@@ -1,63 +1,36 @@
 
 import { Model } from "@/types";
 
-export const openAIModels: Model[] = [
-  {
-    id: "gpt-4o",
-    name: "GPT-4o",
-    provider: "openai",
-    modelId: "gpt-4o",
-    description: "Most capable GPT-4 model, optimized for chat",
-    canUseImage: true,
-  },
-  {
-    id: "gpt-4o-mini",
-    name: "GPT-4o Mini",
-    provider: "openai",
-    modelId: "gpt-4o-mini",
-    description: "Cheaper, faster version of GPT-4o",
-    canUseImage: true,
-  },
-  {
-    id: "gpt-4.5-preview",
-    name: "GPT-4.5 Preview",
-    provider: "openai",
-    modelId: "gpt-4.5-preview",
-    description: "Preview version of GPT-4.5",
-    canUseImage: true,
-  },
-];
-
 export const geminiModels: Model[] = [
   {
-    id: "gemini-1.5-pro",
-    name: "Gemini 1.5 Pro",
+    id: "gemini-2.0-flash",
+    name: "Gemini 2.0 Flash",
     provider: "gemini",
-    modelId: "gemini-1.5-pro",
-    description: "Most capable Gemini model for complex tasks",
+    modelId: "gemini-2.0-flash",
+    description: "Default model for most tasks",
     canUseImage: true,
   },
   {
-    id: "gemini-1.5-flash",
-    name: "Gemini 1.5 Flash",
+    id: "gemini-1.5-flash-8b",
+    name: "Gemini 1.5 Flash-8B",
     provider: "gemini",
-    modelId: "gemini-1.5-flash",
-    description: "Faster version of Gemini 1.5",
+    modelId: "gemini-1.5-flash-8b",
+    description: "Efficient model with good performance",
     canUseImage: true,
   },
   {
-    id: "gemini-1.0-pro",
-    name: "Gemini 1.0 Pro",
+    id: "gemini-2.0-flash-experimental",
+    name: "Gemini 2.0 Flash Experimental",
     provider: "gemini",
-    modelId: "gemini-1.0-pro",
-    description: "Original Gemini model",
-    canUseImage: false,
+    modelId: "gemini-2.0-flash-experimental",
+    description: "Experimental version with image generation capabilities",
+    canUseImage: true,
   },
 ];
 
-export const allModels: Model[] = [...openAIModels, ...geminiModels];
+export const allModels: Model[] = [...geminiModels];
 
-export const defaultModel: Model = allModels[0];
+export const defaultModel: Model = geminiModels[0];
 
 export const getModelById = (id: string): Model => {
   return allModels.find((model) => model.id === id) || defaultModel;

@@ -9,7 +9,6 @@ export type Theme =
   | "gruvbox";
 
 export interface Settings {
-  openaiApiKey: string;
   geminiApiKey: string;
   defaultModel: Model;
   theme: Theme;
@@ -19,7 +18,7 @@ export interface Settings {
 export interface Model {
   id: string;
   name: string;
-  provider: "openai" | "gemini";
+  provider: "gemini";
   modelId: string;
   description: string;
   canUseImage: boolean;

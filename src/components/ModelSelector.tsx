@@ -35,8 +35,8 @@ export const ModelSelector = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2 w-52">
-          <span className="truncate flex-1 text-left">{selectedModel.name}</span>
+        <Button variant="ghost" className="flex items-center gap-2 h-9 px-3 text-sm rounded-md bg-background/5 hover:bg-background/10">
+          <span className="truncate">{selectedModel.name}</span>
           <ChevronDown className="h-4 w-4 opacity-50" />
         </Button>
       </DropdownMenuTrigger>

@@ -12,7 +12,7 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
-  const { chats, createNewChat, currentChat, deleteChat, renameChat } = useChat();
+  const { chats, createNewChat, currentChat, deleteChat, renameChat, selectChat } = useChat();
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile viewport
@@ -44,6 +44,12 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     renameChat(chatId, newTitle);
   };
 
+  // Handle chat selection
+  const handleSelectChat = (chatId: string) => {
+    selectChat(chatId);
+    if (isMobile) onClose();
+  };
+
   return (
     <>
       {/* Mobile overlay */}
@@ -57,7 +63,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       <aside
         className={cn(
           "fixed top-0 left-0 z-50 h-full w-[300px] bg-sidebar border-r border-border flex flex-col transition-transform duration-300",
-          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex items-center justify-between p-4 border-b">
@@ -91,9 +97,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 key={chat.id} 
                 chat={chat} 
                 isActive={currentChat?.id === chat.id}
-                onSelect={() => {
-                  if (isMobile) onClose();
-                }} 
+                onSelect={() => handleSelectChat(chat.id)}
                 onDelete={() => handleDeleteChat(chat.id)}
                 onRename={(newTitle) => handleRenameChat(chat.id, newTitle)}
               />

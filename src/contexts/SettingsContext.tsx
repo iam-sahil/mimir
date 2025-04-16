@@ -5,16 +5,14 @@ import { defaultModel } from "@/lib/models";
 
 interface SettingsContextType {
   settings: Settings;
-  saveOpenAIKey: (key: string) => void;
   saveGeminiKey: (key: string) => void;
   setDefaultModel: (model: Model) => void;
   setTheme: (theme: Theme) => void;
   setUsername: (username: string) => void;
-  hasValidKey: (provider: "openai" | "gemini") => boolean;
+  hasValidKey: (provider: "gemini") => boolean;
 }
 
 const defaultSettings: Settings = {
-  openaiApiKey: "",
   geminiApiKey: "",
   defaultModel: defaultModel,
   theme: "dark",
@@ -36,10 +34,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("mimir-settings", JSON.stringify(settings));
   }, [settings]);
 
-  const saveOpenAIKey = (key: string) => {
-    setSettings((prev) => ({ ...prev, openaiApiKey: key }));
-  };
-
   const saveGeminiKey = (key: string) => {
     setSettings((prev) => ({ ...prev, geminiApiKey: key }));
   };
@@ -56,10 +50,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     setSettings((prev) => ({ ...prev, username }));
   };
 
-  const hasValidKey = (provider: "openai" | "gemini") => {
-    if (provider === "openai") {
-      return !!settings.openaiApiKey;
-    }
+  const hasValidKey = (provider: "gemini") => {
     return !!settings.geminiApiKey;
   };
 
@@ -67,7 +58,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     <SettingsContext.Provider
       value={{
         settings,
-        saveOpenAIKey,
         saveGeminiKey,
         setDefaultModel,
         setTheme,

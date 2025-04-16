@@ -72,7 +72,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         if (chat.id === currentChatId) {
           // Update the chat title based on the first user message if it's "New Chat"
           let title = chat.title;
-          if (title === "New Chat" && role === "user") {
+          if ((title === "New Chat" || !title) && role === "user") {
             // Limit title to first ~30 chars
             title = content.length > 30 ? `${content.substring(0, 30)}...` : content;
           }

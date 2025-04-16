@@ -11,7 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useSettings } from "@/contexts/SettingsContext";
 
 interface SettingsDialogProps {
@@ -20,17 +19,12 @@ interface SettingsDialogProps {
 }
 
 export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
-  const { settings, saveOpenAIKey, saveGeminiKey, setUsername } = useSettings();
+  const { settings, saveGeminiKey, setUsername } = useSettings();
   
-  const [openaiKey, setOpenaiKey] = useState(settings.openaiApiKey || "");
   const [geminiKey, setGeminiKey] = useState(settings.geminiApiKey || "");
   const [username, setUsernameState] = useState(settings.username || "");
 
   const handleSave = () => {
-    if (openaiKey !== settings.openaiApiKey) {
-      saveOpenAIKey(openaiKey);
-    }
-    
     if (geminiKey !== settings.geminiApiKey) {
       saveGeminiKey(geminiKey);
     }
@@ -59,16 +53,6 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
               placeholder="Enter your username"
               value={username}
               onChange={(e) => setUsernameState(e.target.value)}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="openai-api-key">OpenAI API Key</Label>
-            <Input
-              id="openai-api-key"
-              type="password"
-              placeholder="Enter your OpenAI API key"
-              value={openaiKey}
-              onChange={(e) => setOpenaiKey(e.target.value)}
             />
           </div>
           <div className="grid gap-2">

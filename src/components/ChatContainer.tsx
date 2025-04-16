@@ -5,10 +5,9 @@ import { MessageInput } from "./MessageInput";
 import { EmptyState } from "./EmptyState";
 import { useChat } from "@/contexts/ChatContext";
 import { useSettings } from "@/contexts/SettingsContext";
-import { ModelSelector } from "./ModelSelector";
 import { allModels } from "@/lib/models";
 import { sendChatRequest } from "@/lib/api";
-import { Settings, MessageSquare } from "lucide-react";
+import { Settings } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeSelector } from "./ThemeSelector";
 import { SettingsDialog } from "./SettingsDialog";
@@ -19,7 +18,7 @@ interface ChatContainerProps {
 }
 
 export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
-  const { currentChat, addMessage, setCurrentChatModel } = useChat();
+  const { currentChat, addMessage, setCurrentChatModel, createNewChat } = useChat();
   const { settings } = useSettings();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,6 +29,13 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentChat?.messages]);
 
+  // Create a new chat if none exists
+  useEffect(() => {
+    if (!currentChat) {
+      createNewChat();
+    }
+  }, [currentChat, createNewChat]);
+
   const handleSendMessage = async (message: string) => {
     if (!currentChat) return;
 
@@ -37,21 +43,18 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
     addMessage(message, "user");
 
     // Get the API key for the selected model
-    const apiKey =
-      currentChat.model.provider === "openai"
-        ? settings.openaiApiKey
-        : settings.geminiApiKey;
+    const apiKey = settings.geminiApiKey;
         
     // Check if API key is available
     if (!apiKey) {
       toast.error(
-        `No API key found for ${currentChat.model.provider}. Please add your API key in settings.`,
+        "No API key found for Gemini. Please add your API key in settings.",
         {
           duration: 5000,
         }
       );
       addMessage(
-        `Sorry, I couldn't process your request. No API key found for ${currentChat.model.provider}. Please add your API key in the settings.`,
+        "Sorry, I couldn't process your request. No API key found for Gemini. Please add your API key in the settings.",
         "assistant"
       );
       return;
@@ -76,10 +79,10 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
       
       if (error instanceof Error) {
         if (error.message.includes("API key")) {
-          errorMessage = `Invalid API key for ${currentChat.model.provider}. Please check your settings.`;
+          errorMessage = "Invalid Gemini API key. Please check your settings.";
           toast.error(errorMessage, { duration: 5000 });
         } else if (error.message.includes("429")) {
-          errorMessage = `You've reached the rate limit for ${currentChat.model.provider}. Please try again later.`;
+          errorMessage = "You've reached the rate limit for Gemini. Please try again later.";
           toast.error("Rate limit reached", { duration: 5000 });
         } else {
           toast.error("Error connecting to AI service", { duration: 5000 });
@@ -99,31 +102,7 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <header className="h-16 border-b flex items-center justify-between px-4">
-        <div className="flex items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onSidebarToggle}
-            className="mr-2"
-          >
-            <MessageSquare className="h-5 w-5" />
-          </Button>
-          {currentChat && (
-            <ModelSelector
-              selectedModel={currentChat.model}
-              onChange={setCurrentChatModel}
-              models={allModels.filter(
-                (model) =>
-                  settings[
-                    model.provider === "openai"
-                      ? "openaiApiKey"
-                      : "geminiApiKey"
-                  ]
-              )}
-            />
-          )}
-        </div>
+      <header className="h-16 border-b border-border/50 flex items-center justify-end px-4">
         <div className="flex items-center gap-2">
           <ThemeSelector />
           <Button
@@ -139,7 +118,7 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
       {/* Chat area */}
       <div className="flex-1 overflow-y-auto">
         {currentChat && currentChat.messages.length > 0 ? (
-          <div className="pb-20">
+          <div className="pb-20 max-w-4xl mx-auto">
             {currentChat.messages.map((message) => (
               <ChatMessage key={message.id} message={message} />
             ))}
@@ -153,12 +132,17 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
       </div>
 
       {/* Message input */}
-      <div className="border-t sticky bottom-0 bg-background">
-        <MessageInput
-          onSendMessage={handleSendMessage}
-          isLoading={isLoading}
-          placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
-        />
+      <div className="border-t sticky bottom-0 bg-background py-4 px-4">
+        <div className="max-w-4xl mx-auto">
+          <MessageInput
+            onSendMessage={handleSendMessage}
+            isLoading={isLoading}
+            placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
+            selectedModel={currentChat?.model || settings.defaultModel}
+            onModelChange={setCurrentChatModel}
+            availableModels={allModels.filter(model => !!settings.geminiApiKey)}
+          />
+        </div>
       </div>
 
       <SettingsDialog
