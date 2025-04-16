@@ -14,9 +14,9 @@ export async function sendChatRequest(
 
   try {
     if (model.provider === "openai") {
-      return await callOpenAI(apiKey, model.modelId as string, messages);
+      return await callOpenAI(apiKey, model.modelId, messages);
     } else if (model.provider === "gemini") {
-      return await callGemini(apiKey, model.modelId as string, messages);
+      return await callGemini(apiKey, model.modelId, messages);
     } else {
       throw new Error(`Unsupported model provider: ${model.provider}`);
     }

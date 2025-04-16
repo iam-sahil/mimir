@@ -10,7 +10,7 @@ interface ChatContextType {
   currentChat: Chat | null;
   createNewChat: () => Chat;
   selectChat: (id: string) => void;
-  addMessage: (content: string, role: "user" | "assistant" | "system") => void;
+  addMessage: (content: string, role: "user" | "assistant") => void;
   renameChat: (id: string, title: string) => void;
   deleteChat: (id: string) => void;
   setCurrentChatModel: (model: Model) => void;
@@ -57,7 +57,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     setCurrentChatId(id);
   };
 
-  const addMessage = (content: string, role: "user" | "assistant" | "system") => {
+  const addMessage = (content: string, role: "user" | "assistant") => {
     if (!currentChatId) return;
 
     const message: Message = {

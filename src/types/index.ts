@@ -1,6 +1,4 @@
 
-import { Chat } from "../types";
-
 export type Theme =
   | "dark"
   | "light"
@@ -22,6 +20,9 @@ export interface Model {
   id: string;
   name: string;
   provider: "openai" | "gemini";
+  modelId: string;
+  description: string;
+  canUseImage: boolean;
 }
 
 export interface Message {
@@ -37,4 +38,5 @@ export interface Chat {
   messages: Message[];
   model: Model;
   createdAt: number;
+  updatedAt: number;
 }

@@ -1,5 +1,5 @@
 
-import { Model, OpenAIModel, GeminiModel } from "@/types";
+import { Model } from "@/types";
 
 export const openAIModels: Model[] = [
   {
