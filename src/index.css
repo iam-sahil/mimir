@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -65,129 +66,187 @@
     --ring: 212.7 26.8% 83.9%;
   }
 
+  /* Catppuccin Mocha Theme */
   .catppuccin {
-    --background: 249 24% 94%;
-    --foreground: 283 16% 31%;
+    /* Base colors */
+    --background: 225 27% 13%;  /* #303446 */
+    --foreground: 222 23% 72%;  /* #a6adc8 */
     
-    --card: 249 24% 94%;
-    --card-foreground: 283 16% 31%;
+    --card: 225 27% 13%;
+    --card-foreground: 222 23% 72%;
     
-    --popover: 249 24% 94%;
-    --popover-foreground: 283 16% 31%;
+    --popover: 225 27% 13%;
+    --popover-foreground: 222 23% 72%;
     
-    --primary: 291 24% 75%;
-    --primary-foreground: 283 16% 31%;
+    /* Primary accent (Pink) */
+    --primary: 343 81% 75%;      /* #f38ba8 */
+    --primary-foreground: 225 27% 13%;
     
-    --secondary: 249 12% 89%;
-    --secondary-foreground: 283 16% 31%;
+    /* Secondary colors */
+    --secondary: 226 19% 27%;    /* #434759 */
+    --secondary-foreground: 222 23% 72%;
     
-    --muted: 249 12% 89%;
-    --muted-foreground: 284 9% 57%;
+    --muted: 226 19% 27%;
+    --muted-foreground: 222 13% 65%;
     
-    --accent: 249 12% 89%;
-    --accent-foreground: 283 16% 31%;
+    --accent: 226 19% 27%;
+    --accent-foreground: 222 23% 72%;
     
     --destructive: 343 81% 75%;
-    --destructive-foreground: 283 16% 31%;
+    --destructive-foreground: 225 27% 13%;
     
-    --border: 249 12% 84%;
-    --input: 249 12% 84%;
-    --ring: 291 24% 75%;
+    --border: 226 19% 27%;
+    --input: 226 19% 27%;
+    --ring: 343 81% 75%;
+    
+    /* Sidebar specific colors */
+    --sidebar-background: 227 27% 22%;   /* #363a4f */
+    --sidebar-foreground: 222 23% 72%;
+    --sidebar-primary: 343 81% 75%;
+    --sidebar-primary-foreground: 225 27% 13%;
+    --sidebar-accent: 226 19% 27%;
+    --sidebar-accent-foreground: 222 23% 72%;
+    --sidebar-border: 227 20% 30%;
+    --sidebar-ring: 343 81% 75%;
   }
 
+  /* Tokyo Night Theme */
   .tokyo-night {
-    --background: 225 27% 17%;
-    --foreground: 218 27% 92%;
+    /* Base colors */
+    --background: 225 27% 13%;  /* #1a1b26 */
+    --foreground: 220 13% 80%;  /* #c8ccd4 */
     
-    --card: 225 27% 17%;
-    --card-foreground: 218 27% 92%;
+    --card: 225 27% 13%;
+    --card-foreground: 220 13% 80%;
     
-    --popover: 225 27% 17%;
-    --popover-foreground: 218 27% 92%;
+    --popover: 225 27% 13%;
+    --popover-foreground: 220 13% 80%;
     
-    --primary: 200 98% 73%;
-    --primary-foreground: 225 27% 17%;
+    /* Primary accent (Purple) */
+    --primary: 264 61% 78%;      /* #bb9af7 */
+    --primary-foreground: 225 27% 13%;
     
-    --secondary: 227 27% 24%;
-    --secondary-foreground: 218 27% 92%;
+    /* Secondary */
+    --secondary: 223 17% 18%;    /* #1f2335 */
+    --secondary-foreground: 220 13% 80%;
     
-    --muted: 227 27% 24%;
-    --muted-foreground: 215 25% 65%;
+    --muted: 223 17% 18%;
+    --muted-foreground: 220 13% 65%;
     
-    --accent: 227 27% 24%;
-    --accent-foreground: 218 27% 92%;
+    --accent: 223 17% 18%;
+    --accent-foreground: 220 13% 80%;
     
-    --destructive: 0 72% 65%;
-    --destructive-foreground: 218 27% 92%;
+    --destructive: 349 69% 70%;  /* #f7768e */
+    --destructive-foreground: 225 27% 13%;
     
-    --border: 227 27% 24%;
-    --input: 227 27% 24%;
-    --ring: 200 98% 73%;
+    --border: 223 17% 18%;
+    --input: 223 17% 18%;
+    --ring: 264 61% 78%;
+    
+    /* Sidebar specific colors */
+    --sidebar-background: 223 17% 18%;   /* #1f2335 */
+    --sidebar-foreground: 220 13% 80%;
+    --sidebar-primary: 264 61% 78%;
+    --sidebar-primary-foreground: 225 27% 13%;
+    --sidebar-accent: 223 20% 21%;
+    --sidebar-accent-foreground: 220 13% 80%;
+    --sidebar-border: 223 20% 25%;
+    --sidebar-ring: 264 61% 78%;
   }
 
+  /* Nord Theme */
   .nord {
-    --background: 220 17% 96%;
-    --foreground: 220 16% 36%;
+    /* Base colors */
+    --background: 220 16% 22%;  /* #2e3440 */
+    --foreground: 218 27% 88%;  /* #d8dee9 */
     
-    --card: 220 17% 96%;
-    --card-foreground: 220 16% 36%;
+    --card: 220 16% 22%;
+    --card-foreground: 218 27% 88%;
     
-    --popover: 220 17% 96%;
-    --popover-foreground: 220 16% 36%;
+    --popover: 220 16% 22%;
+    --popover-foreground: 218 27% 88%;
     
-    --primary: 213 32% 52%;
-    --primary-foreground: 220 17% 96%;
+    /* Primary accent (Blue) */
+    --primary: 210 25% 63%;      /* #81a1c1 */
+    --primary-foreground: 220 16% 22%;
     
-    --secondary: 218 13% 91%;
-    --secondary-foreground: 220 16% 36%;
+    /* Secondary */
+    --secondary: 220 16% 28%;    /* #3b4252 */
+    --secondary-foreground: 218 27% 88%;
     
-    --muted: 218 13% 91%;
-    --muted-foreground: 220 14% 56%;
+    --muted: 220 16% 28%;
+    --muted-foreground: 219 16% 70%;
     
-    --accent: 218 13% 91%;
-    --accent-foreground: 220 16% 36%;
+    --accent: 220 16% 28%;
+    --accent-foreground: 218 27% 88%;
     
-    --destructive: 1 74% 65%;
-    --destructive-foreground: 220 17% 96%;
+    --destructive: 354 42% 56%;  /* #bf616a */
+    --destructive-foreground: 218 27% 88%;
     
-    --border: 218 13% 87%;
-    --input: 218 13% 87%;
-    --ring: 213 32% 52%;
+    --border: 220 16% 28%;
+    --input: 220 16% 28%;
+    --ring: 210 25% 63%;
+    
+    /* Sidebar specific colors */
+    --sidebar-background: 220 16% 28%;   /* #3b4252 */
+    --sidebar-foreground: 218 27% 88%;
+    --sidebar-primary: 210 25% 63%;
+    --sidebar-primary-foreground: 220 16% 22%;
+    --sidebar-accent: 220 16% 36%;
+    --sidebar-accent-foreground: 218 27% 88%;
+    --sidebar-border: 222 14% 35%;
+    --sidebar-ring: 210 25% 63%;
   }
 
+  /* Monodark Theme */
   .monodark {
-    --background: 0 0% 11%;
-    --foreground: 0 0% 90%;
+    /* Base colors */
+    --background: 220 8% 15%;    /* #21252b */
+    --foreground: 220 9% 71%;    /* #abb2bf */
     
-    --card: 0 0% 11%;
-    --card-foreground: 0 0% 90%;
+    --card: 220 8% 15%;
+    --card-foreground: 220 9% 71%;
     
-    --popover: 0 0% 11%;
-    --popover-foreground: 0 0% 90%;
+    --popover: 220 8% 15%;
+    --popover-foreground: 220 9% 71%;
     
-    --primary: 230 92% 65%;
-    --primary-foreground: 0 0% 11%;
+    /* Primary accent (Blue) */
+    --primary: 210 70% 66%;      /* #61afef */
+    --primary-foreground: 220 8% 15%;
     
-    --secondary: 0 0% 18%;
-    --secondary-foreground: 0 0% 90%;
+    /* Secondary */
+    --secondary: 220 8% 19%;     /* #282c34 */
+    --secondary-foreground: 220 9% 71%;
     
-    --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 63%;
+    --muted: 220 8% 19%;
+    --muted-foreground: 220 9% 55%;
     
-    --accent: 0 0% 18%;
-    --accent-foreground: 0 0% 90%;
+    --accent: 220 8% 19%;
+    --accent-foreground: 220 9% 71%;
     
-    --destructive: 0 70% 54%;
-    --destructive-foreground: 0 0% 90%;
+    --destructive: 5 64% 60%;    /* #e06c75 */
+    --destructive-foreground: 220 9% 71%;
     
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 230 92% 65%;
+    --border: 220 8% 19%;
+    --input: 220 8% 19%;
+    --ring: 210 70% 66%;
+    
+    /* Sidebar specific colors */
+    --sidebar-background: 220 8% 19%;    /* #282c34 */
+    --sidebar-foreground: 220 9% 71%;
+    --sidebar-primary: 210 70% 66%;
+    --sidebar-primary-foreground: 220 8% 15%;
+    --sidebar-accent: 220 8% 23%;
+    --sidebar-accent-foreground: 220 9% 71%;
+    --sidebar-border: 220 8% 25%;
+    --sidebar-ring: 210 70% 66%;
   }
 
+  /* Gruvbox Theme */
   .gruvbox {
-    --background: 50 10% 91%;
-    --foreground: 40 4% 27%;
+    /* Base colors */
+    --background: 50 10% 91%;    /* #fbf1c7 light background */
+    --foreground: 40 4% 27%;     /* #3c3836 */
     
     --card: 50 10% 91%;
     --card-foreground: 40 4% 27%;
@@ -195,10 +254,12 @@
     --popover: 50 10% 91%;
     --popover-foreground: 40 4% 27%;
     
-    --primary: 25 75% 38%;
-    --primary-foreground: 50 10% 91%;
+    /* Primary accent (Yellow) */
+    --primary: 40 92% 58%;       /* #fabd2f */
+    --primary-foreground: 40 4% 27%;
     
-    --secondary: 45 8% 84%;
+    /* Secondary */
+    --secondary: 45 8% 84%;      /* #ebdbb2 */
     --secondary-foreground: 40 4% 27%;
     
     --muted: 45 8% 84%;
@@ -207,12 +268,22 @@
     --accent: 45 8% 84%;
     --accent-foreground: 40 4% 27%;
     
-    --destructive: 0 70% 47%;
+    --destructive: 0 70% 47%;    /* #cc241d */
     --destructive-foreground: 50 10% 91%;
     
     --border: 45 8% 78%;
     --input: 45 8% 78%;
-    --ring: 25 75% 38%;
+    --ring: 40 92% 58%;
+    
+    /* Sidebar specific colors */
+    --sidebar-background: 45 8% 84%;     /* #ebdbb2 */
+    --sidebar-foreground: 40 4% 27%;
+    --sidebar-primary: 40 92% 58%;
+    --sidebar-primary-foreground: 40 4% 27%;
+    --sidebar-accent: 43 8% 76%;
+    --sidebar-accent-foreground: 40 4% 27%;
+    --sidebar-border: 43 9% 70%;
+    --sidebar-ring: 40 92% 58%;
   }
 }
 

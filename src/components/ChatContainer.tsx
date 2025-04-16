@@ -12,6 +12,7 @@ import { Settings, MessageSquare } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeSelector } from "./ThemeSelector";
 import { SettingsDialog } from "./SettingsDialog";
+import { toast } from "@/components/ui/sonner";
 
 interface ChatContainerProps {
   onSidebarToggle: () => void;
@@ -40,6 +41,21 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
       currentChat.model.provider === "openai"
         ? settings.openaiApiKey
         : settings.geminiApiKey;
+        
+    // Check if API key is available
+    if (!apiKey) {
+      toast.error(
+        `No API key found for ${currentChat.model.provider}. Please add your API key in settings.`,
+        {
+          duration: 5000,
+        }
+      );
+      addMessage(
+        `Sorry, I couldn't process your request. No API key found for ${currentChat.model.provider}. Please add your API key in the settings.`,
+        "assistant"
+      );
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -54,10 +70,23 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
       addMessage(response, "assistant");
     } catch (error) {
       console.error("Error sending message:", error);
-      addMessage(
-        "Sorry, there was an error processing your request. Please check your API key and try again.",
-        "assistant"
-      );
+      
+      // Handle specific error cases
+      let errorMessage = "Sorry, there was an error processing your request.";
+      
+      if (error instanceof Error) {
+        if (error.message.includes("API key")) {
+          errorMessage = `Invalid API key for ${currentChat.model.provider}. Please check your settings.`;
+          toast.error(errorMessage, { duration: 5000 });
+        } else if (error.message.includes("429")) {
+          errorMessage = `You've reached the rate limit for ${currentChat.model.provider}. Please try again later.`;
+          toast.error("Rate limit reached", { duration: 5000 });
+        } else {
+          toast.error("Error connecting to AI service", { duration: 5000 });
+        }
+      }
+      
+      addMessage(errorMessage, "assistant");
     } finally {
       setIsLoading(false);
     }
@@ -128,7 +157,7 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
         <MessageInput
           onSendMessage={handleSendMessage}
           isLoading={isLoading}
-          placeholder="Message Mimir..."
+          placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
         />
       </div>
 

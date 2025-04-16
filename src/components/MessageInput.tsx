@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Send } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MessageInputProps {
@@ -59,7 +59,7 @@ export const MessageInput = ({
           onKeyDown={handleKeyDown}
           className={cn(
             "resize-none min-h-[60px] max-h-[200px] pr-16 overflow-y-auto",
-            isLoading && "opacity-50"
+            isLoading && "opacity-70"
           )}
           disabled={isLoading}
         />
@@ -69,7 +69,11 @@ export const MessageInput = ({
           className="absolute bottom-7 right-7"
           disabled={!message.trim() || isLoading}
         >
-          <Send className="h-5 w-5" />
+          {isLoading ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <Send className="h-5 w-5" />
+          )}
         </Button>
       </div>
     </form>
