@@ -2,6 +2,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Settings, Theme, Model } from "@/types";
 import { defaultModel } from "@/lib/models";
+import { toast } from "@/components/ui/sonner";
+
+// Free API key for first 10 messages
+const FREE_API_KEY = "AIzaSyDektoljoG7mk0yug7fLS0kJ7EfF69bs7g";
+const MAX_FREE_MESSAGES = 10;
 
 interface SettingsContextType {
   settings: Settings;
@@ -10,6 +15,8 @@ interface SettingsContextType {
   setTheme: (theme: Theme) => void;
   setUsername: (username: string) => void;
   hasValidKey: (provider: "gemini") => boolean;
+  getActiveApiKey: () => string;
+  incrementFreeMessageCount: () => void;
 }
 
 const defaultSettings: Settings = {
@@ -17,6 +24,7 @@ const defaultSettings: Settings = {
   defaultModel: defaultModel,
   theme: "dark",
   username: "",
+  freeMessagesUsed: 0,
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -51,7 +59,42 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   };
 
   const hasValidKey = (provider: "gemini") => {
-    return !!settings.geminiApiKey;
+    return settings.freeMessagesUsed < MAX_FREE_MESSAGES || !!settings.geminiApiKey;
+  };
+
+  const getActiveApiKey = () => {
+    if (settings.geminiApiKey) {
+      return settings.geminiApiKey;
+    }
+    
+    if (settings.freeMessagesUsed < MAX_FREE_MESSAGES) {
+      return FREE_API_KEY;
+    }
+    
+    return "";
+  };
+
+  const incrementFreeMessageCount = () => {
+    if (!settings.geminiApiKey) {
+      const newCount = settings.freeMessagesUsed + 1;
+      setSettings(prev => ({ ...prev, freeMessagesUsed: newCount }));
+      
+      if (newCount === MAX_FREE_MESSAGES) {
+        toast.warning(
+          "You've used all your free messages. Please enter your API key in settings to continue.",
+          {
+            duration: 6000,
+          }
+        );
+      } else if (newCount === MAX_FREE_MESSAGES - 2) {
+        toast.info(
+          `You have ${MAX_FREE_MESSAGES - newCount} free messages left. Add your API key in settings to continue after that.`,
+          {
+            duration: 5000,
+          }
+        );
+      }
+    }
   };
 
   return (
@@ -63,6 +106,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         setTheme,
         setUsername,
         hasValidKey,
+        getActiveApiKey,
+        incrementFreeMessageCount,
       }}
     >
       {children}

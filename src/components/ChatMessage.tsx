@@ -23,8 +23,10 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
     >
       <div 
         className={cn(
-          "flex max-w-3xl gap-3 rounded-lg p-4",
-          isUser ? "bg-primary/10 text-foreground" : "bg-secondary/15 text-foreground"
+          "flex max-w-2xl gap-3 rounded-lg p-4",
+          isUser 
+            ? "bg-primary/10 text-foreground ml-auto" 
+            : "bg-secondary/15 text-foreground mr-auto"
         )}
       >
         <div className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center">

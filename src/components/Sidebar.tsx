@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, X, Brain } from "lucide-react";
+import { Plus, X, Brain, Menu } from "lucide-react";
 import { useChat } from "@/contexts/ChatContext";
 import { SidebarChatItem } from "./SidebarChatItem";
 import { cn } from "@/lib/utils";
@@ -71,11 +71,13 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             <Brain className="h-6 w-6" />
             <h1>Mimir</h1>
           </div>
-          {isMobile && (
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="h-5 w-5" />
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            {isMobile && (
+              <Button variant="ghost" size="icon" onClick={onClose}>
+                <X className="h-5 w-5" />
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="p-4">

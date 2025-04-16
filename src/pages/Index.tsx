@@ -42,8 +42,8 @@ const Index = () => {
             <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
 
             <main className={cn(
-              "flex-1 transition-none",
-              isMobile ? "w-full" : "ml-0"
+              "flex-1 transition-all duration-300",
+              isMobile ? "w-full" : (isSidebarOpen ? "ml-[300px]" : "ml-0")
             )}>
               <ChatContainer onSidebarToggle={toggleSidebar} />
             </main>

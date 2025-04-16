@@ -23,6 +23,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
   
   const [geminiKey, setGeminiKey] = useState(settings.geminiApiKey || "");
   const [username, setUsernameState] = useState(settings.username || "");
+  const freeMessagesRemaining = 10 - settings.freeMessagesUsed;
 
   const handleSave = () => {
     if (geminiKey !== settings.geminiApiKey) {
@@ -56,7 +57,14 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="gemini-api-key">Gemini API Key</Label>
+            <Label htmlFor="gemini-api-key">
+              Gemini API Key
+              {!settings.geminiApiKey && freeMessagesRemaining > 0 && (
+                <span className="ml-2 text-xs text-muted-foreground">
+                  ({freeMessagesRemaining} free messages remaining)
+                </span>
+              )}
+            </Label>
             <Input
               id="gemini-api-key"
               type="password"

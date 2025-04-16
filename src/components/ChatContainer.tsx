@@ -7,7 +7,7 @@ import { useChat } from "@/contexts/ChatContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { allModels } from "@/lib/models";
 import { sendChatRequest } from "@/lib/api";
-import { Settings } from "lucide-react";
+import { Settings, Menu } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeSelector } from "./ThemeSelector";
 import { SettingsDialog } from "./SettingsDialog";
@@ -19,7 +19,7 @@ interface ChatContainerProps {
 
 export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
   const { currentChat, addMessage, setCurrentChatModel, createNewChat } = useChat();
-  const { settings } = useSettings();
+  const { settings, hasValidKey, getActiveApiKey, incrementFreeMessageCount } = useSettings();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -43,18 +43,18 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
     addMessage(message, "user");
 
     // Get the API key for the selected model
-    const apiKey = settings.geminiApiKey;
+    const apiKey = getActiveApiKey();
         
     // Check if API key is available
     if (!apiKey) {
       toast.error(
-        "No API key found for Gemini. Please add your API key in settings.",
+        "No API key available. Please add your API key in settings.",
         {
           duration: 5000,
         }
       );
       addMessage(
-        "Sorry, I couldn't process your request. No API key found for Gemini. Please add your API key in the settings.",
+        "Sorry, I couldn't process your request. No API key found. Please add your API key in the settings.",
         "assistant"
       );
       return;
@@ -62,6 +62,11 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
 
     setIsLoading(true);
     try {
+      // Increment free message count if using free key
+      if (!settings.geminiApiKey) {
+        incrementFreeMessageCount();
+      }
+      
       // Get response from API
       const response = await sendChatRequest(
         currentChat.model,
@@ -102,7 +107,15 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <header className="h-16 border-b border-border/50 flex items-center justify-end px-4">
+      <header className="h-16 border-b border-border/50 flex items-center justify-between px-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onSidebarToggle}
+          className="lg:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
         <div className="flex items-center gap-2">
           <ThemeSelector />
           <Button
@@ -140,7 +153,7 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
             placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
             selectedModel={currentChat?.model || settings.defaultModel}
             onModelChange={setCurrentChatModel}
-            availableModels={allModels.filter(model => !!settings.geminiApiKey)}
+            availableModels={allModels.filter(() => hasValidKey("gemini"))}
           />
         </div>
       </div>

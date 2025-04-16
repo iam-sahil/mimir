@@ -13,6 +13,7 @@ export interface Settings {
   defaultModel: Model;
   theme: Theme;
   username: string;
+  freeMessagesUsed: number;
 }
 
 export interface Model {
