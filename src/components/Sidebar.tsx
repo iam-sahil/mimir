@@ -13,7 +13,7 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
-  const { chats, createNewChat, currentChat } = useChat();
+  const { chats, createNewChat, currentChat, deleteChat, renameChat } = useChat();
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile viewport
@@ -33,6 +33,16 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     if (isMobile && e.target === e.currentTarget) {
       onClose();
     }
+  };
+
+  // Handle chat deletion
+  const handleDeleteChat = (chatId: string) => {
+    deleteChat(chatId);
+  };
+
+  // Handle chat renaming
+  const handleRenameChat = (chatId: string, newTitle: string) => {
+    renameChat(chatId, newTitle);
   };
 
   return (
@@ -82,6 +92,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 onSelect={() => {
                   if (isMobile) onClose();
                 }} 
+                onDelete={() => handleDeleteChat(chat.id)}
+                onRename={(newTitle) => handleRenameChat(chat.id, newTitle)}
               />
             ))}
           </div>
