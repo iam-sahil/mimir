@@ -1,8 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ThemeSelector } from "@/components/ThemeSelector";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Brain } from "lucide-react";
 import { useChat } from "@/contexts/ChatContext";
 import { SidebarChatItem } from "./SidebarChatItem";
 import { cn } from "@/lib/utils";
@@ -62,7 +61,10 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         )}
       >
         <div className="flex items-center justify-between p-4 border-b">
-          <h1 className="text-xl font-semibold text-sidebar-foreground">Mimir</h1>
+          <div className="flex items-center gap-2 text-xl font-semibold text-sidebar-foreground">
+            <Brain className="h-6 w-6" />
+            <h1>Mimir</h1>
+          </div>
           {isMobile && (
             <Button variant="ghost" size="icon" onClick={onClose}>
               <X className="h-5 w-5" />
@@ -100,9 +102,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </div>
 
         <div className="p-4 border-t mt-auto">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Theme</span>
-            <ThemeSelector />
+          <div className="flex items-center justify-center">
+            <span className="text-sm text-muted-foreground">Mimir © 2025</span>
           </div>
         </div>
       </aside>

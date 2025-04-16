@@ -27,7 +27,7 @@ export const themes: Record<Theme, { name: string; className: string }> = {
     className: "monodark",
   },
   gruvbox: {
-    name: "Gruvbox",
+    name: "Gruvbox Dark",
     className: "gruvbox",
   },
 };

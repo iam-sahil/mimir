@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { MessageSquare, ArrowRight } from "lucide-react";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface SamplePrompt {
   title: string;
@@ -13,6 +14,9 @@ interface EmptyStateProps {
 }
 
 export const EmptyState = ({ onPromptClick }: EmptyStateProps) => {
+  const { settings } = useSettings();
+  const displayName = settings.username ? settings.username : "user";
+
   const samplePrompts: SamplePrompt[] = [
     {
       title: "How does AI work?",
@@ -32,7 +36,7 @@ export const EmptyState = ({ onPromptClick }: EmptyStateProps) => {
     <div className="flex flex-col items-center justify-center h-full max-w-3xl mx-auto px-4">
       <div className="flex flex-col items-center text-center">
         <MessageSquare className="h-12 w-12 mb-4" />
-        <h1 className="text-3xl font-bold mb-2">Hello there!</h1>
+        <h1 className="text-3xl font-bold mb-2">Hello there, {displayName}!</h1>
         <p className="text-muted-foreground mb-6">
           Welcome to Mimir. I'm here to assist with information, answer questions, and engage in conversations.
         </p>

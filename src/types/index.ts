@@ -1,47 +1,40 @@
 
-export type Theme = 
-  | "dark" 
-  | "light" 
-  | "catppuccin" 
-  | "tokyo-night" 
-  | "nord" 
-  | "monodark" 
+import { Chat } from "../types";
+
+export type Theme =
+  | "dark"
+  | "light"
+  | "catppuccin"
+  | "tokyo-night"
+  | "nord"
+  | "monodark"
   | "gruvbox";
 
-export type ModelProvider = "openai" | "gemini";
+export interface Settings {
+  openaiApiKey: string;
+  geminiApiKey: string;
+  defaultModel: Model;
+  theme: Theme;
+  username: string;
+}
 
-export type OpenAIModel = "gpt-4o" | "gpt-4o-mini" | "gpt-4.5-preview";
-
-export type GeminiModel = "gemini-1.5-pro" | "gemini-1.5-flash" | "gemini-1.0-pro";
-
-export type Model = {
+export interface Model {
   id: string;
   name: string;
-  provider: ModelProvider;
-  modelId: OpenAIModel | GeminiModel;
-  description?: string;
-  canUseImage?: boolean;
-};
+  provider: "openai" | "gemini";
+}
 
-export type Message = {
+export interface Message {
   id: string;
-  role: "user" | "assistant" | "system";
   content: string;
+  role: "user" | "assistant";
   timestamp: number;
-};
+}
 
-export type Chat = {
+export interface Chat {
   id: string;
   title: string;
   messages: Message[];
   model: Model;
   createdAt: number;
-  updatedAt: number;
-};
-
-export type Settings = {
-  openaiApiKey?: string;
-  geminiApiKey?: string;
-  defaultModel: Model;
-  theme: Theme;
-};
+}

@@ -5,6 +5,7 @@ import { ChatContainer } from "@/components/ChatContainer";
 import { ChatProvider } from "@/contexts/ChatContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { BackgroundGradient } from "@/components/BackgroundGradient";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -18,6 +19,7 @@ const Index = () => {
       <ThemeProvider>
         <ChatProvider>
           <div className="flex h-screen bg-background text-foreground">
+            <BackgroundGradient />
             <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
 
             <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "lg:ml-[300px]" : ""}`}>

@@ -9,6 +9,7 @@ interface SettingsContextType {
   saveGeminiKey: (key: string) => void;
   setDefaultModel: (model: Model) => void;
   setTheme: (theme: Theme) => void;
+  setUsername: (username: string) => void;
   hasValidKey: (provider: "openai" | "gemini") => boolean;
 }
 
@@ -17,6 +18,7 @@ const defaultSettings: Settings = {
   geminiApiKey: "",
   defaultModel: defaultModel,
   theme: "dark",
+  username: "",
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -50,6 +52,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     setSettings((prev) => ({ ...prev, theme }));
   };
 
+  const setUsername = (username: string) => {
+    setSettings((prev) => ({ ...prev, username }));
+  };
+
   const hasValidKey = (provider: "openai" | "gemini") => {
     if (provider === "openai") {
       return !!settings.openaiApiKey;
@@ -65,6 +71,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         saveGeminiKey,
         setDefaultModel,
         setTheme,
+        setUsername,
         hasValidKey,
       }}
     >
