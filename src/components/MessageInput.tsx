@@ -56,9 +56,9 @@ export const MessageInput = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-4xl mx-auto bg-background/5 rounded-lg mb-4"
+      className="w-full max-w-4xl mx-auto rounded-lg mb-4"
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col border border-border/40 rounded-lg bg-background/5 shadow-sm">
         <Textarea
           ref={textareaRef}
           placeholder={placeholder}
@@ -66,7 +66,7 @@ export const MessageInput = ({
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           className={cn(
-            "resize-none min-h-[60px] max-h-[200px] px-4 py-3 bg-transparent border-none focus:ring-0 text-foreground",
+            "resize-none min-h-[60px] max-h-[200px] px-4 py-3 bg-transparent border-none focus:ring-0 text-foreground font-helvetica",
             isLoading && "opacity-70"
           )}
           disabled={isLoading}

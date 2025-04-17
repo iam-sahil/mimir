@@ -6,7 +6,11 @@ export type Theme =
   | "tokyo-night"
   | "nord"
   | "monodark"
-  | "gruvbox";
+  | "gruvbox"
+  | "one-dark-pro"
+  | "dracula"
+  | "shades-of-purple"
+  | "monokai";
 
 export interface Settings {
   geminiApiKey: string;

@@ -30,4 +30,20 @@ export const themes: Record<Theme, { name: string; className: string }> = {
     name: "Gruvbox Dark",
     className: "gruvbox",
   },
+  "one-dark-pro": {
+    name: "One Dark Pro",
+    className: "one-dark-pro",
+  },
+  "dracula": {
+    name: "Dracula",
+    className: "dracula",
+  },
+  "shades-of-purple": {
+    name: "Shades of Purple",
+    className: "shades-of-purple",
+  },
+  "monokai": {
+    name: "Monokai",
+    className: "monokai",
+  },
 };

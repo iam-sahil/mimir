@@ -28,14 +28,25 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     return [];
   });
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   const currentChat = currentChatId 
     ? chats.find(chat => chat.id === currentChatId) || null 
     : null;
 
   useEffect(() => {
-    localStorage.setItem("mimir-chats", JSON.stringify(chats));
+    // Only save chats with messages to localStorage to avoid empty chat accumulation
+    const chatsToSave = chats.filter(chat => chat.messages.length > 0);
+    localStorage.setItem("mimir-chats", JSON.stringify(chatsToSave));
   }, [chats]);
+
+  useEffect(() => {
+    // This prevents creating multiple empty chats on page reload
+    if (!hasInitialized && chats.length === 0) {
+      setHasInitialized(true);
+      createNewChat();
+    }
+  }, [hasInitialized, chats.length]);
 
   const createNewChat = () => {
     const timestamp = Date.now();
@@ -48,7 +59,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       updatedAt: timestamp,
     };
     
-    setChats(prev => [newChat, ...prev]);
+    setChats(prev => [newChat, ...prev.filter(chat => chat.messages.length > 0 || chat.id === currentChatId)]);
     setCurrentChatId(newChat.id);
     return newChat;
   };
@@ -72,8 +83,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         if (chat.id === currentChatId) {
           // Update the chat title based on the first user message if it's "New Chat"
           let title = chat.title;
-          if ((title === "New Chat" || !title) && role === "user") {
-            // Limit title to first ~30 chars
+          if ((title === "New Chat" || !title) && role === "user" && chat.messages.length === 0) {
+            // Create a summary title from the first message
             title = content.length > 30 ? `${content.substring(0, 30)}...` : content;
           }
           
@@ -110,7 +121,13 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (currentChatId === id) {
-      setCurrentChatId(null);
+      // If we deleted the current chat, select another one or create a new one
+      if (chats.length > 1) {
+        const remainingChats = chats.filter(chat => chat.id !== id);
+        setCurrentChatId(remainingChats[0].id);
+      } else {
+        createNewChat();
+      }
     }
   };
 

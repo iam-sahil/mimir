@@ -21,30 +21,34 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
         isUser ? "justify-end" : "justify-start"
       )}
     >
+      <div className={cn(
+        "absolute mt-1",
+        isUser ? "right-6" : "left-6"
+      )}>
+        {isUser ? (
+          <div className="bg-background text-foreground/80 w-6 h-6 rounded-full flex items-center justify-center">
+            <User className="h-4 w-4" />
+          </div>
+        ) : (
+          <div className="bg-background text-primary w-6 h-6 rounded-full flex items-center justify-center">
+            <Brain className="h-4 w-4" />
+          </div>
+        )}
+      </div>
+      
       <div 
         className={cn(
-          "flex max-w-2xl gap-3 rounded-lg p-4",
+          "flex max-w-2xl rounded-lg p-4",
           isUser 
-            ? "bg-primary/10 text-foreground ml-auto" 
-            : "bg-secondary/15 text-foreground mr-auto"
+            ? "bg-primary/10 text-foreground ml-auto mr-8" 
+            : "bg-secondary/15 text-foreground mr-auto ml-8"
         )}
       >
-        <div className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center">
-          {isUser ? (
-            <div className="bg-background text-foreground/80 w-8 h-8 rounded-full flex items-center justify-center">
-              <User className="h-5 w-5" />
-            </div>
-          ) : (
-            <div className="bg-background text-blue-500 w-8 h-8 rounded-full flex items-center justify-center">
-              <Brain className="h-5 w-5" />
-            </div>
-          )}
-        </div>
         <div className="w-full overflow-hidden">
           {isUser ? (
-            <p className="prose dark:prose-invert max-w-none text-sm">{message.content}</p>
+            <p className="prose dark:prose-invert max-w-none text-sm font-helvetica">{message.content}</p>
           ) : (
-            <div className="prose dark:prose-invert max-w-none text-sm">
+            <div className="prose dark:prose-invert max-w-none text-sm font-helvetica">
               <ReactMarkdown
                 rehypePlugins={[rehypeHighlight]}
                 components={{
@@ -59,6 +63,27 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
                       className={className ? `${className} bg-muted rounded px-1 py-0.5` : "bg-muted rounded px-1 py-0.5"}
                       {...props} 
                     />
+                  ),
+                  ul: ({ node, ...props }) => (
+                    <ul className="my-4 ml-6 list-disc" {...props} />
+                  ),
+                  ol: ({ node, ...props }) => (
+                    <ol className="my-4 ml-6 list-decimal" {...props} />
+                  ),
+                  li: ({ node, ...props }) => (
+                    <li className="my-1" {...props} />
+                  ),
+                  p: ({ node, ...props }) => (
+                    <p className="my-3 leading-relaxed" {...props} />
+                  ),
+                  h1: ({ node, ...props }) => (
+                    <h1 className="text-2xl font-semibold my-4 font-space-grotesk" {...props} />
+                  ),
+                  h2: ({ node, ...props }) => (
+                    <h2 className="text-xl font-semibold my-3 font-space-grotesk" {...props} />
+                  ),
+                  h3: ({ node, ...props }) => (
+                    <h3 className="text-lg font-semibold my-2 font-space-grotesk" {...props} />
                   ),
                 }}
               >

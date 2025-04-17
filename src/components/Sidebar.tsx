@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, X, Brain, Menu } from "lucide-react";
+import { Plus, X, Brain, Menu, ChevronLeft } from "lucide-react";
 import { useChat } from "@/contexts/ChatContext";
 import { SidebarChatItem } from "./SidebarChatItem";
 import { cn } from "@/lib/utils";
@@ -66,23 +66,21 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex items-center justify-between p-4 border-b">
-          <div className="flex items-center gap-2 text-xl font-semibold text-sidebar-foreground">
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <div className="flex items-center gap-2 text-xl font-space-grotesk font-semibold text-sidebar-foreground">
             <Brain className="h-6 w-6" />
             <h1>Mimir</h1>
           </div>
           <div className="flex items-center gap-2">
-            {isMobile && (
-              <Button variant="ghost" size="icon" onClick={onClose}>
-                <X className="h-5 w-5" />
-              </Button>
-            )}
+            <Button variant="ghost" size="icon" onClick={onClose} className="lg:flex">
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
           </div>
         </div>
 
         <div className="p-4">
           <Button 
-            className="w-full justify-start" 
+            className="w-full justify-start font-helvetica" 
             onClick={() => {
               createNewChat();
               if (isMobile) onClose();
@@ -109,7 +107,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
         <div className="p-4 border-t mt-auto">
           <div className="flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Mimir © 2025</span>
+            <span className="text-sm text-muted-foreground font-helvetica">Ask. Learn. Evolve.</span>
           </div>
         </div>
       </aside>

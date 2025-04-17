@@ -40,10 +40,10 @@ const Index = () => {
           <div className="flex h-screen bg-background text-foreground">
             <BackgroundGradient />
             <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
-
+            
             <main className={cn(
-              "flex-1 transition-all duration-300",
-              isMobile ? "w-full" : (isSidebarOpen ? "ml-[300px]" : "ml-0")
+              "flex-1 transition-all duration-300 w-full",
+              isMobile ? "" : (isSidebarOpen ? "lg:ml-[300px]" : "lg:ml-0")
             )}>
               <ChatContainer onSidebarToggle={toggleSidebar} />
             </main>
