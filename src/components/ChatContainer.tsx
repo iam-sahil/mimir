@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { MessageInput } from "./MessageInput";
@@ -10,7 +11,7 @@ import { Settings, Menu, Brain } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeSelector } from "./ThemeSelector";
 import { SettingsDialog } from "./SettingsDialog";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "./ui/sonner";
 import { ChatMessageSkeleton } from "./ChatMessageSkeleton";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
@@ -67,17 +68,17 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
 
     addMessage(message, "user");
 
-    const apiKey = getActiveApiKey();
+    const apiKey = getActiveApiKey(currentChat.model.provider);
         
     if (!apiKey) {
       toast.error(
-        "No API key available. Please add your API key in settings.",
+        `No API key available for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please add your API key in settings.`,
         {
           duration: 5000,
         }
       );
       addMessage(
-        "Sorry, I couldn't process your request. No API key found. Please add your API key in the settings.",
+        `Sorry, I couldn't process your request. No API key found for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please add your API key in the settings.`,
         "assistant"
       );
       return;
@@ -85,7 +86,7 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
 
     setIsLoading(true);
     try {
-      if (!settings.geminiApiKey) {
+      if (currentChat.model.provider === "gemini" && !settings.geminiApiKey) {
         incrementFreeMessageCount();
         
         if (settings.freeMessagesUsed >= 10) {
@@ -114,10 +115,10 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
       
       if (error instanceof Error) {
         if (error.message.includes("API key")) {
-          errorMessage = "Invalid Gemini API key. Please check your settings.";
+          errorMessage = `Invalid ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"} API key. Please check your settings.`;
           toast.error(errorMessage, { duration: 5000 });
         } else if (error.message.includes("429")) {
-          errorMessage = "You've reached the rate limit for Gemini. Please try again later.";
+          errorMessage = `You've reached the rate limit for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please try again later.`;
           toast.error("Rate limit reached", { duration: 5000 });
         } else {
           toast.error("Error connecting to AI service", { duration: 5000 });
@@ -208,17 +209,15 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
         )}
       </div>
 
-      <div className="sticky bottom-0 bg-background py-4 px-4">
-        <div className="max-w-4xl mx-auto">
-          <MessageInput
-            onSendMessage={handleSendMessage}
-            isLoading={isLoading}
-            placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
-            selectedModel={currentChat?.model || settings.defaultModel}
-            onModelChange={setCurrentChatModel}
-            availableModels={allModels.filter(() => hasValidKey("gemini"))}
-          />
-        </div>
+      <div className="sticky bottom-0 py-6 px-4 backdrop-blur-sm">
+        <MessageInput
+          onSendMessage={handleSendMessage}
+          isLoading={isLoading}
+          placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
+          selectedModel={currentChat?.model || settings.defaultModel}
+          onModelChange={setCurrentChatModel}
+          availableModels={allModels}
+        />
       </div>
 
       <SettingsDialog

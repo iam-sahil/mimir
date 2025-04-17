@@ -19,7 +19,7 @@ interface ChatContextType {
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
-  const { settings } = useSettings();
+  const { settings, hasValidKey } = useSettings();
   const [chats, setChats] = useState<Chat[]>(() => {
     const savedChats = localStorage.getItem("mimir-chats");
     if (savedChats) {
@@ -47,6 +47,14 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       createNewChat();
     }
   }, [hasInitialized, chats.length]);
+
+  // Make sure selected model is available with current API keys
+  useEffect(() => {
+    if (currentChat && !hasValidKey(currentChat.model.provider)) {
+      // Switch to default model if current model is not available
+      setCurrentChatModel(defaultModel);
+    }
+  }, [settings.geminiApiKey, settings.openRouterApiKey]);
 
   const createNewChat = () => {
     const timestamp = Date.now();

@@ -44,10 +44,49 @@ export const geminiModels: Model[] = [
   },
 ];
 
-export const allModels: Model[] = [...geminiModels];
+export const openRouterModels: Model[] = [
+  {
+    id: "deepseek-r1",
+    name: "DeepSeek R1",
+    provider: "openrouter",
+    modelId: "deepseek/deepseek-r1:free",
+    description: "Advanced reasoning model with strong performance",
+    canUseImage: false,
+  },
+  {
+    id: "deepseek-r1-distill-qwen-14b",
+    name: "DeepSeek R1 Distill Qwen 14B",
+    provider: "openrouter",
+    modelId: "deepseek/deepseek-r1-distill-qwen-14b:free",
+    description: "Distilled knowledge model with Qwen architecture",
+    canUseImage: false,
+  },
+  {
+    id: "deepseek-r1-distill-llama-70b",
+    name: "DeepSeek R1 Distill Llama 70B",
+    provider: "openrouter",
+    modelId: "deepseek/deepseek-r1-distill-llama-70b:free",
+    description: "Distilled knowledge model with Llama architecture",
+    canUseImage: false,
+  },
+  {
+    id: "meta-llama-4-maverick",
+    name: "Meta Llama 4 Maverick",
+    provider: "openrouter",
+    modelId: "meta-llama/llama-4-maverick:free",
+    description: "Latest generation Llama model with advanced capabilities",
+    canUseImage: false,
+  }
+];
+
+export const allModels: Model[] = [...geminiModels, ...openRouterModels];
 
 export const defaultModel: Model = geminiModels[0];
 
 export const getModelById = (id: string): Model => {
   return allModels.find((model) => model.id === id) || defaultModel;
+};
+
+export const getModelsByProvider = (provider: "gemini" | "openrouter"): Model[] => {
+  return allModels.filter(model => model.provider === provider);
 };

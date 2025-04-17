@@ -1,6 +1,7 @@
 
 import { Message, Model } from "@/types";
 import { callGemini } from "@/services/gemini";
+import { callOpenRouter } from "@/services/openrouter";
 
 export async function sendChatRequest(
   model: Model,
@@ -14,6 +15,8 @@ export async function sendChatRequest(
   try {
     if (model.provider === "gemini") {
       return await callGemini(apiKey, model.modelId, messages);
+    } else if (model.provider === "openrouter") {
+      return await callOpenRouter(apiKey, model.modelId, messages);
     } else {
       throw new Error(`Unsupported model provider: ${model.provider}`);
     }

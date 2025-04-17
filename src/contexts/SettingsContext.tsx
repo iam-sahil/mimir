@@ -11,16 +11,18 @@ const MAX_FREE_MESSAGES = 10;
 interface SettingsContextType {
   settings: Settings;
   saveGeminiKey: (key: string) => void;
+  saveOpenRouterKey: (key: string) => void;
   setDefaultModel: (model: Model) => void;
   setTheme: (theme: Theme) => void;
   setUsername: (username: string) => void;
-  hasValidKey: (provider: "gemini") => boolean;
-  getActiveApiKey: () => string;
+  hasValidKey: (provider: "gemini" | "openrouter") => boolean;
+  getActiveApiKey: (provider: "gemini" | "openrouter") => string;
   incrementFreeMessageCount: () => void;
 }
 
 const defaultSettings: Settings = {
   geminiApiKey: "",
+  openRouterApiKey: "",
   defaultModel: defaultModel,
   theme: "dark",
   username: "",
@@ -46,6 +48,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     setSettings((prev) => ({ ...prev, geminiApiKey: key }));
   };
 
+  const saveOpenRouterKey = (key: string) => {
+    setSettings((prev) => ({ ...prev, openRouterApiKey: key }));
+  };
+
   const setDefaultModel = (model: Model) => {
     setSettings((prev) => ({ ...prev, defaultModel: model }));
   };
@@ -58,17 +64,26 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     setSettings((prev) => ({ ...prev, username }));
   };
 
-  const hasValidKey = (provider: "gemini") => {
-    return settings.freeMessagesUsed < MAX_FREE_MESSAGES || !!settings.geminiApiKey;
+  const hasValidKey = (provider: "gemini" | "openrouter") => {
+    if (provider === "gemini") {
+      return settings.freeMessagesUsed < MAX_FREE_MESSAGES || !!settings.geminiApiKey;
+    }
+    return !!settings.openRouterApiKey;
   };
 
-  const getActiveApiKey = () => {
-    if (settings.geminiApiKey) {
-      return settings.geminiApiKey;
-    }
-    
-    if (settings.freeMessagesUsed < MAX_FREE_MESSAGES) {
-      return FREE_API_KEY;
+  const getActiveApiKey = (provider: "gemini" | "openrouter") => {
+    if (provider === "gemini") {
+      if (settings.geminiApiKey) {
+        return settings.geminiApiKey;
+      }
+      
+      if (settings.freeMessagesUsed < MAX_FREE_MESSAGES) {
+        return FREE_API_KEY;
+      }
+      
+      return "";
+    } else if (provider === "openrouter") {
+      return settings.openRouterApiKey || "";
     }
     
     return "";
@@ -102,6 +117,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       value={{
         settings,
         saveGeminiKey,
+        saveOpenRouterKey,
         setDefaultModel,
         setTheme,
         setUsername,

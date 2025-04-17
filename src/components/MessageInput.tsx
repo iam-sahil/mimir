@@ -5,7 +5,7 @@ import { Textarea } from "./ui/textarea";
 import { Send, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Model } from "@/types";
-import { ModelSelector } from "./ModelSelector";
+import { EnhancedModelSelector } from "./EnhancedModelSelector";
 
 interface MessageInputProps {
   onSendMessage: (message: string) => void;
@@ -22,7 +22,6 @@ export const MessageInput = ({
   placeholder = "Message Mimir...",
   selectedModel,
   onModelChange,
-  availableModels
 }: MessageInputProps) => {
   const [message, setMessage] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -54,11 +53,11 @@ export const MessageInput = ({
   }, [message]);
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full max-w-4xl mx-auto rounded-lg mb-4"
-    >
-      <div className="flex flex-col border border-border/40 rounded-lg bg-background/5 shadow-sm">
+    <div className="w-full max-w-3xl mx-auto">
+      <form
+        onSubmit={handleSubmit}
+        className="relative overflow-hidden rounded-xl backdrop-blur-md bg-background/20 border border-white/10 shadow-lg"
+      >
         <Textarea
           ref={textareaRef}
           placeholder={placeholder}
@@ -71,16 +70,19 @@ export const MessageInput = ({
           )}
           disabled={isLoading}
         />
-        <div className="flex items-center justify-between px-4 py-2 border-t border-border/30">
-          <ModelSelector
+        <div className="flex items-center justify-between px-4 py-2 border-t border-white/5">
+          <EnhancedModelSelector
             selectedModel={selectedModel}
             onChange={onModelChange}
-            models={availableModels}
           />
           <Button
             type="submit"
             size="sm"
-            className="rounded-md"
+            className={cn(
+              "rounded-md transition-all duration-300",
+              !message.trim() ? "bg-secondary/50 text-secondary-foreground/70" : "bg-primary text-primary-foreground",
+              isLoading && "opacity-70"
+            )}
             disabled={!message.trim() || isLoading}
           >
             {isLoading ? (
@@ -90,7 +92,7 @@ export const MessageInput = ({
             )}
           </Button>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };

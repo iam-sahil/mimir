@@ -14,6 +14,7 @@ export type Theme =
 
 export interface Settings {
   geminiApiKey: string;
+  openRouterApiKey: string;
   defaultModel: Model;
   theme: Theme;
   username: string;
@@ -23,7 +24,7 @@ export interface Settings {
 export interface Model {
   id: string;
   name: string;
-  provider: "gemini";
+  provider: "gemini" | "openrouter";
   modelId: string;
   description: string;
   canUseImage: boolean;
