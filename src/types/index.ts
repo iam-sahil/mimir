@@ -44,4 +44,6 @@ export interface Chat {
   model: Model;
   createdAt: number;
   updatedAt: number;
+  folder?: string;
+  isPinned?: boolean;
 }

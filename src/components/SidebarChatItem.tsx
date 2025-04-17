@@ -1,24 +1,15 @@
 
-import React from "react";
-import { MoreHorizontal, Trash, Edit, MessageSquare } from "lucide-react";
+import React, { useState } from "react";
+import { X, Folder, MessageSquare, Pin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Chat } from "@/types";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Input } from "./ui/input";
 
 interface SidebarChatItemProps {
   chat: Chat;
@@ -26,6 +17,10 @@ interface SidebarChatItemProps {
   onSelect: () => void;
   onDelete: () => void;
   onRename: (title: string) => void;
+  onAddToFolder: (folder: string) => void;
+  onPin: () => void;
+  folders: string[];
+  inFolder?: boolean;
 }
 
 export const SidebarChatItem = ({
@@ -34,14 +29,33 @@ export const SidebarChatItem = ({
   onSelect,
   onDelete,
   onRename,
+  onAddToFolder,
+  onPin,
+  folders,
+  inFolder = false,
 }: SidebarChatItemProps) => {
-  const [isRenameDialogOpen, setIsRenameDialogOpen] = React.useState(false);
-  const [newTitle, setNewTitle] = React.useState(chat.title);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(chat.title);
+  const [newFolderName, setNewFolderName] = useState("");
+  const [showFolderInput, setShowFolderInput] = useState(false);
+
+  const handleDoubleClick = () => {
+    setIsEditing(true);
+    setNewTitle(chat.title);
+  };
 
   const handleRename = () => {
     if (newTitle.trim()) {
       onRename(newTitle);
-      setIsRenameDialogOpen(false);
+      setIsEditing(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleRename();
+    } else if (e.key === "Escape") {
+      setIsEditing(false);
     }
   };
 
@@ -51,72 +65,120 @@ export const SidebarChatItem = ({
   });
 
   return (
-    <>
-      <div
-        className={cn(
-          "flex items-center justify-between rounded-md px-2.5 py-2.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer group",
-          isActive && "bg-accent text-accent-foreground"
-        )}
+    <div
+      className={cn(
+        "flex items-center justify-between rounded-md px-2.5 py-2.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer group",
+        isActive && "bg-accent text-accent-foreground"
+      )}
+    >
+      <div 
+        className="flex flex-1 items-center gap-2" 
+        onClick={onSelect}
+        onDoubleClick={handleDoubleClick}
       >
-        <div className="flex flex-1 items-center gap-2" onClick={onSelect}>
-          <MessageSquare className="h-4 w-4" />
-          <span className="truncate flex-1">{chat.title}</span>
-          <span className="text-xs text-muted-foreground">{formattedDate}</span>
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => setIsRenameDialogOpen(true)}
-              className="flex items-center gap-2"
-            >
-              <Edit className="h-4 w-4" />
-              <span>Rename</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={onDelete}
-              className="flex items-center gap-2 text-destructive focus:text-destructive"
-            >
-              <Trash className="h-4 w-4" />
-              <span>Delete</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Rename chat</DialogTitle>
-            <DialogDescription>
-              Enter a new name for this chat
-            </DialogDescription>
-          </DialogHeader>
+        <MessageSquare className="h-4 w-4" />
+        
+        {isEditing ? (
           <Input
+            autoFocus
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            placeholder="Chat title"
-            className="mt-4"
-            autoFocus
+            onBlur={handleRename}
+            onKeyDown={handleKeyDown}
+            onClick={(e) => e.stopPropagation()}
+            className="h-6 p-1 text-sm"
           />
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsRenameDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleRename}>Save</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+        ) : (
+          <>
+            <span className="truncate flex-1">{chat.title}</span>
+            <span className="text-xs text-muted-foreground">{formattedDate}</span>
+          </>
+        )}
+      </div>
+      
+      <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
+        {!inFolder && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-6 w-6 p-0">
+                <Folder className="h-3.5 w-3.5" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-48 p-2">
+              <div className="space-y-2">
+                <p className="text-xs font-medium">Add to folder:</p>
+                
+                {folders.map(folder => (
+                  <Button 
+                    key={folder} 
+                    variant="ghost" 
+                    size="sm" 
+                    className="w-full justify-start text-left text-xs h-7"
+                    onClick={() => onAddToFolder(folder)}
+                  >
+                    <Folder className="h-3 w-3 mr-2" />
+                    {folder}
+                  </Button>
+                ))}
+                
+                {showFolderInput ? (
+                  <div className="flex gap-1">
+                    <Input
+                      value={newFolderName}
+                      onChange={(e) => setNewFolderName(e.target.value)}
+                      placeholder="New folder"
+                      className="h-7 text-xs"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && newFolderName.trim()) {
+                          onAddToFolder(newFolderName);
+                          setNewFolderName("");
+                          setShowFolderInput(false);
+                        } else if (e.key === "Escape") {
+                          setShowFolderInput(false);
+                        }
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs h-7"
+                    onClick={() => setShowFolderInput(true)}
+                  >
+                    + New Folder
+                  </Button>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
+        )}
+        
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0"
+          onClick={(e) => {
+            e.stopPropagation();
+            onPin();
+          }}
+        >
+          <Pin className={cn("h-3.5 w-3.5", chat.isPinned && "fill-primary")} />
+        </Button>
+        
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0 hover:text-destructive"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+        >
+          <X className="h-3.5 w-3.5" />
+        </Button>
+      </div>
+    </div>
   );
 };

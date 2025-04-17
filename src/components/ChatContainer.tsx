@@ -5,9 +5,8 @@ import { MessageInput } from "./MessageInput";
 import { EmptyState } from "./EmptyState";
 import { useChat } from "@/contexts/ChatContext";
 import { useSettings } from "@/contexts/SettingsContext";
-import { allModels } from "@/lib/models";
 import { sendChatRequest } from "@/lib/api";
-import { Settings, Menu, Brain } from "lucide-react";
+import { Settings as SettingsIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeSelector } from "./ThemeSelector";
 import { SettingsDialog } from "./SettingsDialog";
@@ -17,6 +16,7 @@ import { ScrollArea } from "./ui/scroll-area";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import 'highlight.js/styles/github-dark.css';
+import { Brain } from "lucide-react";
 
 interface ChatContainerProps {
   onSidebarToggle: () => void;
@@ -132,37 +132,30 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
     }
   };
 
-  const handlePromptClick = (prompt: string) => {
-    handleSendMessage(prompt);
-  };
-
   return (
     <div className="flex flex-col h-screen">
-      <header className="h-16 border-b border-border/50 flex items-center justify-between px-4 shrink-0">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onSidebarToggle}
-          className="lg:flex"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
-        <p className="text-sm font-space-grotesk hidden md:block">Ask. Learn. Evolve.</p>
+      <header className="h-16 flex items-center justify-between px-4 shrink-0">
+        <div></div>
         <div className="flex items-center gap-2">
-          <ThemeSelector />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsSettingsOpen(true)}
-          >
-            <Settings className="h-5 w-5" />
-          </Button>
+          <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+            <ThemeSelector />
+          </div>
+          <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsSettingsOpen(true)}
+              className="h-8 w-8"
+            >
+              <SettingsIcon className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </header>
 
       <ScrollArea className="flex-1 overflow-y-auto">
         {currentChat && currentChat.messages.length > 0 ? (
-          <div className="pb-24 max-w-4xl mx-auto">
+          <div className="pb-32 max-w-4xl mx-auto">
             {currentChat.messages.map((message) => (
               <ChatMessage key={message.id} message={message} />
             ))}
@@ -204,21 +197,22 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
             <div ref={messagesEndRef} />
           </div>
         ) : (
-          <div className="h-full">
-            <EmptyState onPromptClick={handlePromptClick} />
+          <div className="h-full flex items-center justify-center">
+            <EmptyState onPromptClick={handleSendMessage} />
           </div>
         )}
       </ScrollArea>
 
-      <div className="sticky bottom-0 py-6 px-4 backdrop-blur-sm z-10">
-        <MessageInput
-          onSendMessage={handleSendMessage}
-          isLoading={isLoading}
-          placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
-          selectedModel={currentChat?.model || settings.defaultModel}
-          onModelChange={setCurrentChatModel}
-          availableModels={allModels}
-        />
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+        <div className="w-full max-w-3xl px-4">
+          <MessageInput
+            onSendMessage={handleSendMessage}
+            isLoading={isLoading}
+            placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
+            selectedModel={currentChat?.model || settings.defaultModel}
+            onModelChange={setCurrentChatModel}
+          />
+        </div>
       </div>
 
       <SettingsDialog

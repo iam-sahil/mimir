@@ -30,7 +30,7 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
             <User className="h-4 w-4" />
           </div>
         ) : (
-          <div className="bg-background text-primary w-6 h-6 rounded-full flex items-center justify-center brain-icon">
+          <div className="bg-background text-primary w-6 h-6 rounded-full flex items-center justify-center">
             <Brain className="h-4 w-4" />
           </div>
         )}

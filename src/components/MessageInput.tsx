@@ -5,7 +5,7 @@ import { Textarea } from "./ui/textarea";
 import { Send, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Model } from "@/types";
-import { EnhancedModelSelector } from "./EnhancedModelSelector";
+import { EnhancedModelSelectorV2 } from "./EnhancedModelSelectorV2";
 
 interface MessageInputProps {
   onSendMessage: (message: string) => void;
@@ -13,7 +13,6 @@ interface MessageInputProps {
   placeholder?: string;
   selectedModel: Model;
   onModelChange: (model: Model) => void;
-  availableModels: Model[];
 }
 
 export const MessageInput = ({
@@ -53,10 +52,10 @@ export const MessageInput = ({
   }, [message]);
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
+    <div className="w-full">
       <form
         onSubmit={handleSubmit}
-        className="relative overflow-hidden rounded-xl backdrop-blur-md bg-background/20 border border-white/10 shadow-lg"
+        className="relative overflow-hidden rounded-xl shadow-lg glass-effect border border-white/10"
       >
         <Textarea
           ref={textareaRef}
@@ -71,7 +70,7 @@ export const MessageInput = ({
           disabled={isLoading}
         />
         <div className="flex items-center justify-between px-4 py-2 border-t border-white/5">
-          <EnhancedModelSelector
+          <EnhancedModelSelectorV2
             selectedModel={selectedModel}
             onChange={onModelChange}
           />
@@ -80,7 +79,7 @@ export const MessageInput = ({
             size="sm"
             className={cn(
               "rounded-md transition-all duration-300",
-              !message.trim() ? "bg-secondary/50 text-secondary-foreground/70" : "bg-primary text-primary-foreground",
+              !message.trim() ? "bg-secondary/50 text-secondary-foreground/70" : "bg-primary text-primary-foreground animate-pulse",
               isLoading && "opacity-70"
             )}
             disabled={!message.trim() || isLoading}

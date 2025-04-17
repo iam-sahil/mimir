@@ -14,6 +14,9 @@ interface ChatContextType {
   renameChat: (id: string, title: string) => void;
   deleteChat: (id: string) => void;
   setCurrentChatModel: (model: Model) => void;
+  addChatToFolder: (id: string, folder: string) => void;
+  pinChat: (id: string) => void;
+  unpinChat: (id: string) => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -65,6 +68,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       model: settings.defaultModel,
       createdAt: timestamp,
       updatedAt: timestamp,
+      folder: undefined,
+      isPinned: false,
     };
     
     setChats(prev => [newChat, ...prev.filter(chat => chat.messages.length > 0 || chat.id === currentChatId)]);
@@ -156,6 +161,51 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const addChatToFolder = (id: string, folder: string) => {
+    setChats(prevChats => {
+      return prevChats.map(chat => {
+        if (chat.id === id) {
+          return {
+            ...chat,
+            folder,
+            updatedAt: Date.now(),
+          };
+        }
+        return chat;
+      });
+    });
+  };
+
+  const pinChat = (id: string) => {
+    setChats(prevChats => {
+      return prevChats.map(chat => {
+        if (chat.id === id) {
+          return {
+            ...chat,
+            isPinned: true,
+            updatedAt: Date.now(),
+          };
+        }
+        return chat;
+      });
+    });
+  };
+
+  const unpinChat = (id: string) => {
+    setChats(prevChats => {
+      return prevChats.map(chat => {
+        if (chat.id === id) {
+          return {
+            ...chat,
+            isPinned: false,
+            updatedAt: Date.now(),
+          };
+        }
+        return chat;
+      });
+    });
+  };
+
   return (
     <ChatContext.Provider
       value={{
@@ -167,6 +217,9 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         renameChat,
         deleteChat,
         setCurrentChatModel,
+        addChatToFolder,
+        pinChat,
+        unpinChat,
       }}
     >
       {children}

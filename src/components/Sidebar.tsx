@@ -1,10 +1,12 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, X, Brain, Menu, ChevronLeft } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Plus, X, Brain, Search, ChevronDown, ChevronUp, Folder, Pin } from "lucide-react";
 import { useChat } from "@/contexts/ChatContext";
 import { SidebarChatItem } from "./SidebarChatItem";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { toast } from "./ui/sonner";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -12,9 +14,14 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
-  const { chats, createNewChat, currentChat, deleteChat, renameChat, selectChat } = useChat();
+  const { chats, createNewChat, currentChat, deleteChat, renameChat, selectChat, addChatToFolder, pinChat, unpinChat } = useChat();
   const [isMobile, setIsMobile] = useState(false);
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const [newFolderName, setNewFolderName] = useState("");
+  const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
+  const [isFoldersExpanded, setIsFoldersExpanded] = useState(true);
+  const [isPinnedExpanded, setIsPinnedExpanded] = useState(true);
+  
   // Detect mobile viewport
   useEffect(() => {
     const checkIfMobile = () => {
@@ -34,21 +41,17 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     }
   };
 
-  // Handle chat deletion
-  const handleDeleteChat = (chatId: string) => {
-    deleteChat(chatId);
-  };
-
-  // Handle chat renaming
-  const handleRenameChat = (chatId: string, newTitle: string) => {
-    renameChat(chatId, newTitle);
-  };
-
-  // Handle chat selection
-  const handleSelectChat = (chatId: string) => {
-    selectChat(chatId);
-    if (isMobile) onClose();
-  };
+  const pinnedChats = chats.filter(chat => chat.isPinned);
+  const folderedChats = chats.filter(chat => chat.folder && !chat.isPinned);
+  const unfolderedChats = chats.filter(chat => !chat.folder && !chat.isPinned);
+  
+  // Get unique folder names
+  const folders = Array.from(new Set(chats.filter(chat => chat.folder).map(chat => chat.folder))) as string[];
+  
+  // Filter chats based on search query
+  const filteredChats = chats.filter(chat => 
+    chat.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
@@ -71,16 +74,11 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             <Brain className="h-6 w-6" />
             <h1>Mimir</h1>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={onClose} className="lg:flex">
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-          </div>
         </div>
 
-        <div className="p-4">
+        <div className="p-4 space-y-3">
           <Button 
-            className="w-full justify-start font-helvetica" 
+            className="w-full justify-start font-helvetica glass-effect"
             onClick={() => {
               createNewChat();
               if (isMobile) onClose();
@@ -88,20 +86,150 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           >
             <Plus className="mr-2 h-4 w-4" /> New Chat
           </Button>
+          
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search chats..."
+              className="pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-2">
-          <div className="space-y-1">
-            {chats.map((chat) => (
-              <SidebarChatItem 
-                key={chat.id} 
-                chat={chat} 
-                isActive={currentChat?.id === chat.id}
-                onSelect={() => handleSelectChat(chat.id)}
-                onDelete={() => handleDeleteChat(chat.id)}
-                onRename={(newTitle) => handleRenameChat(chat.id, newTitle)}
-              />
-            ))}
+        <div className="flex-1 overflow-y-auto px-2">
+          {/* Pinned chats section */}
+          <div className="mb-2">
+            <div 
+              className="flex items-center px-2 py-1.5 text-sm font-medium text-sidebar-foreground cursor-pointer"
+              onClick={() => setIsPinnedExpanded(!isPinnedExpanded)}
+            >
+              <Pin className="h-4 w-4 mr-2" />
+              <span>Pinned Chats</span>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="ml-auto h-5 w-5 p-0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsPinnedExpanded(!isPinnedExpanded);
+                }}
+              >
+                {isPinnedExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </Button>
+            </div>
+            
+            {isPinnedExpanded && (
+              <div className="space-y-1 mt-1">
+                {pinnedChats.length === 0 && (
+                  <p className="text-xs text-muted-foreground px-4 py-2">No pinned chats</p>
+                )}
+                {pinnedChats.map((chat) => (
+                  <SidebarChatItem 
+                    key={chat.id} 
+                    chat={chat} 
+                    isActive={currentChat?.id === chat.id}
+                    onSelect={() => selectChat(chat.id)}
+                    onDelete={() => deleteChat(chat.id)}
+                    onRename={(newTitle) => renameChat(chat.id, newTitle)}
+                    onAddToFolder={(folder) => addChatToFolder(chat.id, folder)}
+                    onPin={() => unpinChat(chat.id)}
+                    folders={folders}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Folders section */}
+          <div className="mb-2">
+            <div 
+              className="flex items-center px-2 py-1.5 text-sm font-medium text-sidebar-foreground cursor-pointer"
+              onClick={() => setIsFoldersExpanded(!isFoldersExpanded)}
+            >
+              <Folder className="h-4 w-4 mr-2" />
+              <span>Folders</span>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="ml-auto h-5 w-5 p-0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsFoldersExpanded(!isFoldersExpanded);
+                }}
+              >
+                {isFoldersExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </Button>
+            </div>
+            
+            {isFoldersExpanded && (
+              <>
+                {folders.length === 0 && (
+                  <p className="text-xs text-muted-foreground px-4 py-2">No folders yet</p>
+                )}
+                {folders.map((folderName) => (
+                  <div key={folderName} className="ml-2 mt-1">
+                    <div className="flex items-center px-2 py-1 text-sm font-medium">
+                      <Folder className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                      <span>{folderName}</span>
+                    </div>
+                    <div className="space-y-1 ml-4">
+                      {chats
+                        .filter(chat => chat.folder === folderName)
+                        .map(chat => (
+                          <SidebarChatItem 
+                            key={chat.id} 
+                            chat={chat} 
+                            isActive={currentChat?.id === chat.id}
+                            onSelect={() => selectChat(chat.id)}
+                            onDelete={() => deleteChat(chat.id)}
+                            onRename={(newTitle) => renameChat(chat.id, newTitle)}
+                            onAddToFolder={(folder) => addChatToFolder(chat.id, folder)}
+                            onPin={() => pinChat(chat.id)}
+                            folders={folders}
+                            inFolder={true}
+                          />
+                        ))}
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+
+          {/* Other chats */}
+          <div className="space-y-1 mt-3">
+            {searchQuery
+              ? filteredChats
+                .filter(chat => !chat.isPinned && !chat.folder)
+                .map((chat) => (
+                  <SidebarChatItem 
+                    key={chat.id} 
+                    chat={chat} 
+                    isActive={currentChat?.id === chat.id}
+                    onSelect={() => selectChat(chat.id)}
+                    onDelete={() => deleteChat(chat.id)}
+                    onRename={(newTitle) => renameChat(chat.id, newTitle)}
+                    onAddToFolder={(folder) => addChatToFolder(chat.id, folder)}
+                    onPin={() => pinChat(chat.id)}
+                    folders={folders}
+                  />
+                ))
+              : unfolderedChats.map((chat) => (
+                  <SidebarChatItem 
+                    key={chat.id} 
+                    chat={chat} 
+                    isActive={currentChat?.id === chat.id}
+                    onSelect={() => selectChat(chat.id)}
+                    onDelete={() => deleteChat(chat.id)}
+                    onRename={(newTitle) => renameChat(chat.id, newTitle)}
+                    onAddToFolder={(folder) => addChatToFolder(chat.id, folder)}
+                    onPin={() => pinChat(chat.id)}
+                    folders={folders}
+                  />
+                ))
+            }
           </div>
         </div>
 
@@ -111,6 +239,40 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           </div>
         </div>
       </aside>
+
+      <Dialog open={isFolderDialogOpen} onOpenChange={setIsFolderDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Folder</DialogTitle>
+          </DialogHeader>
+          <Input
+            value={newFolderName}
+            onChange={(e) => setNewFolderName(e.target.value)}
+            placeholder="Folder name"
+            className="mt-4"
+          />
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsFolderDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                if (newFolderName.trim()) {
+                  // Add logic to create folder
+                  toast.success(`Folder "${newFolderName}" created`);
+                  setIsFolderDialogOpen(false);
+                  setNewFolderName("");
+                }
+              }}
+            >
+              Create Folder
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

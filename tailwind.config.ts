@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -84,13 +85,32 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				pulse: {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.7' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+			},
+			fontFamily: {
+				'space-grotesk': ['Space Grotesk', 'sans-serif'],
+				'helvetica': ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif']
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addUtilities }: any) {
+			const newUtilities = {
+				'.glass-effect': {
+					'@apply backdrop-blur-md bg-background/50 border border-white/10': {},
+				},
+			}
+			addUtilities(newUtilities)
+		}
+	],
 } satisfies Config;
