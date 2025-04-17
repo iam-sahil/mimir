@@ -13,6 +13,7 @@ import { ThemeSelector } from "./ThemeSelector";
 import { SettingsDialog } from "./SettingsDialog";
 import { toast } from "./ui/sonner";
 import { ChatMessageSkeleton } from "./ChatMessageSkeleton";
+import { ScrollArea } from "./ui/scroll-area";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import 'highlight.js/styles/github-dark.css';
@@ -137,7 +138,7 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="h-16 border-b border-border/50 flex items-center justify-between px-4">
+      <header className="h-16 border-b border-border/50 flex items-center justify-between px-4 shrink-0">
         <Button
           variant="ghost"
           size="icon"
@@ -159,14 +160,14 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto">
+      <ScrollArea className="flex-1 overflow-y-auto">
         {currentChat && currentChat.messages.length > 0 ? (
-          <div className="pb-20 max-w-4xl mx-auto">
+          <div className="pb-24 max-w-4xl mx-auto">
             {currentChat.messages.map((message) => (
               <ChatMessage key={message.id} message={message} />
             ))}
             {isTyping && (
-              <div className="w-full py-6 px-4 justify-start">
+              <div className="w-full py-6 px-4 justify-start relative">
                 <div className="flex max-w-2xl rounded-lg p-4 bg-secondary/15 text-foreground mr-auto ml-8">
                   <div className="w-full overflow-hidden">
                     <div className="prose dark:prose-invert max-w-none text-sm font-helvetica">
@@ -190,8 +191,8 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
                     </div>
                   </div>
                 </div>
-                <div className="absolute left-6 mt-1">
-                  <div className="bg-background text-primary w-6 h-6 rounded-full flex items-center justify-center">
+                <div className="absolute top-8 left-6">
+                  <div className="bg-background text-primary w-6 h-6 rounded-full flex items-center justify-center brain-icon">
                     <Brain className="h-4 w-4" />
                   </div>
                 </div>
@@ -207,9 +208,9 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
             <EmptyState onPromptClick={handlePromptClick} />
           </div>
         )}
-      </div>
+      </ScrollArea>
 
-      <div className="sticky bottom-0 py-6 px-4 backdrop-blur-sm">
+      <div className="sticky bottom-0 py-6 px-4 backdrop-blur-sm z-10">
         <MessageInput
           onSendMessage={handleSendMessage}
           isLoading={isLoading}

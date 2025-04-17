@@ -17,12 +17,12 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
   return (
     <div
       className={cn(
-        "flex w-full py-6 px-4",
+        "flex w-full py-6 px-4 relative",
         isUser ? "justify-end" : "justify-start"
       )}
     >
       <div className={cn(
-        "absolute mt-1",
+        "absolute top-8",
         isUser ? "right-6" : "left-6"
       )}>
         {isUser ? (
@@ -30,7 +30,7 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
             <User className="h-4 w-4" />
           </div>
         ) : (
-          <div className="bg-background text-primary w-6 h-6 rounded-full flex items-center justify-center">
+          <div className="bg-background text-primary w-6 h-6 rounded-full flex items-center justify-center brain-icon">
             <Brain className="h-4 w-4" />
           </div>
         )}
