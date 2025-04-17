@@ -1,16 +1,15 @@
 
 export type Theme =
-  | "dark"
-  | "light"
+  | "light-pink"
+  | "dark-green"
+  | "dark-mono"
   | "catppuccin"
   | "tokyo-night"
   | "nord"
-  | "monodark"
   | "gruvbox"
-  | "one-dark-pro"
+  | "one-dark"
   | "dracula"
-  | "shades-of-purple"
-  | "monokai";
+  | "github-light";
 
 export interface Settings {
   geminiApiKey: string;

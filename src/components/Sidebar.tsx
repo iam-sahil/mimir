@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, X, Brain, Search, ChevronDown, ChevronUp, Folder, Pin } from "lucide-react";
+import { Plus, X, Brain, Search, ChevronDown, ChevronUp, Folder, Pin, ChevronRight } from "lucide-react";
 import { useChat } from "@/contexts/ChatContext";
 import { SidebarChatItem } from "./SidebarChatItem";
 import { cn } from "@/lib/utils";
@@ -65,7 +66,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-[300px] bg-sidebar border-r border-border flex flex-col transition-transform duration-300",
+          "fixed top-0 left-0 z-50 h-full w-[300px] bg-sidebar border-r border-border flex flex-col transition-transform duration-300 overflow-hidden",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -74,11 +75,19 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             <Brain className="h-6 w-6" />
             <h1>Mimir</h1>
           </div>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-8 w-8" 
+            onClick={onClose}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
         </div>
 
         <div className="p-4 space-y-3">
           <Button 
-            className="w-full justify-start font-helvetica glass-effect"
+            className="w-full justify-center font-space-grotesk glass-effect transition-all hover:shadow-lg"
             onClick={() => {
               createNewChat();
               if (isMobile) onClose();
@@ -98,14 +107,14 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-2">
+        <div className="flex-1 overflow-y-auto px-2 overflow-x-hidden">
           {/* Pinned chats section */}
           <div className="mb-2">
             <div 
               className="flex items-center px-2 py-1.5 text-sm font-medium text-sidebar-foreground cursor-pointer"
               onClick={() => setIsPinnedExpanded(!isPinnedExpanded)}
             >
-              <Pin className="h-4 w-4 mr-2" />
+              <Pin className="h-4 w-4 mr-2 text-accent-primary" />
               <span>Pinned Chats</span>
               <Button 
                 variant="ghost" 
@@ -148,7 +157,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               className="flex items-center px-2 py-1.5 text-sm font-medium text-sidebar-foreground cursor-pointer"
               onClick={() => setIsFoldersExpanded(!isFoldersExpanded)}
             >
-              <Folder className="h-4 w-4 mr-2" />
+              <Folder className="h-4 w-4 mr-2 text-accent-primary" />
               <span>Folders</span>
               <Button 
                 variant="ghost" 
@@ -172,7 +181,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                   <div key={folderName} className="ml-2 mt-1">
                     <div className="flex items-center px-2 py-1 text-sm font-medium">
                       <Folder className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                      <span>{folderName}</span>
+                      <span className="truncate">{folderName}</span>
                     </div>
                     <div className="space-y-1 ml-4">
                       {chats
@@ -235,7 +244,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
         <div className="p-4 border-t mt-auto">
           <div className="flex items-center justify-center">
-            <span className="text-sm text-muted-foreground font-helvetica">Ask. Learn. Evolve.</span>
+            <span className="text-sm text-muted-foreground font-space-grotesk">Ask. Learn. Evolve.</span>
           </div>
         </div>
       </aside>

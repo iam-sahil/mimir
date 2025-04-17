@@ -17,38 +17,54 @@ export const ThemeSelector = () => {
   // Helper to get the theme icon
   const getThemeIcon = (theme: Theme) => {
     switch (theme) {
-      case "light":
-        return <Sun className="h-4 w-4" />;
-      case "dark":
-        return <Moon className="h-4 w-4" />;
+      case "light-pink":
+        return <Sun className="h-4 w-4 text-[#FF4081]" />;
+      case "dark-green":
+        return <Moon className="h-4 w-4 text-[#4CAF50]" />;
+      case "dark-mono":
+        return <Moon className="h-4 w-4 text-[#FFFFFF]" />;
       case "catppuccin":
-        return <Palette className="h-4 w-4 text-[#f38ba8]" />;
+        return <Palette className="h-4 w-4 text-[#F38BA8]" />;
       case "tokyo-night":
-        return <Palette className="h-4 w-4 text-[#bb9af7]" />;
+        return <Palette className="h-4 w-4 text-[#BB9AF7]" />;
       case "nord":
-        return <Palette className="h-4 w-4 text-[#81a1c1]" />;
-      case "monodark":
-        return <Palette className="h-4 w-4 text-[#61afef]" />;
+        return <Palette className="h-4 w-4 text-[#81A1C1]" />;
       case "gruvbox":
-        return <Palette className="h-4 w-4 text-[#fabd2f]" />;
+        return <Palette className="h-4 w-4 text-[#FABD2F]" />;
+      case "one-dark":
+        return <Palette className="h-4 w-4 text-[#61AFEF]" />;
+      case "dracula":
+        return <Palette className="h-4 w-4 text-[#BD93F9]" />;
+      case "github-light":
+        return <Palette className="h-4 w-4 text-[#0366D6]" />;
       default:
-        return <Moon className="h-4 w-4" />;
+        return <Sun className="h-4 w-4" />;
     }
   };
 
   // Helper to get theme accent color
   const getThemeAccentClass = (theme: Theme) => {
     switch (theme) {
+      case "light-pink":
+        return "text-[#FF4081]";
+      case "dark-green":
+        return "text-[#4CAF50]";
+      case "dark-mono":
+        return "text-[#FFFFFF]";
       case "catppuccin":
-        return "text-[#f38ba8]";
+        return "text-[#F38BA8]";
       case "tokyo-night":
-        return "text-[#bb9af7]";
+        return "text-[#BB9AF7]";
       case "nord":
-        return "text-[#81a1c1]";
-      case "monodark":
-        return "text-[#61afef]";
+        return "text-[#81A1C1]";
       case "gruvbox":
-        return "text-[#fabd2f]";
+        return "text-[#FABD2F]";
+      case "one-dark":
+        return "text-[#61AFEF]";
+      case "dracula":
+        return "text-[#BD93F9]";
+      case "github-light":
+        return "text-[#0366D6]";
       default:
         return "";
     }
@@ -61,7 +77,7 @@ export const ThemeSelector = () => {
           {getThemeIcon(currentTheme)}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="max-h-[70vh] overflow-y-auto">
         {Object.entries(themes).map(([key, { name }]) => (
           <DropdownMenuItem
             key={key}
@@ -69,11 +85,7 @@ export const ThemeSelector = () => {
             className="flex items-center justify-between"
           >
             <div className="flex items-center gap-2">
-              {key === "light" && <Sun className="h-4 w-4" />}
-              {key === "dark" && <Moon className="h-4 w-4" />}
-              {!["light", "dark"].includes(key) && 
-                <Palette className={`h-4 w-4 ${getThemeAccentClass(key as Theme)}`} />
-              }
+              {getThemeIcon(key as Theme)}
               <span>{name}</span>
             </div>
             {currentTheme === key && <Check className="h-4 w-4" />}

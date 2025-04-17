@@ -1,8 +1,512 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
-.brain-icon {
-  box-shadow: 0 0 8px rgba(var(--primary-rgb), 0.3);
+/* Base styles */
+:root, html, body {
+  font-family: 'Space Grotesk', sans-serif;
 }
 
-/* Add any additional global styles here */
+.brain-icon {
+  box-shadow: 0 0 8px rgba(var(--accent-primary-rgb), 0.3);
+}
+
+.glass-effect {
+  background: rgba(var(--surface-rgb), 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--divider-rgb), 0.4);
+  transition: all 0.3s ease;
+}
+
+.glass-effect:hover {
+  background: rgba(var(--surface-rgb), 0.7);
+}
+
+/* Theme Definitions */
+
+/* 1. Light (Pink accent) */
+.light-pink {
+  --background-rgb: 255, 255, 255;
+  --surface-rgb: 247, 247, 247;
+  --text-primary-rgb: 33, 33, 33;
+  --text-secondary-rgb: 117, 117, 117;
+  --accent-primary-rgb: 255, 64, 129;
+  --accent-secondary-rgb: 244, 143, 177;
+  --divider-rgb: 224, 224, 224;
+  --button-primary-bg-rgb: 255, 64, 129;
+  --button-primary-text-rgb: 255, 255, 255;
+  --button-secondary-bg-rgb: 247, 247, 247;
+  --button-secondary-text-rgb: 33, 33, 33;
+  --link-rgb: 255, 64, 129;
+  --link-hover-rgb: 244, 143, 177;
+
+  --background: 0 0% 100%;
+  --foreground: 224 71.4% 4.1%;
+  --card: 0 0% 97%;
+  --card-foreground: 224 71.4% 4.1%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 224 71.4% 4.1%;
+  --primary: 330 81% 60%;
+  --primary-foreground: 210 20% 98%;
+  --secondary: 220 14.3% 95.9%;
+  --secondary-foreground: 220.9 39.3% 11%;
+  --muted: 220 14.3% 95.9%;
+  --muted-foreground: 220 8.9% 46.1%;
+  --accent: 330 81% 96.1%;
+  --accent-foreground: 224 71.4% 4.1%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 20% 98%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 330 81% 60%;
+  --radius: 0.5rem;
+
+  /* Custom sidebar */
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 224 71.4% 4.1%;
+  --sidebar-accent: 220 14.3% 95.9%;
+  --sidebar-accent-foreground: 224 71.4% 4.1%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 330 81% 60%;
+}
+
+/* 2. Dark (Green accent) */
+.dark-green {
+  --background-rgb: 18, 18, 18;
+  --surface-rgb: 30, 30, 30;
+  --text-primary-rgb: 255, 255, 255;
+  --text-secondary-rgb: 189, 189, 189;
+  --accent-primary-rgb: 76, 175, 80;
+  --accent-secondary-rgb: 129, 199, 132;
+  --divider-rgb: 66, 66, 66;
+  --button-primary-bg-rgb: 76, 175, 80;
+  --button-primary-text-rgb: 255, 255, 255;
+  --button-secondary-bg-rgb: 30, 30, 30;
+  --button-secondary-text-rgb: 255, 255, 255;
+  --link-rgb: 76, 175, 80;
+  --link-hover-rgb: 129, 199, 132;
+
+  --background: 0 0% 7%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 12%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 7%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 142 70% 49%;
+  --primary-foreground: 0 0% 7%;
+  --secondary: 0 0% 12%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 142 70% 19%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 16.1%;
+  --input: 0 0% 16.1%;
+  --ring: 142 70% 49%;
+  
+  /* Custom sidebar */
+  --sidebar: 0 0% 10%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-accent: 0 0% 14.9%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-border: 0 0% 16.1%;
+  --sidebar-ring: 142 70% 49%;
+}
+
+/* 3. Dark mono (White accent) */
+.dark-mono {
+  --background-rgb: 33, 33, 33;
+  --surface-rgb: 48, 48, 48;
+  --text-primary-rgb: 255, 255, 255;
+  --text-secondary-rgb: 158, 158, 158;
+  --accent-primary-rgb: 255, 255, 255;
+  --accent-secondary-rgb: 224, 224, 224;
+  --divider-rgb: 66, 66, 66;
+  --button-primary-bg-rgb: 255, 255, 255;
+  --button-primary-text-rgb: 33, 33, 33;
+  --button-secondary-bg-rgb: 48, 48, 48;
+  --button-secondary-text-rgb: 255, 255, 255;
+  --link-rgb: 255, 255, 255;
+  --link-hover-rgb: 224, 224, 224;
+
+  --background: 0 0% 13%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 19%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 13%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 19%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 19%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 25%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 21.2%;
+  --input: 0 0% 21.2%;
+  --ring: 0 0% 83.1%;
+  
+  /* Custom sidebar */
+  --sidebar: 0 0% 15%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-accent: 0 0% 22%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-border: 0 0% 21.2%;
+  --sidebar-ring: 0 0% 83.1%;
+}
+
+/* 4. Catppuccin Mocha */
+.catppuccin {
+  --background-rgb: 48, 52, 70;
+  --surface-rgb: 54, 58, 79;
+  --text-primary-rgb: 166, 173, 200;
+  --text-secondary-rgb: 140, 150, 170;
+  --accent-primary-rgb: 243, 139, 168;
+  --accent-secondary-rgb: 250, 189, 47;
+  --divider-rgb: 81, 87, 109;
+  --button-primary-bg-rgb: 243, 139, 168;
+  --button-primary-text-rgb: 48, 52, 70;
+  --button-secondary-bg-rgb: 67, 71, 89;
+  --button-secondary-text-rgb: 166, 173, 200;
+  --link-rgb: 137, 180, 250;
+  --link-hover-rgb: 203, 166, 247;
+
+  --background: 232 27% 23%;
+  --foreground: 226 64% 88%;
+  --card: 232 16% 25%;
+  --card-foreground: 226 64% 88%;
+  --popover: 232 27% 23%;
+  --popover-foreground: 226 64% 88%;
+  --primary: 343 100% 75%;
+  --primary-foreground: 232 27% 23%;
+  --secondary: 232 16% 25%;
+  --secondary-foreground: 226 64% 88%;
+  --muted: 232 16% 25%;
+  --muted-foreground: 226 14% 60%;
+  --accent: 343 100% 15%;
+  --accent-foreground: 226 64% 88%;
+  --destructive: 0 74% 42%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 232 16% 25%;
+  --input: 232 16% 25%;
+  --ring: 343 100% 69%;
+  
+  /* Custom sidebar */
+  --sidebar: 232 27% 18%;
+  --sidebar-foreground: 226 64% 88%;
+  --sidebar-accent: 232 16% 22%;
+  --sidebar-accent-foreground: 226 64% 88%;
+  --sidebar-border: 232 16% 20%;
+  --sidebar-ring: 343 100% 69%;
+}
+
+/* 5. Tokyo Night */
+.tokyo-night {
+  --background-rgb: 26, 27, 38;
+  --surface-rgb: 31, 35, 53;
+  --text-primary-rgb: 200, 204, 212;
+  --text-secondary-rgb: 150, 153, 163;
+  --accent-primary-rgb: 187, 154, 247;
+  --accent-secondary-rgb: 122, 162, 247;
+  --divider-rgb: 59, 66, 82;
+  --button-primary-bg-rgb: 187, 154, 247;
+  --button-primary-text-rgb: 26, 27, 38;
+  --button-secondary-bg-rgb: 40, 44, 62;
+  --button-secondary-text-rgb: 200, 204, 212;
+  --link-rgb: 122, 162, 247;
+  --link-hover-rgb: 187, 154, 247;
+
+  --background: 225 27% 13%;
+  --foreground: 220 13% 80%;
+  --card: 223 30% 17%;
+  --card-foreground: 220 13% 80%;
+  --popover: 225 27% 13%;
+  --popover-foreground: 220 13% 80%;
+  --primary: 266 85% 79%;
+  --primary-foreground: 0 0% 12%;
+  --secondary: 223 30% 17%;
+  --secondary-foreground: 220 13% 80%;
+  --muted: 223 30% 17%;
+  --muted-foreground: 220 13% 60%;
+  --accent: 223 30% 20%;
+  --accent-foreground: 220 13% 80%;
+  --destructive: 0 63% 63%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 223 30% 17%;
+  --input: 223 30% 17%;
+  --ring: 266 85% 79%;
+  
+  /* Custom sidebar */
+  --sidebar: 225 27% 10%;
+  --sidebar-foreground: 220 13% 80%;
+  --sidebar-accent: 223 30% 15%;
+  --sidebar-accent-foreground: 220 13% 80%;
+  --sidebar-border: 223 30% 15%;
+  --sidebar-ring: 266 85% 79%;
+}
+
+/* 6. Nord */
+.nord {
+  --background-rgb: 46, 52, 64;
+  --surface-rgb: 59, 66, 82;
+  --text-primary-rgb: 216, 222, 233;
+  --text-secondary-rgb: 180, 190, 210;
+  --accent-primary-rgb: 129, 161, 193;
+  --accent-secondary-rgb: 163, 190, 140;
+  --divider-rgb: 76, 86, 106;
+  --button-primary-bg-rgb: 129, 161, 193;
+  --button-primary-text-rgb: 46, 52, 64;
+  --button-secondary-bg-rgb: 59, 66, 82;
+  --button-secondary-text-rgb: 216, 222, 233;
+  --link-rgb: 129, 161, 193;
+  --link-hover-rgb: 136, 192, 208;
+
+  --background: 220 16% 22%;
+  --foreground: 218 27% 88%;
+  --card: 220 17% 28%;
+  --card-foreground: 218 27% 88%;
+  --popover: 220 16% 22%;
+  --popover-foreground: 218 27% 88%;
+  --primary: 210 34% 63%;
+  --primary-foreground: 0 0% 12%;
+  --secondary: 220 17% 28%;
+  --secondary-foreground: 218 27% 88%;
+  --muted: 220 17% 28%;
+  --muted-foreground: 220 13% 69%;
+  --accent: 220 17% 33%;
+  --accent-foreground: 218 27% 88%;
+  --destructive: 354 57% 45%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 220 17% 33%;
+  --input: 220 17% 33%;
+  --ring: 210 34% 63%;
+  
+  /* Custom sidebar */
+  --sidebar: 220 16% 18%;
+  --sidebar-foreground: 218 27% 88%;
+  --sidebar-accent: 220 17% 25%;
+  --sidebar-accent-foreground: 218 27% 88%;
+  --sidebar-border: 220 17% 28%;
+  --sidebar-ring: 210 34% 63%;
+}
+
+/* 7. Gruvbox Dark */
+.gruvbox {
+  --background-rgb: 40, 40, 40;
+  --surface-rgb: 60, 56, 54;
+  --text-primary-rgb: 235, 219, 178;
+  --text-secondary-rgb: 189, 174, 147;
+  --accent-primary-rgb: 250, 189, 47;
+  --accent-secondary-rgb: 251, 73, 52;
+  --divider-rgb: 80, 73, 69;
+  --button-primary-bg-rgb: 250, 189, 47;
+  --button-primary-text-rgb: 40, 40, 40;
+  --button-secondary-bg-rgb: 80, 73, 69;
+  --button-secondary-text-rgb: 235, 219, 178;
+  --link-rgb: 131, 165, 152;
+  --link-hover-rgb: 250, 189, 47;
+
+  --background: 0 0% 16%;
+  --foreground: 43 44% 81%;
+  --card: 0 2% 22%;
+  --card-foreground: 43 44% 81%;
+  --popover: 0 0% 16%;
+  --popover-foreground: 43 44% 81%;
+  --primary: 40 92% 58%;
+  --primary-foreground: 0 0% 16%;
+  --secondary: 0 2% 22%;
+  --secondary-foreground: 43 44% 81%;
+  --muted: 0 2% 22%;
+  --muted-foreground: 43 15% 62%;
+  --accent: 0 2% 27%;
+  --accent-foreground: 43 44% 81%;
+  --destructive: 0 70% 60%;
+  --destructive-foreground: 0 0% 16%;
+  --border: 0 2% 27%;
+  --input: 0 2% 27%;
+  --ring: 40 92% 58%;
+  
+  /* Custom sidebar */
+  --sidebar: 0 0% 13%;
+  --sidebar-foreground: 43 44% 81%;
+  --sidebar-accent: 0 2% 19%;
+  --sidebar-accent-foreground: 43 44% 81%;
+  --sidebar-border: 0 2% 22%;
+  --sidebar-ring: 40 92% 58%;
+}
+
+/* 8. One Dark */
+.one-dark {
+  --background-rgb: 40, 44, 52;
+  --surface-rgb: 62, 68, 81;
+  --text-primary-rgb: 171, 178, 191;
+  --text-secondary-rgb: 130, 140, 155;
+  --accent-primary-rgb: 97, 175, 239;
+  --accent-secondary-rgb: 152, 195, 121;
+  --divider-rgb: 92, 99, 112;
+  --button-primary-bg-rgb: 97, 175, 239;
+  --button-primary-text-rgb: 40, 44, 52;
+  --button-secondary-bg-rgb: 62, 68, 81;
+  --button-secondary-text-rgb: 171, 178, 191;
+  --link-rgb: 97, 175, 239;
+  --link-hover-rgb: 173, 216, 230;
+
+  --background: 220 13% 18%;
+  --foreground: 220 13% 71%;
+  --card: 218 15% 28%;
+  --card-foreground: 220 13% 71%;
+  --popover: 220 13% 18%;
+  --popover-foreground: 220 13% 71%;
+  --primary: 210 100% 66%;
+  --primary-foreground: 0 0% 12%;
+  --secondary: 218 15% 28%;
+  --secondary-foreground: 220 13% 71%;
+  --muted: 218 15% 28%;
+  --muted-foreground: 220 13% 50%;
+  --accent: 218 15% 33%;
+  --accent-foreground: 220 13% 71%;
+  --destructive: 0 80% 63%;
+  --destructive-foreground: 0 0% 12%;
+  --border: 218 15% 33%;
+  --input: 218 15% 33%;
+  --ring: 210 100% 66%;
+  
+  /* Custom sidebar */
+  --sidebar: 220 13% 15%;
+  --sidebar-foreground: 220 13% 71%;
+  --sidebar-accent: 218 15% 24%;
+  --sidebar-accent-foreground: 220 13% 71%;
+  --sidebar-border: 218 15% 28%;
+  --sidebar-ring: 210 100% 66%;
+}
+
+/* 9. Dracula */
+.dracula {
+  --background-rgb: 40, 42, 54;
+  --surface-rgb: 68, 71, 90;
+  --text-primary-rgb: 248, 248, 242;
+  --text-secondary-rgb: 98, 114, 164;
+  --accent-primary-rgb: 189, 147, 249;
+  --accent-secondary-rgb: 139, 233, 253;
+  --divider-rgb: 68, 71, 90;
+  --button-primary-bg-rgb: 189, 147, 249;
+  --button-primary-text-rgb: 40, 42, 54;
+  --button-secondary-bg-rgb: 68, 71, 90;
+  --button-secondary-text-rgb: 248, 248, 242;
+  --link-rgb: 139, 233, 253;
+  --link-hover-rgb: 189, 147, 249;
+
+  --background: 231 15% 18%;
+  --foreground: 60 30% 96%;
+  --card: 240 12% 31%;
+  --card-foreground: 60 30% 96%;
+  --popover: 231 15% 18%;
+  --popover-foreground: 60 30% 96%;
+  --primary: 269 80% 78%;
+  --primary-foreground: 0 0% 12%;
+  --secondary: 240 12% 31%;
+  --secondary-foreground: 60 30% 96%;
+  --muted: 240 12% 31%;
+  --muted-foreground: 60 10% 60%;
+  --accent: 240 12% 36%;
+  --accent-foreground: 60 30% 96%;
+  --destructive: 347 87% 59%;
+  --destructive-foreground: 0 0% 12%;
+  --border: 240 12% 36%;
+  --input: 240 12% 36%;
+  --ring: 269 80% 78%;
+  
+  /* Custom sidebar */
+  --sidebar: 231 15% 15%;
+  --sidebar-foreground: 60 30% 96%;
+  --sidebar-accent: 240 12% 26%;
+  --sidebar-accent-foreground: 60 30% 96%;
+  --sidebar-border: 240 12% 31%;
+  --sidebar-ring: 269 80% 78%;
+}
+
+/* 10. Github Default Theme (Light) */
+.github-light {
+  --background-rgb: 255, 255, 255;
+  --surface-rgb: 246, 248, 250;
+  --text-primary-rgb: 36, 41, 46;
+  --text-secondary-rgb: 88, 96, 105;
+  --accent-primary-rgb: 3, 102, 214;
+  --accent-secondary-rgb: 34, 134, 58;
+  --divider-rgb: 209, 213, 218;
+  --button-primary-bg-rgb: 40, 167, 69;
+  --button-primary-text-rgb: 255, 255, 255;
+  --button-secondary-bg-rgb: 246, 248, 250;
+  --button-secondary-text-rgb: 36, 41, 46;
+  --link-rgb: 3, 102, 214;
+  --link-hover-rgb: 34, 134, 58;
+
+  --background: 0 0% 100%;
+  --foreground: 210 11% 16%;
+  --card: 210 20% 98%;
+  --card-foreground: 210 11% 16%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 210 11% 16%;
+  --primary: 210 100% 43%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 50% 98%;
+  --secondary-foreground: 210 11% 16%;
+  --muted: 210 50% 98%;
+  --muted-foreground: 215 8% 38%;
+  --accent: 137 55% 39%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 355 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 210 14% 83%;
+  --input: 210 14% 83%;
+  --ring: 210 100% 43%;
+  
+  /* Custom sidebar */
+  --sidebar: 0 0% 98%;
+  --sidebar-foreground: 210 11% 16%;
+  --sidebar-accent: 210 50% 95%;
+  --sidebar-accent-foreground: 210 11% 16%;
+  --sidebar-border: 210 14% 83%;
+  --sidebar-ring: 210 100% 43%;
+}
+
+/* Additional shared styles */
+.font-space-grotesk {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Message input glass effect */
+.message-prompt-glass {
+  background: rgba(var(--surface-rgb), 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(var(--divider-rgb), 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--text-secondary-rgb), 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--text-secondary-rgb), 0.5);
+}
+
+/* Fix for the horizontal scrollbar in sidebar */
+.overflow-x-hidden {
+  overflow-x: hidden !important;
+}

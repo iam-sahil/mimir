@@ -2,48 +2,44 @@
 import { Theme } from "@/types";
 
 export const themes: Record<Theme, { name: string; className: string }> = {
-  dark: {
-    name: "Dark",
-    className: "dark",
+  "light-pink": {
+    name: "Light (Pink accent)",
+    className: "light-pink",
   },
-  light: {
-    name: "Light",
-    className: "light",
+  "dark-green": {
+    name: "Dark (Green accent)",
+    className: "dark-green",
   },
-  catppuccin: {
-    name: "Catppuccin",
+  "dark-mono": {
+    name: "Dark mono (White accent)",
+    className: "dark-mono",
+  },
+  "catppuccin": {
+    name: "Catppuccin Mocha",
     className: "catppuccin",
   },
   "tokyo-night": {
     name: "Tokyo Night",
     className: "tokyo-night",
   },
-  nord: {
+  "nord": {
     name: "Nord",
     className: "nord",
   },
-  monodark: {
-    name: "Monodark",
-    className: "monodark",
-  },
-  gruvbox: {
+  "gruvbox": {
     name: "Gruvbox Dark",
     className: "gruvbox",
   },
-  "one-dark-pro": {
-    name: "One Dark Pro",
-    className: "one-dark-pro",
+  "one-dark": {
+    name: "One Dark",
+    className: "one-dark",
   },
   "dracula": {
     name: "Dracula",
     className: "dracula",
   },
-  "shades-of-purple": {
-    name: "Shades of Purple",
-    className: "shades-of-purple",
-  },
-  "monokai": {
-    name: "Monokai",
-    className: "monokai",
+  "github-light": {
+    name: "Github Light",
+    className: "github-light",
   },
 };

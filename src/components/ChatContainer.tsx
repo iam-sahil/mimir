@@ -6,7 +6,7 @@ import { EmptyState } from "./EmptyState";
 import { useChat } from "@/contexts/ChatContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { sendChatRequest } from "@/lib/api";
-import { Settings as SettingsIcon } from "lucide-react";
+import { Settings as SettingsIcon, Info } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeSelector } from "./ThemeSelector";
 import { SettingsDialog } from "./SettingsDialog";
@@ -17,13 +17,15 @@ import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import 'highlight.js/styles/github-dark.css';
 import { Brain } from "lucide-react";
+import { useHotkeys } from "@/hooks/useHotkeys";
 
 interface ChatContainerProps {
   onSidebarToggle: () => void;
+  onInfoClick: () => void;
 }
 
-export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
-  const { currentChat, addMessage, setCurrentChatModel, createNewChat } = useChat();
+export const ChatContainer = ({ onSidebarToggle, onInfoClick }: ChatContainerProps) => {
+  const { currentChat, addMessage, setCurrentChatModel, createNewChat, renameChat } = useChat();
   const { settings, hasValidKey, getActiveApiKey, incrementFreeMessageCount } = useSettings();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +33,25 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
   const [typingText, setTypingText] = useState("");
   const [completeResponse, setCompleteResponse] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+
+  // Register keyboard shortcut for renaming current chat
+  useHotkeys([
+    { 
+      keys: ["Control", "r"], 
+      callback: () => {
+        if (currentChat) {
+          const newTitle = prompt("Rename chat:", currentChat.title);
+          if (newTitle && newTitle.trim() !== "" && newTitle !== currentChat.title) {
+            renameChat(currentChat.id, newTitle);
+            toast.success("Chat renamed successfully");
+          }
+        } else {
+          toast.error("No chat selected");
+        }
+      },
+      description: "Rename current chat" 
+    }
+  ]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -150,6 +171,16 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
               <SettingsIcon className="h-5 w-5" />
             </Button>
           </div>
+          <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onInfoClick}
+              className="h-8 w-8"
+            >
+              <Info className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -163,7 +194,7 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
               <div className="w-full py-6 px-4 justify-start relative">
                 <div className="flex max-w-2xl rounded-lg p-4 bg-secondary/15 text-foreground mr-auto ml-8">
                   <div className="w-full overflow-hidden">
-                    <div className="prose dark:prose-invert max-w-none text-sm font-helvetica">
+                    <div className="prose dark:prose-invert max-w-none text-sm font-space-grotesk">
                       <ReactMarkdown
                         rehypePlugins={[rehypeHighlight]}
                         components={{
@@ -203,15 +234,17 @@ export const ChatContainer = ({ onSidebarToggle }: ChatContainerProps) => {
         )}
       </ScrollArea>
 
-      <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+      <div className="fixed bottom-6 left-0 right-0 flex justify-center">
         <div className="w-full max-w-3xl px-4">
-          <MessageInput
-            onSendMessage={handleSendMessage}
-            isLoading={isLoading}
-            placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
-            selectedModel={currentChat?.model || settings.defaultModel}
-            onModelChange={setCurrentChatModel}
-          />
+          <div className="glass-effect backdrop-blur-md shadow-lg rounded-xl p-2">
+            <MessageInput
+              onSendMessage={handleSendMessage}
+              isLoading={isLoading}
+              placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
+              selectedModel={currentChat?.model || settings.defaultModel}
+              onModelChange={setCurrentChatModel}
+            />
+          </div>
         </div>
       </div>
 

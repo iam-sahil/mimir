@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { X, Folder, MessageSquare, Pin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
@@ -38,6 +38,7 @@ export const SidebarChatItem = ({
   const [newTitle, setNewTitle] = useState(chat.title);
   const [newFolderName, setNewFolderName] = useState("");
   const [showFolderInput, setShowFolderInput] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDoubleClick = () => {
     setIsEditing(true);
@@ -59,44 +60,45 @@ export const SidebarChatItem = ({
     }
   };
 
-  const formattedDate = new Date(chat.updatedAt).toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-  });
+  // Focus input when editing starts
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
 
   return (
     <div
       className={cn(
-        "flex items-center justify-between rounded-md px-2.5 py-2.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer group",
-        isActive && "bg-accent text-accent-foreground"
+        "flex items-center justify-between rounded-md px-2.5 py-2.5 text-sm transition-colors hover:bg-accent/10 hover:text-accent-foreground cursor-pointer group relative",
+        isActive && "bg-accent/20 text-accent-foreground"
       )}
     >
       <div 
-        className="flex flex-1 items-center gap-2" 
+        className="flex flex-1 items-center gap-2 truncate" 
         onClick={onSelect}
         onDoubleClick={handleDoubleClick}
       >
-        <MessageSquare className="h-4 w-4" />
+        <MessageSquare className="h-4 w-4 shrink-0" />
         
         {isEditing ? (
           <Input
+            ref={inputRef}
             autoFocus
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
             onBlur={handleRename}
             onKeyDown={handleKeyDown}
             onClick={(e) => e.stopPropagation()}
-            className="h-6 p-1 text-sm"
+            className="h-6 p-1 text-sm bg-background text-foreground"
           />
         ) : (
-          <>
-            <span className="truncate flex-1">{chat.title}</span>
-            <span className="text-xs text-muted-foreground">{formattedDate}</span>
-          </>
+          <span className="truncate flex-1">{chat.title}</span>
         )}
       </div>
       
-      <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute right-2 flex opacity-0 group-hover:opacity-100 transition-opacity bg-accent/30 backdrop-blur rounded-md shadow-lg">
         {!inFolder && (
           <Popover>
             <PopoverTrigger asChild>
@@ -164,7 +166,7 @@ export const SidebarChatItem = ({
             onPin();
           }}
         >
-          <Pin className={cn("h-3.5 w-3.5", chat.isPinned && "fill-primary")} />
+          <Pin className={cn("h-3.5 w-3.5", chat.isPinned && "fill-accent-primary")} />
         </Button>
         
         <Button
