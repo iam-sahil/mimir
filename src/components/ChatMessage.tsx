@@ -31,7 +31,7 @@ export const ChatMessage = ({
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     setIsCopied(true);
-    toast("Copied to clipboard");
+    toast.success("Copied to clipboard");
     setTimeout(() => setIsCopied(false), 2000);
   };
   
@@ -77,8 +77,8 @@ export const ChatMessage = ({
         className={cn(
           "flex flex-col max-w-2xl rounded-lg p-4 relative",
           isUser 
-            ? "bg-primary/10 text-foreground ml-auto mr-8" 
-            : "bg-secondary/15 text-foreground mr-auto ml-8"
+            ? "bg-primary/5 text-foreground ml-auto mr-8" 
+            : "bg-secondary/10 text-foreground mr-auto ml-8"
         )}
       >
         {/* Action bar for user messages */}
@@ -89,7 +89,6 @@ export const ChatMessage = ({
               size="icon" 
               className="h-6 w-6" 
               onClick={() => copyToClipboard(message.content)}
-              title="Copy prompt"
             >
               {isCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
             </Button>
@@ -99,7 +98,6 @@ export const ChatMessage = ({
                 size="icon" 
                 className="h-6 w-6" 
                 onClick={onRegenerateResponse}
-                title="Regenerate response"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
               </Button>
@@ -110,7 +108,6 @@ export const ChatMessage = ({
                 size="icon" 
                 className="h-6 w-6" 
                 onClick={handleEdit}
-                title="Edit message"
               >
                 <Edit className="h-3.5 w-3.5" />
               </Button>
@@ -126,7 +123,6 @@ export const ChatMessage = ({
               size="icon" 
               className="h-6 w-6" 
               onClick={() => copyToClipboard(message.content)}
-              title="Copy response"
             >
               {isCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
             </Button>

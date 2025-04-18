@@ -110,7 +110,7 @@ const Index = () => {
       
       <main className={cn(
         "flex-1 transition-all duration-300 w-full relative",
-        isMobile ? "" : (isSidebarOpen ? "lg:ml-[300px]" : "lg:ml-0")
+        isSidebarOpen ? "lg:ml-[300px]" : "lg:ml-0"
       )}>
         {!isSidebarOpen && (
           <CollapsedSidebarButtons 

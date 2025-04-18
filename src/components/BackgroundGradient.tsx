@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
 interface GradientBlob {
@@ -9,11 +9,13 @@ interface GradientBlob {
   size: number;
   color: string;
   opacity: number;
+  speed: { x: number; y: number };
 }
 
 export const BackgroundGradient = () => {
   const [blobs, setBlobs] = useState<GradientBlob[]>([]);
   const { currentTheme } = useTheme();
+  const animationRef = useRef<number>();
   
   // Generate colors based on current theme
   const getThemeColors = () => {
@@ -58,18 +60,56 @@ export const BackgroundGradient = () => {
         size: Math.random() * 300 + 200, // Size between 200-500px
         color: colors[i % colors.length],
         opacity: Math.random() * 0.03 + 0.02, // Very low opacity: 0.02-0.05
+        speed: { 
+          x: (Math.random() - 0.5) * 0.01, // Extremely slow movement
+          y: (Math.random() - 0.5) * 0.01  
+        }
       });
     }
     
     setBlobs(newBlobs);
   }, [currentTheme]);
+  
+  // Animation loop for slow movement
+  useEffect(() => {
+    const animate = () => {
+      setBlobs(prevBlobs => prevBlobs.map(blob => {
+        let newX = blob.x + blob.speed.x;
+        let newY = blob.y + blob.speed.y;
+        
+        // Bounce when reaching edges
+        if (newX <= 0 || newX >= 100) blob.speed.x *= -1;
+        if (newY <= 0 || newY >= 100) blob.speed.y *= -1;
+        
+        // Ensure blobs stay within bounds
+        newX = Math.max(0, Math.min(100, newX));
+        newY = Math.max(0, Math.min(100, newY));
+        
+        return {
+          ...blob,
+          x: newX,
+          y: newY
+        };
+      }));
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    
+    animationRef.current = requestAnimationFrame(animate);
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
       {blobs.map((blob) => (
         <div
           key={blob.id}
-          className="absolute rounded-full blur-3xl"
+          className="absolute rounded-full blur-[100px]"
           style={{
             left: `${blob.x}%`,
             top: `${blob.y}%`,
@@ -77,6 +117,7 @@ export const BackgroundGradient = () => {
             height: `${blob.size}px`,
             backgroundColor: blob.color,
             opacity: blob.opacity,
+            transition: "left 8s ease-in-out, top 8s ease-in-out",
           }}
         />
       ))}

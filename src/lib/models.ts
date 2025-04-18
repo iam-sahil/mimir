@@ -12,7 +12,7 @@ export const geminiModels: Model[] = [
   },
   {
     id: "gemini-2.5-pro-exp-03-25",
-    name: "Gemini 2.5 Pro Preview",
+    name: "Gemini 2.5 Pro",
     provider: "gemini",
     modelId: "gemini-2.5-pro-exp-03-25",
     description: "Advanced model with enhanced capabilities",
@@ -55,7 +55,7 @@ export const openRouterModels: Model[] = [
   },
   {
     id: "deepseek-r1-distill-qwen-14b",
-    name: "DeepSeek R1 Distill Qwen 14B",
+    name: "DeepSeek R1 Qwen",
     provider: "openrouter",
     modelId: "deepseek/deepseek-r1-distill-qwen-14b:free",
     description: "Distilled knowledge model with Qwen architecture",
@@ -63,7 +63,7 @@ export const openRouterModels: Model[] = [
   },
   {
     id: "deepseek-r1-distill-llama-70b",
-    name: "DeepSeek R1 Distill Llama 70B",
+    name: "DeepSeek R1 Llama",
     provider: "openrouter",
     modelId: "deepseek/deepseek-r1-distill-llama-70b:free",
     description: "Distilled knowledge model with Llama architecture",

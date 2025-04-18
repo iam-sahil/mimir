@@ -42,6 +42,7 @@ export const ChatContainer = ({
   const [isTyping, setIsTyping] = useState(false);
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [thinkingText, setThinkingText] = useState("");
 
   // Register keyboard shortcut for renaming current chat
   useHotkeys([
@@ -52,10 +53,10 @@ export const ChatContainer = ({
           const newTitle = prompt("Rename chat:", currentChat.title);
           if (newTitle && newTitle.trim() !== "" && newTitle !== currentChat.title) {
             renameChat(currentChat.id, newTitle);
-            toast("Chat renamed successfully");
+            toast.success("Chat renamed successfully");
           }
         } else {
-          toast("No chat selected");
+          toast.error("No chat selected");
         }
       },
       description: "Rename current chat" 
@@ -64,7 +65,7 @@ export const ChatContainer = ({
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [currentChat?.messages, typingText]);
+  }, [currentChat?.messages, typingText, thinkingText]);
 
   useEffect(() => {
     if (!currentChat) {
@@ -93,6 +94,32 @@ export const ChatContainer = ({
     
     typeWriter();
   }, [isTyping, completeResponse, addMessage]);
+
+  // Add thinking text effect when loading
+  useEffect(() => {
+    if (!isLoading || isTyping) {
+      setThinkingText("");
+      return;
+    }
+    
+    setThinkingText("Just a second...");
+    
+    // Optional: create a more elaborate thinking animation
+    // const thinkingPhrases = [
+    //  "Just a second...",
+    //  "Thinking...",
+    //  "Processing your request...",
+    //  "Formulating response..."
+    // ];
+    //
+    // let index = 0;
+    // const interval = setInterval(() => {
+    //   setThinkingText(thinkingPhrases[index % thinkingPhrases.length]);
+    //   index++;
+    // }, 3000);
+    //
+    // return () => clearInterval(interval);
+  }, [isLoading, isTyping]);
 
   // Handle scroll to detect when to show the scroll to bottom button
   useEffect(() => {
@@ -124,7 +151,7 @@ export const ChatContainer = ({
     const apiKey = getActiveApiKey(currentChat.model.provider);
         
     if (!apiKey) {
-      toast("Error: No API key available");
+      toast.error("Error: No API key available");
       addMessage(
         `Sorry, I couldn't process your request. No API key found for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please add your API key in the settings.`,
         "assistant"
@@ -138,7 +165,7 @@ export const ChatContainer = ({
         incrementFreeMessageCount();
         
         if (settings.freeMessagesUsed >= 10) {
-          toast("Free message limit reached");
+          toast.warning("Free message limit reached");
         }
       }
       
@@ -159,12 +186,12 @@ export const ChatContainer = ({
       if (error instanceof Error) {
         if (error.message.includes("API key")) {
           errorMessage = `Invalid ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"} API key. Please check your settings.`;
-          toast("API Error");
+          toast.error("API Error");
         } else if (error.message.includes("429")) {
           errorMessage = `You've reached the rate limit for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please try again later.`;
-          toast("Rate Limit");
+          toast.error("Rate Limit");
         } else {
-          toast("Connection Error");
+          toast.error("Connection Error");
         }
       }
       
@@ -190,7 +217,7 @@ export const ChatContainer = ({
       // Resend the user message to get a new response
       handleSendMessage(userMessage);
       
-      toast("Regenerating response");
+      toast.success("Regenerating response");
     }
   };
 
@@ -200,10 +227,7 @@ export const ChatContainer = ({
   };
 
   return (
-    <div className={cn(
-      "flex flex-col h-screen",
-      sidebarOpen ? "lg:ml-0" : ""  // Fixed: No additional margin when sidebar is open
-    )}>
+    <div className="flex flex-col h-screen">
       <header className="h-16 flex items-center justify-between px-4 shrink-0">
         <div></div>
         <div className="flex items-center gap-2">
@@ -248,9 +272,25 @@ export const ChatContainer = ({
                 model={message.model || currentChat.model}
               />
             ))}
+            {thinkingText && !isTyping && (
+              <div className="w-full py-6 px-4 justify-start relative">
+                <div className="flex max-w-2xl rounded-lg p-4 bg-secondary/10 text-foreground mr-auto ml-8">
+                  <div className="w-full overflow-hidden">
+                    <div className="prose dark:prose-invert max-w-none text-sm font-space-grotesk">
+                      <p>{thinkingText}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute top-8 left-6">
+                  <div className="bg-background text-primary w-6 h-6 rounded-full flex items-center justify-center brain-icon">
+                    <Brain className="h-4 w-4" />
+                  </div>
+                </div>
+              </div>
+            )}
             {isTyping && (
               <div className="w-full py-6 px-4 justify-start relative">
-                <div className="flex max-w-2xl rounded-lg p-4 bg-secondary/15 text-foreground mr-auto ml-8">
+                <div className="flex max-w-2xl rounded-lg p-4 bg-secondary/10 text-foreground mr-auto ml-8">
                   <div className="w-full overflow-hidden">
                     <div className="prose dark:prose-invert max-w-none text-sm font-space-grotesk">
                       <ReactMarkdown
@@ -281,7 +321,7 @@ export const ChatContainer = ({
                 </div>
               </div>
             )}
-            {isLoading && !isTyping && (
+            {isLoading && !isTyping && !thinkingText && (
               <ChatMessageSkeleton />
             )}
             <div ref={messagesEndRef} className="h-32" />
@@ -306,8 +346,11 @@ export const ChatContainer = ({
         </div>
       )}
 
-      <div className="fixed bottom-6 left-0 right-0 flex justify-center mx-auto">
-        <div className="w-full max-w-3xl px-4">
+      <div className="fixed bottom-6 left-0 right-0 flex justify-center">
+        <div className={cn(
+          "w-full max-w-3xl px-4",
+          sidebarOpen ? "lg:ml-[300px] lg:mr-[300px]" : "mx-auto"
+        )}>
           <div className="glass-effect backdrop-blur-md shadow-lg rounded-xl p-2">
             <MessageInput
               onSendMessage={handleSendMessage}
