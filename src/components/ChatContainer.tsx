@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { MessageInput } from "./MessageInput";
@@ -9,7 +10,7 @@ import { Settings as SettingsIcon, Info, ArrowDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeSelector } from "./ThemeSelector";
 import { SettingsDialog } from "./SettingsDialog";
-import { toast } from "./ui/sonner";
+import { toast } from "@/components/ui/sonner";
 import { ChatMessageSkeleton } from "./ChatMessageSkeleton";
 import { ScrollArea } from "./ui/scroll-area";
 import ReactMarkdown from "react-markdown";
@@ -51,16 +52,11 @@ export const ChatContainer = ({
           const newTitle = prompt("Rename chat:", currentChat.title);
           if (newTitle && newTitle.trim() !== "" && newTitle !== currentChat.title) {
             renameChat(currentChat.id, newTitle);
-            toast({
-              title: "Success",
-              description: "Chat renamed successfully"
-            });
+            toast("Chat renamed successfully");
           }
         } else {
-          toast({
-            title: "Error",
-            description: "No chat selected",
-            variant: "destructive"
+          toast("No chat selected", {
+            description: "Please select a chat first"
           });
         }
       },
@@ -130,11 +126,8 @@ export const ChatContainer = ({
     const apiKey = getActiveApiKey(currentChat.model.provider);
         
     if (!apiKey) {
-      toast({
-        title: "Error",
-        description: `No API key available for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please add your API key in settings.`,
-        duration: 5000,
-        variant: "destructive"
+      toast("Error", {
+        description: `No API key available for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please add your API key in settings.`
       });
       addMessage(
         `Sorry, I couldn't process your request. No API key found for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please add your API key in the settings.`,
@@ -149,11 +142,8 @@ export const ChatContainer = ({
         incrementFreeMessageCount();
         
         if (settings.freeMessagesUsed >= 10) {
-          toast({
-            title: "Error",
-            description: "You've used all your free messages. Please add your Gemini API key in settings to continue.",
-            duration: 8000,
-            variant: "destructive"
+          toast("Free message limit reached", {
+            description: "You've used all your free messages. Please add your Gemini API key in settings to continue."
           });
         }
       }
@@ -175,26 +165,17 @@ export const ChatContainer = ({
       if (error instanceof Error) {
         if (error.message.includes("API key")) {
           errorMessage = `Invalid ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"} API key. Please check your settings.`;
-          toast({
-            title: "API Error",
-            description: errorMessage,
-            duration: 5000,
-            variant: "destructive"
+          toast("API Error", {
+            description: errorMessage
           });
         } else if (error.message.includes("429")) {
           errorMessage = `You've reached the rate limit for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please try again later.`;
-          toast({
-            title: "Rate Limit",
-            description: "Rate limit reached",
-            duration: 5000,
-            variant: "destructive"
+          toast("Rate Limit", {
+            description: "Rate limit reached"
           });
         } else {
-          toast({
-            title: "Connection Error",
-            description: "Error connecting to AI service",
-            duration: 5000,
-            variant: "destructive"
+          toast("Connection Error", {
+            description: "Error connecting to AI service"
           });
         }
       }
@@ -223,10 +204,7 @@ export const ChatContainer = ({
       // Resend the user message to get a new response
       handleSendMessage(userMessage);
       
-      toast({
-        title: "Regenerating",
-        description: "Regenerating response...",
-      });
+      toast("Regenerating response...");
     }
   };
 

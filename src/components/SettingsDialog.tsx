@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   Dialog,
@@ -59,10 +60,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
     }
     
     onOpenChange(false);
-    toast({
-      title: "Settings saved",
-      description: "Your settings have been saved successfully"
-    });
+    toast("Settings saved successfully");
   };
 
   const handleFontUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,10 +76,8 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
     const familyParam = urlParams.get('family');
     
     if (!familyParam) {
-      toast({
-        title: "Invalid URL",
-        description: "Invalid Google Font URL. Please make sure it contains a family parameter.",
-        variant: "destructive"
+      toast("Invalid Google Font URL", {
+        description: "Please make sure it contains a family parameter."
       });
       return;
     }
@@ -98,10 +94,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
     
     setPreviewFont(true);
     
-    toast({
-      title: "Font preview",
-      description: "Font preview applied. Save changes to keep this font."
-    });
+    toast("Font preview applied");
   };
 
   return (

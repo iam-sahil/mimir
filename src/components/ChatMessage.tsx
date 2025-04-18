@@ -31,11 +31,7 @@ export const ChatMessage = ({
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     setIsCopied(true);
-    toast({
-      title: "Copied", 
-      description: "Copied to clipboard",
-      duration: 2000
-    });
+    toast("Copied to clipboard");
     setTimeout(() => setIsCopied(false), 2000);
   };
   

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +7,7 @@ import { useChat } from "@/contexts/ChatContext";
 import { SidebarChatItem } from "./SidebarChatItem";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { toast } from "./ui/sonner";
+import { toast } from "@/components/ui/sonner";
 import { format, isToday, isYesterday, isAfter, subDays } from "date-fns";
 
 interface SidebarProps {
@@ -80,10 +81,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const handleDeleteChat = (chatId: string) => {
     if (confirm("Are you sure you want to delete this chat? This action cannot be undone.")) {
       deleteChat(chatId);
-      toast({
-        title: "Chat deleted",
-        description: "Chat deleted successfully"
-      });
+      toast("Chat deleted successfully");
     }
   };
 
@@ -436,10 +434,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             <Button
               onClick={() => {
                 if (newFolderName.trim()) {
-                  toast({
-                    title: "Folder created",
-                    description: `Folder "${newFolderName}" created`
-                  });
+                  toast("Folder created");
                   setIsFolderDialogOpen(false);
                   setNewFolderName("");
                 }
