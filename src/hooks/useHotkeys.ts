@@ -62,7 +62,7 @@ export const KEYBOARD_SHORTCUTS = [
   {
     name: 'Focus Search',
     keys: ['Ctrl', 'K'],
-    description: 'Focus the search input'
+    description: 'Focus the search input or open search modal'
   },
   {
     name: 'New Chat',

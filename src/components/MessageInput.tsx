@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Send, Loader2, Paperclip, X } from "lucide-react";
+import { Send, Loader2, Paperclip, X, FileText, FileImage, File } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Model } from "@/types";
 import { EnhancedModelSelectorV2 } from "./EnhancedModelSelectorV2";
@@ -17,14 +17,32 @@ interface MessageInputProps {
   onModelChange: (model: Model) => void;
 }
 
-// Models that support image attachments
-const IMAGE_SUPPORTING_MODELS = ["gemini-pro-vision", "gpt-4o", "gpt-4o-mini", "claude-3-opus-20240229", "claude-3-sonnet-20240229"];
+// Models that support image attachments - updated list
+const IMAGE_SUPPORTING_MODELS = [
+  "gemini-pro-vision", 
+  "gpt-4o", 
+  "gpt-4o-mini", 
+  "claude-3-opus-20240229", 
+  "claude-3-sonnet-20240229",
+  "claude-3-haiku-20240307"
+];
 
 // Allowed file types
 const ALLOWED_FILE_TYPES = {
   images: ["image/jpeg", "image/png", "image/gif", "image/webp"],
   documents: ["application/pdf", "text/plain", "application/msword", 
               "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
+};
+
+// Helper function to get file icon based on type
+const getFileIcon = (file: File) => {
+  if (file.type.startsWith('image/')) {
+    return <FileImage className="h-4 w-4" />;
+  } else if (file.type === 'application/pdf') {
+    return <FileText className="h-4 w-4" />;
+  } else {
+    return <File className="h-4 w-4" />;
+  }
 };
 
 export const MessageInput = ({
@@ -75,7 +93,7 @@ export const MessageInput = ({
       );
       
       if (validFiles.length !== newFiles.length) {
-        toast("Invalid file type", {
+        toast({
           description: "Only images, PDFs, and document files are supported",
         });
       }
@@ -91,6 +109,21 @@ export const MessageInput = ({
   const removeAttachment = (index: number) => {
     setAttachments(attachments.filter((_, i) => i !== index));
   };
+
+  // Handle Ctrl+Shift+A keyboard shortcut for file attachment
+  useEffect(() => {
+    const handleKeyboardShortcut = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        e.preventDefault();
+        if (supportsAttachments && !isLoading) {
+          handleAttachFiles();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyboardShortcut);
+    return () => window.removeEventListener('keydown', handleKeyboardShortcut);
+  }, [supportsAttachments, isLoading]);
 
   // Auto-resize textarea based on content
   useEffect(() => {
@@ -110,7 +143,7 @@ export const MessageInput = ({
         className="relative overflow-hidden rounded-xl shadow-lg glass-effect border border-white/10"
       >
         {attachments.length > 0 && (
-          <div className="flex flex-wrap gap-2 p-2 border-b border-white/5">
+          <div className="flex flex-wrap gap-2 p-3 border-b border-white/5">
             {attachments.map((file, index) => (
               <div 
                 key={index}
@@ -126,7 +159,8 @@ export const MessageInput = ({
                   </div>
                 ) : (
                   <div className="w-10 h-10 flex items-center justify-center bg-secondary/30 rounded">
-                    <span className="text-xs">.{file.name.split('.').pop()}</span>
+                    {getFileIcon(file)}
+                    <span className="text-xs ml-1">.{file.name.split('.').pop()}</span>
                   </div>
                 )}
                 <span className="text-xs truncate max-w-[100px]">{file.name}</span>
@@ -144,7 +178,7 @@ export const MessageInput = ({
           </div>
         )}
         
-        <div className="flex items-center">
+        <div className="flex items-center p-2">
           <Textarea
             ref={textareaRef}
             placeholder={placeholder}
@@ -157,24 +191,22 @@ export const MessageInput = ({
             )}
             disabled={isLoading}
           />
-          <div className="flex items-center pr-2">
-            <Button
-              type="submit"
-              size="sm"
-              className={cn(
-                "rounded-md transition-all duration-300",
-                !message.trim() && attachments.length === 0 ? "bg-secondary/50 text-secondary-foreground/70" : "bg-primary text-primary-foreground animate-pulse",
-                isLoading && "opacity-70"
-              )}
-              disabled={(!message.trim() && attachments.length === 0) || isLoading}
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
-            </Button>
-          </div>
+          <Button
+            type="submit"
+            size="sm"
+            className={cn(
+              "ml-2 rounded-md transition-all duration-300",
+              !message.trim() && attachments.length === 0 ? "bg-secondary/50 text-secondary-foreground/70" : "bg-primary text-primary-foreground animate-pulse",
+              isLoading && "opacity-70"
+            )}
+            disabled={(!message.trim() && attachments.length === 0) || isLoading}
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+          </Button>
         </div>
         
         <div className="flex items-center justify-between px-4 py-2 border-t border-white/5">
@@ -203,7 +235,7 @@ export const MessageInput = ({
                 </TooltipTrigger>
                 <TooltipContent>
                   {supportsAttachments 
-                    ? "Attach images or documents" 
+                    ? "Attach files (Ctrl+Shift+A)" 
                     : "This model doesn't support attachments"}
                 </TooltipContent>
               </Tooltip>

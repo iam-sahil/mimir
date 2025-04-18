@@ -60,12 +60,19 @@ const Index = () => {
           }
         }
       },
-      description: "Focus message input" 
+      description: "Focus message input or open search" 
     },
     { 
       keys: ["Control", "Shift", "o"], 
       callback: () => createNewChat(),
       description: "Create new chat" 
+    },
+    {
+      keys: ["Control", "Shift", "a"],
+      callback: () => {
+        // This will be handled by the MessageInput component
+      },
+      description: "Attach files"
     }
   ]);
 
@@ -112,6 +119,7 @@ const Index = () => {
         <ChatContainer 
           onSidebarToggle={toggleSidebar}
           onInfoClick={() => setIsInfoOpen(true)}
+          sidebarOpen={isSidebarOpen}
         />
       </main>
       

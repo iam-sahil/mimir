@@ -4,6 +4,8 @@ export interface Message {
   role: "user" | "assistant";
   content: string;
   timestamp: number;
+  attachments?: string[]; // URLs to attached files
+  model?: Model; // The model used to generate this specific message
 }
 
 export interface Chat {
@@ -45,4 +47,11 @@ export interface Settings {
   theme: Theme;
   username: string;
   freeMessagesUsed: number;
+  customFont?: {
+    url: string;
+    family: string;
+  };
 }
+
+// Chat organization types
+export type ChatSection = "pinned" | "folders" | "today" | "yesterday" | "older";

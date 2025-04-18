@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@/contexts/ChatContext";
-import { Search, MessageSquare } from "lucide-react";
+import { Search, MessageSquare, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SearchModalProps {
@@ -41,8 +41,17 @@ export const SearchModal = ({ open, onOpenChange }: SearchModalProps) => {
     if (e.key === "Enter") {
       if (searchQuery.trim()) {
         // Implement search functionality here
-        // For now, just close the modal
-        onOpenChange(false);
+        // Find and select best matching chat
+        const matchingChats = chats.filter(chat => 
+          chat.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        
+        if (matchingChats.length > 0) {
+          handleSelectChat(matchingChats[0].id);
+        } else {
+          createNewChat();
+          onOpenChange(false);
+        }
       } else {
         createNewChat();
         onOpenChange(false);
@@ -101,7 +110,7 @@ export const SearchModal = ({ open, onOpenChange }: SearchModalProps) => {
             </>
           ) : (
             <>
-              <p className="text-xs text-muted-foreground mb-2">Recent Chats</p>
+              <p className="text-xs text-primary mb-2">Recent Chats</p>
               <div className="space-y-1">
                 {recentChats.map(chat => (
                   <Button
@@ -129,6 +138,7 @@ export const SearchModal = ({ open, onOpenChange }: SearchModalProps) => {
               onOpenChange(false);
             }}
           >
+            <Plus className="mr-2 h-4 w-4" />
             New Chat
           </Button>
         </div>

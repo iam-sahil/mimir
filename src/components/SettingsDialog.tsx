@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ExternalLink, Github, Instagram, Mail } from "lucide-react";
 import { useSettings } from "@/contexts/SettingsContext";
 import { KEYBOARD_SHORTCUTS } from "@/hooks/useHotkeys";
+import { toast } from "@/components/ui/sonner";
 
 interface SettingsDialogProps {
   open: boolean;
@@ -22,7 +23,7 @@ interface SettingsDialogProps {
 }
 
 export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
-  const { settings, saveGeminiKey, saveOpenRouterKey, setUsername } = useSettings();
+  const { settings, saveGeminiKey, saveOpenRouterKey, setUsername, setCustomFont } = useSettings();
   
   const [geminiKey, setGeminiKey] = useState(settings.geminiApiKey || "");
   const [openRouterKey, setOpenRouterKey] = useState(settings.openRouterApiKey || "");
@@ -37,6 +38,11 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
       setGeminiKey(settings.geminiApiKey || "");
       setOpenRouterKey(settings.openRouterApiKey || "");
       setUsernameState(settings.username || "");
+      
+      // Reset font preview
+      setPreviewFont(false);
+      setFontUrl("");
+      setCustomFontFamily("");
     }
   }, [open, settings]);
 
@@ -53,13 +59,24 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
       setUsername(username);
     }
     
-    // Custom font handling would go here
+    // Custom font handling
+    if (previewFont && customFontFamily && fontUrl) {
+      setCustomFont({
+        url: fontUrl,
+        family: customFontFamily
+      });
+      
+      toast({
+        description: `Custom font ${customFontFamily} applied successfully`
+      });
+    }
     
     onOpenChange(false);
   };
 
   const handleFontUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFontUrl(e.target.value);
+    setPreviewFont(false);
   };
 
   const handlePreviewFont = () => {
@@ -70,7 +87,10 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
     const familyParam = urlParams.get('family');
     
     if (!familyParam) {
-      alert("Invalid Google Font URL. Please make sure it contains a family parameter.");
+      toast({
+        variant: "destructive",
+        description: "Invalid Google Font URL. Please make sure it contains a family parameter."
+      });
       return;
     }
     
@@ -85,6 +105,10 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
     document.head.appendChild(linkEl);
     
     setPreviewFont(true);
+    
+    toast({
+      description: "Font preview applied. Save changes to keep this font."
+    });
   };
 
   return (
@@ -93,15 +117,16 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>
-            Configure your API keys and preferences.
+            Configure your API keys, preferences, and customizations.
           </DialogDescription>
         </DialogHeader>
         
         <Tabs defaultValue="account" className="mt-4">
-          <TabsList className="grid grid-cols-3 mb-4">
+          <TabsList className="grid grid-cols-4 mb-4">
             <TabsTrigger value="account">Account</TabsTrigger>
             <TabsTrigger value="customization">Customization</TabsTrigger>
             <TabsTrigger value="shortcuts">Keyboard Shortcuts</TabsTrigger>
+            <TabsTrigger value="contact">Contact Us</TabsTrigger>
           </TabsList>
           
           <TabsContent value="account" className="space-y-4">
@@ -181,6 +206,14 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
               </div>
               <p className="text-xs text-muted-foreground">
                 Paste a Google Fonts URL to use a custom font for the app.
+                <a 
+                  href="https://fonts.google.com/" 
+                  target="_blank"
+                  rel="noopener noreferrer" 
+                  className="text-primary ml-1 flex items-center gap-1 hover:underline inline-flex"
+                >
+                  Browse Google Fonts <ExternalLink className="h-3 w-3" />
+                </a>
               </p>
             </div>
             
@@ -199,6 +232,16 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
                 >
                   The quick brown fox jumps over the lazy dog.
                 </p>
+                <div className="mt-4 text-xs">
+                  <h4 className="font-semibold mb-1">How to apply:</h4>
+                  <ol className="list-decimal pl-4 space-y-1">
+                    <li>Go to <a href="https://fonts.google.com/" className="text-primary hover:underline" target="_blank" rel="noreferrer">Google Fonts</a></li>
+                    <li>Select a font family</li>
+                    <li>Click "Select this style" for the styles you want</li>
+                    <li>Open the "Use on the web" section</li>
+                    <li>Copy the &lt;link&gt; URL and paste it here</li>
+                  </ol>
+                </div>
               </div>
             )}
           </TabsContent>
@@ -232,6 +275,52 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="contact" className="space-y-4">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/54258a59-772a-46bb-a45b-18bfcb06fb40.png" 
+                  alt="Mimir" 
+                  className="w-10 h-10"
+                />
+              </div>
+              <h3 className="text-lg font-semibold">Connect with the Developer</h3>
+              <p className="text-muted-foreground">
+                Have questions, feedback, or just want to say hi? Reach out through any of these channels:
+              </p>
+              
+              <div className="flex flex-col gap-3 w-full max-w-xs">
+                <a 
+                  href="https://instagram.com/_sahiilrana" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 p-2 border rounded-md transition-colors hover:bg-accent/10"
+                >
+                  <Instagram className="h-5 w-5 text-pink-500" />
+                  <span>@_sahiilrana</span>
+                </a>
+                
+                <a 
+                  href="mailto:developer.sahilrana@gmail.com" 
+                  className="flex items-center gap-2 p-2 border rounded-md transition-colors hover:bg-accent/10"
+                >
+                  <Mail className="h-5 w-5 text-blue-500" />
+                  <span>developer.sahilrana@gmail.com</span>
+                </a>
+                
+                <a 
+                  href="https://github.com/sahilranaX" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 p-2 border rounded-md transition-colors hover:bg-accent/10"
+                >
+                  <Github className="h-5 w-5" />
+                  <span>sahilranaX</span>
+                </a>
+              </div>
             </div>
           </TabsContent>
         </Tabs>
