@@ -1,3 +1,4 @@
+
 export interface Message {
   id: string;
   role: "user" | "assistant";
@@ -21,6 +22,8 @@ export interface Model {
   name: string;
   modelId: string;
   provider: "gemini" | "openrouter";
+  description?: string;
+  canUseImage?: boolean;
 }
 
 export type Theme =

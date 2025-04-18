@@ -17,7 +17,7 @@ interface EnhancedModelSelectorProps {
 }
 
 // Only keep these two Gemini models
-const geminiModels = [
+const geminiModels: Model[] = [
   {
     id: "gemini-2-flash",
     name: "Gemini 2.0 Flash",
@@ -37,7 +37,7 @@ const geminiModels = [
 ];
 
 // OpenRouter models
-const openRouterModels = [
+const openRouterModels: Model[] = [
   {
     id: "deepseek-r1",
     name: "DeepSeek: R1",
@@ -83,13 +83,13 @@ export const EnhancedModelSelectorV2 = ({
     // Check if the API key is available for the selected model provider
     if (!hasValidKey(model.provider)) {
       const providerName = model.provider === "openrouter" ? "OpenRouter" : "Gemini";
-      toast.error(`Please add your ${providerName} API key in settings to use this model.`);
+      toast(`Please add your ${providerName} API key in settings to use this model.`);
       return;
     }
 
     // Check free message limit if using the free Gemini model
     if (model.provider === "gemini" && !settings.geminiApiKey && settings.freeMessagesUsed >= 10) {
-      toast.error("You've used all your free messages. Please add your Gemini API key in settings.");
+      toast("You've used all your free messages. Please add your Gemini API key in settings.");
       return;
     }
 
@@ -124,7 +124,7 @@ export const EnhancedModelSelectorV2 = ({
           onClick={(e) => {
             if (!isModelSelectorEnabled) {
               e.preventDefault();
-              toast.error("Please add your API key in settings to use different models.");
+              toast("Please add your API key in settings to use different models.");
             }
           }}
         >
@@ -148,7 +148,7 @@ export const EnhancedModelSelectorV2 = ({
                   selectedModel.id === model.id && "bg-accent",
                   isModelEnabled ? "cursor-pointer hover:bg-accent/80" : "opacity-60 cursor-not-allowed"
                 )}
-                onClick={() => isModelEnabled && handleSelectModel(model as Model)}
+                onClick={() => isModelEnabled && handleSelectModel(model)}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">

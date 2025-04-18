@@ -6,7 +6,7 @@ import { Send, Loader2, Paperclip, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Model } from "@/types";
 import { EnhancedModelSelectorV2 } from "./EnhancedModelSelectorV2";
-import { Toast } from "@/components/ui/toast";
+import { toast } from "@/components/ui/sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface MessageInputProps {
@@ -75,9 +75,7 @@ export const MessageInput = ({
       );
       
       if (validFiles.length !== newFiles.length) {
-        Toast({
-          title: "Invalid file type",
-          description: "Only images, PDFs, and document files are supported",
+        toast("Invalid file type", {
           variant: "destructive",
         });
       }

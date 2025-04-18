@@ -132,7 +132,7 @@ export const EnhancedModelSelector = ({
                     {!isModelAvailable(model) && <Lock className="h-3 w-3 ml-auto" />}
                     {model.id === selectedModel.id && <Check className="h-4 w-4 ml-auto text-primary" />}
                   </div>
-                  <p className="text-xs text-muted-foreground">{model.description}</p>
+                  <p className="text-xs text-muted-foreground">{model.description || ""}</p>
                 </div>
               ))}
             </div>
@@ -157,7 +157,7 @@ export const EnhancedModelSelector = ({
                     {!isModelAvailable(model) && <Lock className="h-3 w-3 ml-auto" />}
                     {model.id === selectedModel.id && <Check className="h-4 w-4 ml-auto text-primary" />}
                   </div>
-                  <p className="text-xs text-muted-foreground">{model.description}</p>
+                  <p className="text-xs text-muted-foreground">{model.description || ""}</p>
                 </div>
               ))}
             </div>
