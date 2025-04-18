@@ -76,7 +76,7 @@ export const MessageInput = ({
       
       if (validFiles.length !== newFiles.length) {
         toast("Invalid file type", {
-          variant: "destructive",
+          description: "Only images, PDFs, and document files are supported",
         });
       }
       
