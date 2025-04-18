@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Brain, User, Copy, RefreshCw, Edit, Check, Terminal } from "lucide-react";
 import { useChat } from "@/contexts/ChatContext";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 interface ChatMessageProps {
   message: Message;
@@ -162,7 +162,7 @@ export const ChatMessage = ({
                             {language}
                           </div>
                         )}
-                        <div className="absolute top-0 right-0 hidden group-hover:flex">
+                        <div className="absolute top-0 right-0 hidden group-hover:flex sticky">
                           <Button 
                             variant="ghost" 
                             size="sm" 

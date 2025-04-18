@@ -12,10 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ExternalLink, Github, Instagram, Mail } from "lucide-react";
+import { ExternalLink, Github, Instagram, Mail, Brain } from "lucide-react";
 import { useSettings } from "@/contexts/SettingsContext";
 import { KEYBOARD_SHORTCUTS } from "@/hooks/useHotkeys";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 interface SettingsDialogProps {
   open: boolean;
@@ -76,9 +76,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
     const familyParam = urlParams.get('family');
     
     if (!familyParam) {
-      toast("Invalid Google Font URL", {
-        description: "Please make sure it contains a family parameter."
-      });
+      toast("Invalid Google Font URL");
       return;
     }
     
@@ -99,7 +97,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] min-h-[400px]">
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>
@@ -108,11 +106,11 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
         </DialogHeader>
         
         <Tabs defaultValue="account" className="mt-4">
-          <TabsList className="grid grid-cols-4 mb-4">
-            <TabsTrigger value="account">Account</TabsTrigger>
-            <TabsTrigger value="customization">Customization</TabsTrigger>
-            <TabsTrigger value="shortcuts">Keyboard Shortcuts</TabsTrigger>
-            <TabsTrigger value="contact">Contact Us</TabsTrigger>
+          <TabsList className="grid grid-cols-4 mb-4 w-full">
+            <TabsTrigger value="account" className="w-full">Account</TabsTrigger>
+            <TabsTrigger value="customization" className="w-full">Customization</TabsTrigger>
+            <TabsTrigger value="shortcuts" className="w-full">Keyboard Shortcuts</TabsTrigger>
+            <TabsTrigger value="contact" className="w-full">Contact Us</TabsTrigger>
           </TabsList>
           
           <TabsContent value="account" className="space-y-4">
@@ -178,7 +176,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
             </div>
           </TabsContent>
           
-          <TabsContent value="customization" className="space-y-4">
+          <TabsContent value="customization" className="space-y-4 min-h-[300px]">
             <div className="grid gap-2">
               <Label htmlFor="google-font">Google Fonts URL</Label>
               <div className="flex gap-2">
@@ -232,7 +230,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
             )}
           </TabsContent>
           
-          <TabsContent value="shortcuts" className="space-y-4">
+          <TabsContent value="shortcuts" className="space-y-4 min-h-[300px]">
             <div className="border rounded-md">
               <table className="w-full text-sm">
                 <thead>
@@ -264,14 +262,10 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
             </div>
           </TabsContent>
           
-          <TabsContent value="contact" className="space-y-4">
+          <TabsContent value="contact" className="space-y-4 min-h-[300px]">
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                <img 
-                  src="/lovable-uploads/54258a59-772a-46bb-a45b-18bfcb06fb40.png" 
-                  alt="Mimir" 
-                  className="w-10 h-10"
-                />
+                <Brain className="h-10 w-10 text-primary" />
               </div>
               <h3 className="text-lg font-semibold">Connect with the Developer</h3>
               <p className="text-muted-foreground">
@@ -298,13 +292,13 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
                 </a>
                 
                 <a 
-                  href="https://github.com/sahilranaX" 
+                  href="https://github.com/iam-sahil" 
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 p-2 border rounded-md transition-colors hover:bg-accent/10"
                 >
                   <Github className="h-5 w-5" />
-                  <span>sahilranaX</span>
+                  <span>iam-sahil</span>
                 </a>
               </div>
             </div>

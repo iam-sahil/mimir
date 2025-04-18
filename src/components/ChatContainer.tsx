@@ -6,11 +6,11 @@ import { EmptyState } from "./EmptyState";
 import { useChat } from "@/contexts/ChatContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { sendChatRequest } from "@/lib/api";
-import { Settings as SettingsIcon, Info, ArrowDown } from "lucide-react";
+import { PanelRight, Info, ArrowDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeSelector } from "./ThemeSelector";
 import { SettingsDialog } from "./SettingsDialog";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { ChatMessageSkeleton } from "./ChatMessageSkeleton";
 import { ScrollArea } from "./ui/scroll-area";
 import ReactMarkdown from "react-markdown";
@@ -55,9 +55,7 @@ export const ChatContainer = ({
             toast("Chat renamed successfully");
           }
         } else {
-          toast("No chat selected", {
-            description: "Please select a chat first"
-          });
+          toast("No chat selected");
         }
       },
       description: "Rename current chat" 
@@ -126,9 +124,7 @@ export const ChatContainer = ({
     const apiKey = getActiveApiKey(currentChat.model.provider);
         
     if (!apiKey) {
-      toast("Error", {
-        description: `No API key available for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please add your API key in settings.`
-      });
+      toast("Error: No API key available");
       addMessage(
         `Sorry, I couldn't process your request. No API key found for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please add your API key in the settings.`,
         "assistant"
@@ -142,9 +138,7 @@ export const ChatContainer = ({
         incrementFreeMessageCount();
         
         if (settings.freeMessagesUsed >= 10) {
-          toast("Free message limit reached", {
-            description: "You've used all your free messages. Please add your Gemini API key in settings to continue."
-          });
+          toast("Free message limit reached");
         }
       }
       
@@ -165,18 +159,12 @@ export const ChatContainer = ({
       if (error instanceof Error) {
         if (error.message.includes("API key")) {
           errorMessage = `Invalid ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"} API key. Please check your settings.`;
-          toast("API Error", {
-            description: errorMessage
-          });
+          toast("API Error");
         } else if (error.message.includes("429")) {
           errorMessage = `You've reached the rate limit for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please try again later.`;
-          toast("Rate Limit", {
-            description: "Rate limit reached"
-          });
+          toast("Rate Limit");
         } else {
-          toast("Connection Error", {
-            description: "Error connecting to AI service"
-          });
+          toast("Connection Error");
         }
       }
       
@@ -204,17 +192,13 @@ export const ChatContainer = ({
       // Resend the user message to get a new response
       handleSendMessage(userMessage);
       
-      toast("Regenerating response...");
+      toast("Regenerating response");
     }
   };
 
   const handleEditMessage = (content: string) => {
     // Populate the message input with the content to edit
-    // This would require passing this function down to the MessageInput component
-    // For now, we'll just log it
-    console.log("Editing message:", content);
-    // We would need to set up state to track which message is being edited
-    // and then update the message input component with that content
+    setEditingMessageId(content);
   };
 
   return (
@@ -235,7 +219,7 @@ export const ChatContainer = ({
               onClick={() => setIsSettingsOpen(true)}
               className="h-8 w-8"
             >
-              <SettingsIcon className="h-5 w-5" />
+              <Info className="h-5 w-5" />
             </Button>
           </div>
           <div className="glass-effect rounded-lg p-1.5 shadow-sm">
@@ -252,11 +236,11 @@ export const ChatContainer = ({
       </header>
 
       <ScrollArea 
-        className="flex-1 overflow-y-auto"
+        className="flex-1 overflow-y-auto pb-32"
         ref={scrollAreaRef}
       >
         {currentChat && currentChat.messages.length > 0 ? (
-          <div className="pb-32 max-w-4xl mx-auto">
+          <div className="pb-32 pt-4 max-w-4xl mx-auto">
             {currentChat.messages.map((message, index) => (
               <ChatMessage 
                 key={message.id} 
@@ -302,7 +286,7 @@ export const ChatContainer = ({
             {isLoading && !isTyping && (
               <ChatMessageSkeleton />
             )}
-            <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} className="h-32" />
           </div>
         ) : (
           <div className="h-full flex items-center justify-center">
@@ -324,10 +308,7 @@ export const ChatContainer = ({
         </div>
       )}
 
-      <div className={cn(
-        "fixed bottom-6 left-0 right-0 flex justify-center",
-        sidebarOpen ? "lg:ml-[300px] transition-all duration-300" : "transition-all duration-300"
-      )}>
+      <div className="fixed bottom-6 left-0 right-0 flex justify-center mx-auto">
         <div className="w-full max-w-3xl px-4">
           <div className="glass-effect backdrop-blur-md shadow-lg rounded-xl p-2">
             <MessageInput
@@ -336,6 +317,8 @@ export const ChatContainer = ({
               placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
               selectedModel={currentChat?.model || settings.defaultModel}
               onModelChange={setCurrentChatModel}
+              editingMessage={editingMessageId}
+              onClearEditingMessage={() => setEditingMessageId(null)}
             />
           </div>
         </div>

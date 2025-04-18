@@ -6,8 +6,9 @@ import { Send, Loader2, Paperclip, X, FileText, FileImage, File } from "lucide-r
 import { cn } from "@/lib/utils";
 import { Model } from "@/types";
 import { EnhancedModelSelectorV2 } from "./EnhancedModelSelectorV2";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "./ui/alert-dialog";
 
 interface MessageInputProps {
   onSendMessage: (message: string, attachments?: File[]) => void;
@@ -15,9 +16,11 @@ interface MessageInputProps {
   placeholder?: string;
   selectedModel: Model;
   onModelChange: (model: Model) => void;
+  editingMessage?: string | null;
+  onClearEditingMessage?: () => void;
 }
 
-// Models that support image attachments - updated list
+// Models that support image attachments
 const IMAGE_SUPPORTING_MODELS = [
   "gemini-pro-vision", 
   "gpt-4o", 
@@ -51,6 +54,8 @@ export const MessageInput = ({
   placeholder = "Message Mimir...",
   selectedModel,
   onModelChange,
+  editingMessage = null,
+  onClearEditingMessage
 }: MessageInputProps) => {
   const [message, setMessage] = useState("");
   const [attachments, setAttachments] = useState<File[]>([]);
@@ -59,12 +64,24 @@ export const MessageInput = ({
 
   const supportsAttachments = IMAGE_SUPPORTING_MODELS.includes(selectedModel.modelId);
 
+  useEffect(() => {
+    if (editingMessage) {
+      setMessage(editingMessage);
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }
+  }, [editingMessage]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if ((message.trim() || attachments.length > 0) && !isLoading) {
       onSendMessage(message, attachments);
       setMessage("");
       setAttachments([]);
+      if (onClearEditingMessage) {
+        onClearEditingMessage();
+      }
     }
   };
 

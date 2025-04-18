@@ -5,7 +5,7 @@ import { ChatContainer } from "@/components/ChatContainer";
 import { useChat } from "@/contexts/ChatContext";
 import { BackgroundGradient } from "@/components/BackgroundGradient";
 import { cn } from "@/lib/utils";
-import { Menu, Plus, Search, Info } from "lucide-react";
+import { PanelRight, Plus, Search, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InfoDialog } from "@/components/InfoDialog";
 import { SearchModal } from "@/components/SearchModal";
@@ -19,15 +19,21 @@ const CollapsedSidebarButtons = ({ onToggleSidebar, onNewChat, onOpenSearch, onI
 }) => {
   return (
     <div className="fixed left-4 top-4 z-40 flex flex-row space-x-2">
-      <Button variant="secondary" size="icon" className="rounded-md shadow-md glass-effect" onClick={onToggleSidebar}>
-        <Menu className="h-5 w-5" />
-      </Button>
-      <Button variant="secondary" size="icon" className="rounded-md shadow-md glass-effect" onClick={onNewChat}>
-        <Plus className="h-5 w-5" />
-      </Button>
-      <Button variant="secondary" size="icon" className="rounded-md shadow-md glass-effect" onClick={onOpenSearch}>
-        <Search className="h-5 w-5" />
-      </Button>
+      <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onToggleSidebar}>
+          <PanelRight className="h-5 w-5" />
+        </Button>
+      </div>
+      <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onNewChat}>
+          <Plus className="h-5 w-5" />
+        </Button>
+      </div>
+      <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onOpenSearch}>
+          <Search className="h-5 w-5" />
+        </Button>
+      </div>
     </div>
   );
 };

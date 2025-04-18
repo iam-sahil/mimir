@@ -2,12 +2,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, ChevronDown, ChevronUp, Folder, Pin, ChevronRight, X } from "lucide-react";
+import { Plus, Search, ChevronDown, ChevronUp, Folder, Pin, PanelRight, X, Brain } from "lucide-react";
 import { useChat } from "@/contexts/ChatContext";
 import { SidebarChatItem } from "./SidebarChatItem";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "./ui/alert-dialog";
 import { format, isToday, isYesterday, isAfter, subDays } from "date-fns";
 
 interface SidebarProps {
@@ -23,9 +24,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
   const [isFoldersExpanded, setIsFoldersExpanded] = useState(true);
   const [isPinnedExpanded, setIsPinnedExpanded] = useState(true);
-  const [isTodayExpanded, setIsTodayExpanded] = useState(true);
-  const [isYesterdayExpanded, setIsYesterdayExpanded] = useState(true);
-  const [isOlderExpanded, setIsOlderExpanded] = useState(true);
+  const [chatToDelete, setChatToDelete] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   
   useEffect(() => {
@@ -79,9 +79,16 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   );
 
   const handleDeleteChat = (chatId: string) => {
-    if (confirm("Are you sure you want to delete this chat? This action cannot be undone.")) {
-      deleteChat(chatId);
+    setChatToDelete(chatId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (chatToDelete) {
+      deleteChat(chatToDelete);
       toast("Chat deleted successfully");
+      setIsDeleteDialogOpen(false);
+      setChatToDelete(null);
     }
   };
 
@@ -102,7 +109,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       >
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2 text-xl font-space-grotesk font-semibold text-sidebar-foreground">
-            <img src="/lovable-uploads/54258a59-772a-46bb-a45b-18bfcb06fb40.png" alt="Mimir Logo" className="h-6 w-6" />
+            <Brain className="h-6 w-6" />
             <h1>Mimir</h1>
           </div>
           <Button 
@@ -111,7 +118,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             className="h-8 w-8" 
             onClick={onClose}
           >
-            <ChevronRight className="h-5 w-5" />
+            <PanelRight className="h-5 w-5" />
           </Button>
         </div>
 
@@ -158,7 +165,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               onClick={() => setIsPinnedExpanded(!isPinnedExpanded)}
             >
               <Pin className="h-4 w-4 mr-2 text-accent-primary" />
-              <span>Pinned Chats</span>
+              <span className="text-primary">Pinned Chats</span>
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -200,7 +207,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               onClick={() => setIsFoldersExpanded(!isFoldersExpanded)}
             >
               <Folder className="h-4 w-4 mr-2 text-accent-primary" />
-              <span>Folders</span>
+              <span className="text-primary">Folders</span>
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -252,127 +259,79 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
           {todayChats.length > 0 && (
             <div className="mb-2">
-              <div 
-                className="flex items-center px-2 py-1.5 text-sm font-medium text-primary cursor-pointer"
-                onClick={() => setIsTodayExpanded(!isTodayExpanded)}
-              >
-                <span>Today</span>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="ml-auto h-5 w-5 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsTodayExpanded(!isTodayExpanded);
-                  }}
-                >
-                  {isTodayExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </Button>
+              <div className="flex items-center px-2 py-1.5 text-sm font-medium text-primary">
+                <span className="text-primary">Today</span>
               </div>
               
-              {isTodayExpanded && (
-                <div className="space-y-1 mt-1">
-                  {todayChats
-                    .sort((a, b) => b.updatedAt - a.updatedAt)
-                    .map((chat) => (
-                      <SidebarChatItem 
-                        key={chat.id} 
-                        chat={chat} 
-                        isActive={currentChat?.id === chat.id}
-                        onSelect={() => selectChat(chat.id)}
-                        onDelete={() => handleDeleteChat(chat.id)}
-                        onRename={(newTitle) => renameChat(chat.id, newTitle)}
-                        onAddToFolder={(folder) => addChatToFolder(chat.id, folder)}
-                        onPin={() => pinChat(chat.id)}
-                        folders={folders}
-                      />
-                    ))}
-                </div>
-              )}
+              <div className="space-y-1 mt-1">
+                {todayChats
+                  .sort((a, b) => b.updatedAt - a.updatedAt)
+                  .map((chat) => (
+                    <SidebarChatItem 
+                      key={chat.id} 
+                      chat={chat} 
+                      isActive={currentChat?.id === chat.id}
+                      onSelect={() => selectChat(chat.id)}
+                      onDelete={() => handleDeleteChat(chat.id)}
+                      onRename={(newTitle) => renameChat(chat.id, newTitle)}
+                      onAddToFolder={(folder) => addChatToFolder(chat.id, folder)}
+                      onPin={() => pinChat(chat.id)}
+                      folders={folders}
+                    />
+                  ))}
+              </div>
             </div>
           )}
 
           {yesterdayChats.length > 0 && (
             <div className="mb-2">
-              <div 
-                className="flex items-center px-2 py-1.5 text-sm font-medium text-primary cursor-pointer"
-                onClick={() => setIsYesterdayExpanded(!isYesterdayExpanded)}
-              >
-                <span>Yesterday</span>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="ml-auto h-5 w-5 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsYesterdayExpanded(!isYesterdayExpanded);
-                  }}
-                >
-                  {isYesterdayExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </Button>
+              <div className="flex items-center px-2 py-1.5 text-sm font-medium text-primary">
+                <span className="text-primary">Yesterday</span>
               </div>
               
-              {isYesterdayExpanded && (
-                <div className="space-y-1 mt-1">
-                  {yesterdayChats
-                    .sort((a, b) => b.updatedAt - a.updatedAt)
-                    .map((chat) => (
-                      <SidebarChatItem 
-                        key={chat.id} 
-                        chat={chat} 
-                        isActive={currentChat?.id === chat.id}
-                        onSelect={() => selectChat(chat.id)}
-                        onDelete={() => handleDeleteChat(chat.id)}
-                        onRename={(newTitle) => renameChat(chat.id, newTitle)}
-                        onAddToFolder={(folder) => addChatToFolder(chat.id, folder)}
-                        onPin={() => pinChat(chat.id)}
-                        folders={folders}
-                      />
-                    ))}
-                </div>
-              )}
+              <div className="space-y-1 mt-1">
+                {yesterdayChats
+                  .sort((a, b) => b.updatedAt - a.updatedAt)
+                  .map((chat) => (
+                    <SidebarChatItem 
+                      key={chat.id} 
+                      chat={chat} 
+                      isActive={currentChat?.id === chat.id}
+                      onSelect={() => selectChat(chat.id)}
+                      onDelete={() => handleDeleteChat(chat.id)}
+                      onRename={(newTitle) => renameChat(chat.id, newTitle)}
+                      onAddToFolder={(folder) => addChatToFolder(chat.id, folder)}
+                      onPin={() => pinChat(chat.id)}
+                      folders={folders}
+                    />
+                  ))}
+              </div>
             </div>
           )}
 
           {olderChats.length > 0 && (
             <div className="mb-2">
-              <div 
-                className="flex items-center px-2 py-1.5 text-sm font-medium text-primary cursor-pointer"
-                onClick={() => setIsOlderExpanded(!isOlderExpanded)}
-              >
-                <span>Older</span>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="ml-auto h-5 w-5 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsOlderExpanded(!isOlderExpanded);
-                  }}
-                >
-                  {isOlderExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </Button>
+              <div className="flex items-center px-2 py-1.5 text-sm font-medium text-primary">
+                <span className="text-primary">Older</span>
               </div>
               
-              {isOlderExpanded && (
-                <div className="space-y-1 mt-1">
-                  {olderChats
-                    .sort((a, b) => b.updatedAt - a.updatedAt)
-                    .map((chat) => (
-                      <SidebarChatItem 
-                        key={chat.id} 
-                        chat={chat} 
-                        isActive={currentChat?.id === chat.id}
-                        onSelect={() => selectChat(chat.id)}
-                        onDelete={() => handleDeleteChat(chat.id)}
-                        onRename={(newTitle) => renameChat(chat.id, newTitle)}
-                        onAddToFolder={(folder) => addChatToFolder(chat.id, folder)}
-                        onPin={() => pinChat(chat.id)}
-                        folders={folders}
-                      />
-                    ))}
-                </div>
-              )}
+              <div className="space-y-1 mt-1">
+                {olderChats
+                  .sort((a, b) => b.updatedAt - a.updatedAt)
+                  .map((chat) => (
+                    <SidebarChatItem 
+                      key={chat.id} 
+                      chat={chat} 
+                      isActive={currentChat?.id === chat.id}
+                      onSelect={() => selectChat(chat.id)}
+                      onDelete={() => handleDeleteChat(chat.id)}
+                      onRename={(newTitle) => renameChat(chat.id, newTitle)}
+                      onAddToFolder={(folder) => addChatToFolder(chat.id, folder)}
+                      onPin={() => pinChat(chat.id)}
+                      folders={folders}
+                    />
+                  ))}
+              </div>
             </div>
           )}
 
@@ -412,6 +371,21 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           </div>
         </div>
       </aside>
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Chat</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this chat? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Dialog open={isFolderDialogOpen} onOpenChange={setIsFolderDialogOpen}>
         <DialogContent>

@@ -1,11 +1,9 @@
-
 export interface Message {
   id: string;
-  role: "user" | "assistant";
+  role: "user" | "system" | "assistant";
   content: string;
   timestamp: number;
-  attachments?: string[]; // URLs to attached files
-  model?: Model; // The model used to generate this specific message
+  model?: Model;
 }
 
 export interface Chat {
