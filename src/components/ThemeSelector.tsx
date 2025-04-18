@@ -73,7 +73,7 @@ export const ThemeSelector = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="ghost" size="icon" className="h-8 w-8">
           {getThemeIcon(currentTheme)}
         </Button>
       </DropdownMenuTrigger>

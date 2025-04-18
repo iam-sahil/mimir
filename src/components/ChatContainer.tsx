@@ -6,7 +6,7 @@ import { EmptyState } from "./EmptyState";
 import { useChat } from "@/contexts/ChatContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { sendChatRequest } from "@/lib/api";
-import { PanelRight, Info, ArrowDown } from "lucide-react";
+import { PanelRight, Info, ArrowDown, Settings } from "lucide-react";
 import { Button } from "./ui/button";
 import { ThemeSelector } from "./ThemeSelector";
 import { SettingsDialog } from "./SettingsDialog";
@@ -187,8 +187,6 @@ export const ChatContainer = ({
       // Remove the assistant response and all subsequent messages
       const newMessages = currentChat.messages.slice(0, messageIndex);
       
-      // TODO: Update the chat context with the new messages array
-      
       // Resend the user message to get a new response
       handleSendMessage(userMessage);
       
@@ -204,7 +202,7 @@ export const ChatContainer = ({
   return (
     <div className={cn(
       "flex flex-col h-screen",
-      sidebarOpen ? "lg:ml-[300px]" : ""
+      sidebarOpen ? "lg:ml-0" : ""  // Fixed: No additional margin when sidebar is open
     )}>
       <header className="h-16 flex items-center justify-between px-4 shrink-0">
         <div></div>
@@ -219,7 +217,7 @@ export const ChatContainer = ({
               onClick={() => setIsSettingsOpen(true)}
               className="h-8 w-8"
             >
-              <Info className="h-5 w-5" />
+              <Settings className="h-5 w-5" />
             </Button>
           </div>
           <div className="glass-effect rounded-lg p-1.5 shadow-sm">

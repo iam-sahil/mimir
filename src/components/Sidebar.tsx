@@ -124,7 +124,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
         <div className="p-4 space-y-3">
           <Button 
-            className="w-full justify-center font-space-grotesk glass-effect transition-all hover:shadow-lg bg-primary text-primary-foreground"
+            className="w-full justify-center font-space-grotesk bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
             onClick={() => {
               createNewChat();
               if (isMobile) onClose();

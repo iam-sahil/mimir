@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ExternalLink, Github, Instagram, Mail, Brain } from "lucide-react";
+import { ExternalLink, Github, Instagram, Mail, Brain, Settings } from "lucide-react";
 import { useSettings } from "@/contexts/SettingsContext";
 import { KEYBOARD_SHORTCUTS } from "@/hooks/useHotkeys";
 import { toast } from "sonner";
@@ -32,6 +32,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
   const [customFontFamily, setCustomFontFamily] = useState("");
   const [previewFont, setPreviewFont] = useState(false);
   const freeMessagesRemaining = 10 - settings.freeMessagesUsed;
+  const [activeTab, setActiveTab] = useState("account");
 
   useEffect(() => {
     if (open) {
@@ -97,7 +98,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] min-h-[400px]">
+      <DialogContent className="sm:max-w-[600px] min-h-[500px] w-full">
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>
@@ -105,15 +106,40 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
           </DialogDescription>
         </DialogHeader>
         
-        <Tabs defaultValue="account" className="mt-4">
+        <Tabs 
+          defaultValue="account" 
+          className="mt-4" 
+          value={activeTab} 
+          onValueChange={setActiveTab}
+        >
           <TabsList className="grid grid-cols-4 mb-4 w-full">
-            <TabsTrigger value="account" className="w-full">Account</TabsTrigger>
-            <TabsTrigger value="customization" className="w-full">Customization</TabsTrigger>
-            <TabsTrigger value="shortcuts" className="w-full">Keyboard Shortcuts</TabsTrigger>
-            <TabsTrigger value="contact" className="w-full">Contact Us</TabsTrigger>
+            <TabsTrigger 
+              value="account" 
+              className="w-full px-1 py-1.5"
+            >
+              Account
+            </TabsTrigger>
+            <TabsTrigger 
+              value="customization" 
+              className="w-full px-1 py-1.5"
+            >
+              Customization
+            </TabsTrigger>
+            <TabsTrigger 
+              value="shortcuts" 
+              className="w-full px-1 py-1.5"
+            >
+              Keyboard Shortcuts
+            </TabsTrigger>
+            <TabsTrigger 
+              value="contact" 
+              className="w-full px-1 py-1.5"
+            >
+              Contact Us
+            </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="account" className="space-y-4">
+          <TabsContent value="account" className="space-y-4 min-h-[300px]">
             <div className="grid gap-2">
               <Label htmlFor="username">Username</Label>
               <Input
