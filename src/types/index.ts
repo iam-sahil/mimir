@@ -1,3 +1,27 @@
+export interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: number;
+}
+
+export interface Chat {
+  id: string;
+  title: string;
+  messages: Message[];
+  model: Model;
+  createdAt: number;
+  updatedAt: number;
+  folder?: string;
+  isPinned: boolean;
+}
+
+export interface Model {
+  id: string;
+  name: string;
+  modelId: string;
+  provider: "gemini" | "openrouter";
+}
 
 export type Theme =
   | "light-pink"
@@ -18,31 +42,4 @@ export interface Settings {
   theme: Theme;
   username: string;
   freeMessagesUsed: number;
-}
-
-export interface Model {
-  id: string;
-  name: string;
-  provider: "gemini" | "openrouter";
-  modelId: string;
-  description: string;
-  canUseImage: boolean;
-}
-
-export interface Message {
-  id: string;
-  content: string;
-  role: "user" | "assistant";
-  timestamp: number;
-}
-
-export interface Chat {
-  id: string;
-  title: string;
-  messages: Message[];
-  model: Model;
-  createdAt: number;
-  updatedAt: number;
-  folder?: string;
-  isPinned?: boolean;
 }

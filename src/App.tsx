@@ -14,9 +14,9 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <SettingsProvider>
-        <ThemeProvider>
+    <SettingsProvider>
+      <ThemeProvider>
+        <TooltipProvider>
           <ChatProvider>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -26,9 +26,9 @@ const App = () => (
             <Toaster />
             <Sonner />
           </ChatProvider>
-        </ThemeProvider>
-      </SettingsProvider>
-    </TooltipProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </SettingsProvider>
   </QueryClientProvider>
 );
 

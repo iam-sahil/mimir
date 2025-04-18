@@ -16,11 +16,21 @@ export function useHotkeys(hotkeys: Hotkey[]) {
       
       // Check each hotkey
       hotkeys.forEach(hotkey => {
-        const isMatch = hotkey.keys.every(key => 
-          pressedKeys.current[key] || 
-          pressedKeys.current[key.toLowerCase()] ||
-          pressedKeys.current[key.charAt(0).toUpperCase() + key.slice(1)]
-        );
+        const isMatch = hotkey.keys.every(key => {
+          if (key === 'Control' || key === 'Ctrl') {
+            return e.ctrlKey;
+          } else if (key === 'Shift') {
+            return e.shiftKey;
+          } else if (key === 'Alt') {
+            return e.altKey;
+          } else if (key === 'Meta' || key === 'Command' || key === 'Cmd') {
+            return e.metaKey;
+          } else {
+            return pressedKeys.current[key] || 
+                   pressedKeys.current[key.toLowerCase()] ||
+                   pressedKeys.current[key.charAt(0).toUpperCase() + key.slice(1)];
+          }
+        });
         
         if (isMatch) {
           e.preventDefault();
@@ -42,3 +52,31 @@ export function useHotkeys(hotkeys: Hotkey[]) {
     };
   }, [hotkeys]);
 }
+
+export const KEYBOARD_SHORTCUTS = [
+  {
+    name: 'Toggle Sidebar',
+    keys: ['Ctrl', 'B'],
+    description: 'Show or hide the sidebar'
+  },
+  {
+    name: 'Focus Search',
+    keys: ['Ctrl', 'K'],
+    description: 'Focus the search input'
+  },
+  {
+    name: 'New Chat',
+    keys: ['Ctrl', 'Shift', 'O'],
+    description: 'Create a new chat'
+  },
+  {
+    name: 'Rename Chat',
+    keys: ['Ctrl', 'R'],
+    description: 'Rename the current chat'
+  },
+  {
+    name: 'Attach Files',
+    keys: ['Ctrl', 'Shift', 'A'],
+    description: 'Open file picker to attach files'
+  }
+];

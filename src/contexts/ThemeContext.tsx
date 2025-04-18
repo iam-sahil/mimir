@@ -17,9 +17,21 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Apply theme class to the document element
   useEffect(() => {
-    // Remove all theme classes
-    const themeClasses = Object.values(themes).map(theme => theme.className).filter(Boolean);
-    document.documentElement.classList.remove(...themeClasses);
+    // Safety check for themes object
+    if (!themes) {
+      console.error("Themes object is undefined");
+      return;
+    }
+
+    // Get valid theme classes
+    const themeClasses = Object.values(themes)
+      .map(theme => theme?.className)
+      .filter(Boolean);
+
+    // Remove all theme classes safely
+    if (themeClasses.length > 0) {
+      document.documentElement.classList.remove(...themeClasses);
+    }
     
     // Check if the current theme exists in the themes object
     const currentTheme = settings.theme;

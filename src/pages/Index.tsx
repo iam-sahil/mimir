@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Menu, Plus, Search, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InfoDialog } from "@/components/InfoDialog";
+import { SearchModal } from "@/components/SearchModal";
 import { useHotkeys } from "@/hooks/useHotkeys";
 
 const CollapsedSidebarButtons = ({ onToggleSidebar, onNewChat, onOpenSearch, onInfoClick }: { 
@@ -17,14 +18,14 @@ const CollapsedSidebarButtons = ({ onToggleSidebar, onNewChat, onOpenSearch, onI
   onInfoClick: () => void;
 }) => {
   return (
-    <div className="fixed left-4 top-4 z-40 flex flex-col space-y-2">
-      <Button variant="secondary" size="icon" className="rounded-full shadow-md glass-effect" onClick={onToggleSidebar}>
+    <div className="fixed left-4 top-4 z-40 flex flex-row space-x-2">
+      <Button variant="secondary" size="icon" className="rounded-md shadow-md glass-effect" onClick={onToggleSidebar}>
         <Menu className="h-5 w-5" />
       </Button>
-      <Button variant="secondary" size="icon" className="rounded-full shadow-md glass-effect" onClick={onNewChat}>
+      <Button variant="secondary" size="icon" className="rounded-md shadow-md glass-effect" onClick={onNewChat}>
         <Plus className="h-5 w-5" />
       </Button>
-      <Button variant="secondary" size="icon" className="rounded-full shadow-md glass-effect" onClick={onOpenSearch}>
+      <Button variant="secondary" size="icon" className="rounded-md shadow-md glass-effect" onClick={onOpenSearch}>
         <Search className="h-5 w-5" />
       </Button>
     </div>
@@ -35,33 +36,36 @@ const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const { createNewChat } = useChat();
 
   // Register keyboard shortcuts
   useHotkeys([
     { 
-      keys: ["Control", "s"], 
+      keys: ["Control", "b"], 
       callback: () => setIsSidebarOpen(prev => !prev),
       description: "Toggle sidebar" 
     },
     { 
       keys: ["Control", "k"], 
       callback: () => {
-        // Focus message input
-        const messageInput = document.querySelector('textarea[placeholder="Message Mimir..."]');
-        if (messageInput) {
-          (messageInput as HTMLTextAreaElement).focus();
+        // Focus message input or open search modal
+        if (!isSidebarOpen || isMobile) {
+          setIsSearchModalOpen(true);
+        } else {
+          // Focus message input
+          const messageInput = document.querySelector('textarea[placeholder="Message Mimir..."]');
+          if (messageInput) {
+            (messageInput as HTMLTextAreaElement).focus();
+          }
         }
       },
       description: "Focus message input" 
     },
     { 
-      keys: ["Control", "r"], 
-      callback: () => {
-        // Rename current chat
-        // This is handled in ChatContainer
-      },
-      description: "Rename current chat" 
+      keys: ["Control", "Shift", "o"], 
+      callback: () => createNewChat(),
+      description: "Create new chat" 
     }
   ]);
 
@@ -100,8 +104,7 @@ const Index = () => {
             onToggleSidebar={toggleSidebar}
             onNewChat={createNewChat}
             onOpenSearch={() => {
-              // Implement search functionality
-              toggleSidebar();
+              setIsSearchModalOpen(true);
             }}
             onInfoClick={() => setIsInfoOpen(true)}
           />
@@ -113,6 +116,7 @@ const Index = () => {
       </main>
       
       <InfoDialog open={isInfoOpen} onOpenChange={setIsInfoOpen} />
+      <SearchModal open={isSearchModalOpen} onOpenChange={setIsSearchModalOpen} />
     </div>
   );
 };
