@@ -24,15 +24,21 @@ export const BackgroundGradient = () => {
         return ["#bb9af7", "#7aa2f7", "#7dcfff", "#9ece6a", "#f7768e"];
       case "nord":
         return ["#81a1c1", "#88c0d0", "#a3be8c", "#bf616a", "#d08770"];
-      case "monodark":
-        return ["#61afef", "#98c379", "#c678dd", "#e5c07b", "#e06c75"];
+      case "dark-mono":
+        return ["#ffffff", "#e0e0e0", "#bdbdbd", "#9e9e9e", "#757575"];
       case "gruvbox":
         return ["#fabd2f", "#b8bb26", "#83a598", "#d3869b", "#fb4934"];
-      case "light":
-        return ["#ff69b4", "#ff8c00", "#4682b4", "#32cd32", "#9370db"];
-      case "dark":
+      case "light-pink":
+        return ["#ff4081", "#f48fb1", "#ff69b4", "#ff8c00", "#4682b4"];
+      case "dark-green":
       default:
-        return ["#ff6bcb", "#5555ff", "#44ccff", "#44ffcc", "#ffcc44"];
+        return ["#4caf50", "#81c784", "#a5d6a7", "#c8e6c9", "#e8f5e9"];
+      case "one-dark":
+        return ["#61afef", "#98c379", "#c678dd", "#e5c07b", "#e06c75"];
+      case "dracula":
+        return ["#bd93f9", "#50fa7b", "#ff79c6", "#8be9fd", "#ffb86c"];
+      case "github-light":
+        return ["#0366d6", "#22863a", "#cb2431", "#6f42c1", "#005cc5"];
     }
   };
 

@@ -2,14 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { ChatContainer } from "@/components/ChatContainer";
-import { ChatProvider } from "@/contexts/ChatContext";
-import { SettingsProvider } from "@/contexts/SettingsContext";
-import { ThemeProvider } from "@/contexts/ThemeContext";
+import { useChat } from "@/contexts/ChatContext";
 import { BackgroundGradient } from "@/components/BackgroundGradient";
 import { cn } from "@/lib/utils";
 import { Menu, Plus, Search, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useChat } from "@/contexts/ChatContext";
 import { InfoDialog } from "@/components/InfoDialog";
 import { useHotkeys } from "@/hooks/useHotkeys";
 
@@ -90,39 +87,33 @@ const Index = () => {
   };
 
   return (
-    <SettingsProvider>
-      <ThemeProvider>
-        <ChatProvider>
-          <div className="flex h-screen bg-background text-foreground font-space-grotesk">
-            <BackgroundGradient />
-            <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
-            
-            <main className={cn(
-              "flex-1 transition-all duration-300 w-full relative",
-              isMobile ? "" : (isSidebarOpen ? "lg:ml-[300px]" : "lg:ml-0")
-            )}>
-              {!isSidebarOpen && (
-                <CollapsedSidebarButtons 
-                  onToggleSidebar={toggleSidebar}
-                  onNewChat={createNewChat}
-                  onOpenSearch={() => {
-                    // Implement search functionality
-                    toggleSidebar();
-                  }}
-                  onInfoClick={() => setIsInfoOpen(true)}
-                />
-              )}
-              <ChatContainer 
-                onSidebarToggle={toggleSidebar}
-                onInfoClick={() => setIsInfoOpen(true)}
-              />
-            </main>
-            
-            <InfoDialog open={isInfoOpen} onOpenChange={setIsInfoOpen} />
-          </div>
-        </ChatProvider>
-      </ThemeProvider>
-    </SettingsProvider>
+    <div className="flex h-screen bg-background text-foreground font-space-grotesk">
+      <BackgroundGradient />
+      <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
+      
+      <main className={cn(
+        "flex-1 transition-all duration-300 w-full relative",
+        isMobile ? "" : (isSidebarOpen ? "lg:ml-[300px]" : "lg:ml-0")
+      )}>
+        {!isSidebarOpen && (
+          <CollapsedSidebarButtons 
+            onToggleSidebar={toggleSidebar}
+            onNewChat={createNewChat}
+            onOpenSearch={() => {
+              // Implement search functionality
+              toggleSidebar();
+            }}
+            onInfoClick={() => setIsInfoOpen(true)}
+          />
+        )}
+        <ChatContainer 
+          onSidebarToggle={toggleSidebar}
+          onInfoClick={() => setIsInfoOpen(true)}
+        />
+      </main>
+      
+      <InfoDialog open={isInfoOpen} onOpenChange={setIsInfoOpen} />
+    </div>
   );
 };
 

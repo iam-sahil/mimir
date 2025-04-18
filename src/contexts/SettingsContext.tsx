@@ -24,7 +24,7 @@ const defaultSettings: Settings = {
   geminiApiKey: "",
   openRouterApiKey: "",
   defaultModel: defaultModel,
-  theme: "dark",
+  theme: "dark-green", // Updated default theme to one in our Theme type
   username: "",
   freeMessagesUsed: 0,
 };
