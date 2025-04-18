@@ -18,53 +18,65 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Apply theme class to the document element
   useEffect(() => {
     // Remove all theme classes
-    document.documentElement.classList.remove(...Object.values(themes).map(theme => theme.className));
+    const themeClasses = Object.values(themes).map(theme => theme.className).filter(Boolean);
+    document.documentElement.classList.remove(...themeClasses);
     
-    // Add current theme class
-    document.documentElement.classList.add(themes[settings.theme].className);
+    // Check if the current theme exists in the themes object
+    const currentTheme = settings.theme;
+    const themeData = themes[currentTheme];
     
-    // Set CSS custom property for primary RGB
-    const setPrimaryRGB = () => {
-      let primaryRGB;
-      switch(settings.theme) {
-        case "light-pink":
-          primaryRGB = "255, 64, 129";
-          break;
-        case "dark-green":
-          primaryRGB = "76, 175, 80";
-          break;
-        case "dark-mono":
-          primaryRGB = "255, 255, 255";
-          break;
-        case "catppuccin":
-          primaryRGB = "243, 139, 168";
-          break;
-        case "tokyo-night":
-          primaryRGB = "187, 154, 247";
-          break;
-        case "nord":
-          primaryRGB = "129, 161, 193";
-          break;
-        case "gruvbox":
-          primaryRGB = "250, 189, 47";
-          break;
-        case "one-dark":
-          primaryRGB = "97, 175, 239";
-          break;
-        case "dracula":
-          primaryRGB = "189, 147, 249";
-          break;
-        case "github-light":
-          primaryRGB = "3, 102, 214";
-          break;
-        default:
-          primaryRGB = "255, 64, 129";
-      }
+    if (themeData && themeData.className) {
+      // Add current theme class
+      document.documentElement.classList.add(themeData.className);
       
-      document.documentElement.style.setProperty('--primary-rgb', primaryRGB);
-    };
-    
-    setPrimaryRGB();
+      // Set CSS custom property for primary RGB
+      const setPrimaryRGB = () => {
+        let primaryRGB;
+        switch(currentTheme) {
+          case "light-pink":
+            primaryRGB = "255, 64, 129";
+            break;
+          case "dark-green":
+            primaryRGB = "76, 175, 80";
+            break;
+          case "dark-mono":
+            primaryRGB = "255, 255, 255";
+            break;
+          case "catppuccin":
+            primaryRGB = "243, 139, 168";
+            break;
+          case "tokyo-night":
+            primaryRGB = "187, 154, 247";
+            break;
+          case "nord":
+            primaryRGB = "129, 161, 193";
+            break;
+          case "gruvbox":
+            primaryRGB = "250, 189, 47";
+            break;
+          case "one-dark":
+            primaryRGB = "97, 175, 239";
+            break;
+          case "dracula":
+            primaryRGB = "189, 147, 249";
+            break;
+          case "github-light":
+            primaryRGB = "3, 102, 214";
+            break;
+          default:
+            primaryRGB = "76, 175, 80"; // Default to dark-green
+        }
+        
+        document.documentElement.style.setProperty('--primary-rgb', primaryRGB);
+      };
+      
+      setPrimaryRGB();
+    } else {
+      console.warn(`Theme '${currentTheme}' not found in themes object or missing className`);
+      // Apply a default theme as fallback
+      document.documentElement.classList.add("dark-green");
+      document.documentElement.style.setProperty('--primary-rgb', "76, 175, 80");
+    }
   }, [settings.theme]);
 
   return (
