@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +27,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const [isOlderExpanded, setIsOlderExpanded] = useState(true);
   const searchInputRef = useRef<HTMLInputElement>(null);
   
-  // Detect mobile viewport
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -40,25 +38,21 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  // Handle focus on search input when clicked
   const handleSearchFocus = () => {
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
   };
 
-  // Handle click outside of sidebar on mobile
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (isMobile && e.target === e.currentTarget) {
       onClose();
     }
   };
 
-  // Filter and organize chats
   const pinnedChats = chats.filter(chat => chat.isPinned);
   const folderedChats = chats.filter(chat => chat.folder && !chat.isPinned);
   
-  // Get chats for today, yesterday, and older, excluding pinned and foldered chats
   const now = new Date();
   const yesterdayDate = subDays(now, 1);
   
@@ -77,19 +71,17 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     !chat.folder
   );
   
-  // Get unique folder names
   const folders = Array.from(new Set(chats.filter(chat => chat.folder).map(chat => chat.folder))) as string[];
   
-  // Filter chats based on search query
   const filteredChats = chats.filter(chat => 
     chat.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Function to handle chat deletion with confirmation
   const handleDeleteChat = (chatId: string) => {
     if (confirm("Are you sure you want to delete this chat? This action cannot be undone.")) {
       deleteChat(chatId);
       toast({
+        title: "Chat deleted",
         description: "Chat deleted successfully"
       });
     }
@@ -97,7 +89,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   return (
     <>
-      {/* Mobile overlay */}
       {isMobile && isOpen && (
         <div 
           className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
@@ -163,7 +154,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </div>
 
         <div className="flex-1 overflow-y-auto px-2 overflow-x-hidden">
-          {/* Pinned chats section */}
           <div className="mb-2">
             <div 
               className="flex items-center px-2 py-1.5 text-sm font-medium text-primary cursor-pointer"
@@ -206,7 +196,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             )}
           </div>
 
-          {/* Folders section */}
           <div className="mb-2">
             <div 
               className="flex items-center px-2 py-1.5 text-sm font-medium text-primary cursor-pointer"
@@ -241,7 +230,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                     <div className="space-y-1 ml-4">
                       {chats
                         .filter(chat => chat.folder === folderName)
-                        .sort((a, b) => b.updatedAt - a.updatedAt) // Show most recently accessed first
+                        .sort((a, b) => b.updatedAt - a.updatedAt)
                         .map(chat => (
                           <SidebarChatItem 
                             key={chat.id} 
@@ -263,7 +252,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             )}
           </div>
 
-          {/* Today section */}
           {todayChats.length > 0 && (
             <div className="mb-2">
               <div 
@@ -306,7 +294,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </div>
           )}
 
-          {/* Yesterday section */}
           {yesterdayChats.length > 0 && (
             <div className="mb-2">
               <div 
@@ -349,7 +336,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </div>
           )}
 
-          {/* Older section */}
           {olderChats.length > 0 && (
             <div className="mb-2">
               <div 
@@ -392,7 +378,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </div>
           )}
 
-          {/* If search is active, show filtered results */}
           {searchQuery && (
             <div className="mt-4">
               <h3 className="text-sm font-medium px-2 py-1">Search Results</h3>
@@ -451,8 +436,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             <Button
               onClick={() => {
                 if (newFolderName.trim()) {
-                  // Add logic to create folder
                   toast({
+                    title: "Folder created",
                     description: `Folder "${newFolderName}" created`
                   });
                   setIsFolderDialogOpen(false);

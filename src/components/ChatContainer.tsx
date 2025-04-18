@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { MessageInput } from "./MessageInput";
@@ -53,13 +52,15 @@ export const ChatContainer = ({
           if (newTitle && newTitle.trim() !== "" && newTitle !== currentChat.title) {
             renameChat(currentChat.id, newTitle);
             toast({
+              title: "Success",
               description: "Chat renamed successfully"
             });
           }
         } else {
           toast({
-            variant: "destructive",
-            description: "No chat selected"
+            title: "Error",
+            description: "No chat selected",
+            variant: "destructive"
           });
         }
       },
@@ -90,7 +91,7 @@ export const ChatContainer = ({
         setTimeout(typeWriter, speed);
       } else {
         setIsTyping(false);
-        addMessage(completeResponse, "assistant", currentChat?.model);
+        addMessage(completeResponse, "assistant");
         setCompleteResponse("");
         setTypingText("");
       }
@@ -130,9 +131,10 @@ export const ChatContainer = ({
         
     if (!apiKey) {
       toast({
-        variant: "destructive",
+        title: "Error",
         description: `No API key available for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please add your API key in settings.`,
         duration: 5000,
+        variant: "destructive"
       });
       addMessage(
         `Sorry, I couldn't process your request. No API key found for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please add your API key in the settings.`,
@@ -148,9 +150,10 @@ export const ChatContainer = ({
         
         if (settings.freeMessagesUsed >= 10) {
           toast({
-            variant: "destructive",
+            title: "Error",
             description: "You've used all your free messages. Please add your Gemini API key in settings to continue.",
             duration: 8000,
+            variant: "destructive"
           });
         }
       }
@@ -173,22 +176,25 @@ export const ChatContainer = ({
         if (error.message.includes("API key")) {
           errorMessage = `Invalid ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"} API key. Please check your settings.`;
           toast({
-            variant: "destructive",
+            title: "API Error",
             description: errorMessage,
             duration: 5000,
+            variant: "destructive"
           });
         } else if (error.message.includes("429")) {
           errorMessage = `You've reached the rate limit for ${currentChat.model.provider === "openrouter" ? "OpenRouter" : "Gemini"}. Please try again later.`;
           toast({
-            variant: "destructive",
+            title: "Rate Limit",
             description: "Rate limit reached",
             duration: 5000,
+            variant: "destructive"
           });
         } else {
           toast({
-            variant: "destructive",
+            title: "Connection Error",
             description: "Error connecting to AI service",
             duration: 5000,
+            variant: "destructive"
           });
         }
       }
@@ -218,6 +224,7 @@ export const ChatContainer = ({
       handleSendMessage(userMessage);
       
       toast({
+        title: "Regenerating",
         description: "Regenerating response...",
       });
     }

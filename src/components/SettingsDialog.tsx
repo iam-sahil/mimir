@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   Dialog,
@@ -23,7 +22,7 @@ interface SettingsDialogProps {
 }
 
 export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
-  const { settings, saveGeminiKey, saveOpenRouterKey, setUsername, setCustomFont } = useSettings();
+  const { settings, saveGeminiKey, saveOpenRouterKey, setUsername } = useSettings();
   
   const [geminiKey, setGeminiKey] = useState(settings.geminiApiKey || "");
   const [openRouterKey, setOpenRouterKey] = useState(settings.openRouterApiKey || "");
@@ -59,19 +58,11 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
       setUsername(username);
     }
     
-    // Custom font handling
-    if (previewFont && customFontFamily && fontUrl) {
-      setCustomFont({
-        url: fontUrl,
-        family: customFontFamily
-      });
-      
-      toast({
-        description: `Custom font ${customFontFamily} applied successfully`
-      });
-    }
-    
     onOpenChange(false);
+    toast({
+      title: "Settings saved",
+      description: "Your settings have been saved successfully"
+    });
   };
 
   const handleFontUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,8 +79,9 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
     
     if (!familyParam) {
       toast({
-        variant: "destructive",
-        description: "Invalid Google Font URL. Please make sure it contains a family parameter."
+        title: "Invalid URL",
+        description: "Invalid Google Font URL. Please make sure it contains a family parameter.",
+        variant: "destructive"
       });
       return;
     }
@@ -107,6 +99,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
     setPreviewFont(true);
     
     toast({
+      title: "Font preview",
       description: "Font preview applied. Save changes to keep this font."
     });
   };

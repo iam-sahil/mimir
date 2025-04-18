@@ -94,6 +94,7 @@ export const MessageInput = ({
       
       if (validFiles.length !== newFiles.length) {
         toast({
+          title: "Invalid files",
           description: "Only images, PDFs, and document files are supported",
         });
       }
