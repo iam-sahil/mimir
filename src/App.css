@@ -1,7 +1,8 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }
 
@@ -95,6 +96,7 @@
               inset 0 1px 1px rgba(255, 255, 255, 0.1),
               inset 0 -1px 1px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
+  height: 44px;
 }
 
 .new-chat-button:hover {
@@ -112,7 +114,6 @@
 
 /* Search input styling */
 .sidebar-search {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: border-color 0.2s ease;
 }
 
@@ -128,7 +129,7 @@
 
 /* Reduced font size */
 html {
-  font-size: 15px;
+  font-size: 14px;
 }
 
 /* Prompt box transitions */
@@ -138,9 +139,55 @@ html {
 
 /* Message backgrounds */
 .user-message {
-  background-color: rgba(52, 53, 65, 0.5);
+  background-color: rgba(52, 53, 65, 0.3);
 }
 
 .assistant-message {
-  background-color: rgba(68, 70, 84, 0.5);
+  background-color: rgba(68, 70, 84, 0.3);
+}
+
+/* Sidebar styling */
+.sidebar-root {
+  background-color: var(--sidebar);
+  color: var(--sidebar-foreground);
+  border-right: 1px solid var(--sidebar-border);
+}
+
+/* Main content area */
+.main-content-area {
+  background-color: var(--background);
+  transition: all 0.3s ease;
+}
+
+/* Top gap layout */
+.top-gap {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+
+.top-gap-active {
+  height: 60px;
+}
+
+/* Message input container */
+.message-input-container {
+  position: fixed;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+  padding: 0 16px;
+  transition: all 0.3s ease;
+}
+
+/* Chat theme buttons */
+.chat-theme-buttons {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
 }

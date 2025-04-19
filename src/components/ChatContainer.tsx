@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { MessageInput } from "./MessageInput";
@@ -207,11 +208,10 @@ export const ChatContainer = ({
   return (
     <div className="flex flex-col h-screen">
       <header className={cn(
-        "h-16 flex items-center justify-between px-4 shrink-0 transition-all duration-300",
+        "h-16 flex items-center justify-end px-4 shrink-0 transition-all duration-300",
         sidebarOpen ? "lg:ml-[300px]" : ""
       )}>
-        <div></div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 z-10">
           <div className="glass-effect rounded-lg p-1.5 shadow-md">
             <ThemeSelector />
           </div>
@@ -328,10 +328,10 @@ export const ChatContainer = ({
       )}
 
       <div className={cn(
-        "fixed bottom-6 left-0 right-0 flex justify-center mx-auto prompt-box-transition",
-        sidebarOpen ? "lg:ml-[300px] lg:mr-0" : "mx-auto"
+        "message-input-container prompt-box-transition",
+        sidebarOpen ? "lg:ml-[300px] lg:w-[calc(100%-300px)]" : "w-full"
       )}>
-        <div className="glass-effect backdrop-blur-md shadow-lg rounded-xl p-2">
+        <div className="glass-effect backdrop-blur-md shadow-lg rounded-xl p-2 max-w-4xl w-full mx-auto">
           <MessageInput
             onSendMessage={handleSendMessage}
             isLoading={isLoading}
