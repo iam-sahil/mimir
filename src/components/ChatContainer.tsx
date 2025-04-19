@@ -148,7 +148,15 @@ export const ChatContainer = ({
   const handleSendMessage = async (message: string, attachments?: File[]) => {
     if (!currentChat) return;
 
-    addMessage(message, "user");
+    // Create message attachments if files are provided
+    const messageAttachments = attachments?.map(file => ({
+      file,
+      type: file.type,
+      name: file.name
+    }));
+
+    // Add user message with attachments
+    addMessage(message, "user", messageAttachments);
 
     const apiKey = getActiveApiKey(currentChat.model.provider);
         
@@ -171,9 +179,18 @@ export const ChatContainer = ({
         }
       }
       
+      // Create a temp user message with attachments to send in the request
+      const tempUserMessage = { 
+        id: "temp", 
+        role: "user", 
+        content: message, 
+        timestamp: Date.now(),
+        attachments: messageAttachments 
+      };
+      
       const response = await sendChatRequest(
         currentChat.model,
-        [...currentChat.messages, { id: "temp", role: "user", content: message, timestamp: Date.now() }],
+        [...currentChat.messages, tempUserMessage],
         apiKey
       );
 
@@ -350,7 +367,7 @@ export const ChatContainer = ({
 
       <div className="fixed bottom-6 left-0 right-0 flex justify-center mx-auto">
         <div className={cn(
-          "w-full max-w-3xl px-4", 
+          "w-full max-w-3xl px-4 transition-all duration-500 ease-in-out", 
           sidebarOpen ? "lg:ml-[300px] lg:mr-0" : "mx-auto"
         )}>
           <div className="glass-effect backdrop-blur-md shadow-lg rounded-xl p-2">
@@ -370,6 +387,7 @@ export const ChatContainer = ({
       <SettingsDialog
         open={isSettingsOpen}
         onOpenChange={setIsSettingsOpen}
+        className="w-[800px] max-w-[90vw] max-h-[90vh]"
       />
     </div>
   );

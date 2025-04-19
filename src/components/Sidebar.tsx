@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -105,7 +104,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-[300px] border-r border-border flex flex-col transition-transform duration-500 ease-in-out overflow-hidden",
+          "fixed top-0 left-0 z-50 h-full w-[300px] flex flex-col transition-all duration-500 ease-in-out overflow-hidden",
           isOpen ? "translate-x-0" : "-translate-x-full",
           "bg-sidebar"
         )}
@@ -137,13 +136,13 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           </Button>
           
           <div 
-            className="relative focus-within:ring-1 focus-within:ring-primary"
+            className="relative border-b border-sidebar-border/30 focus-within:border-primary"
             onClick={handleSearchFocus}
           >
-            <Search className="absolute left-0 top-2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-0 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search your chats..."
-              className="pl-7 border-none focus-visible:ring-0 bg-transparent border-b border-sidebar-border/30"
+              className="pl-7 border-none focus-visible:ring-0 bg-transparent"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               ref={searchInputRef}

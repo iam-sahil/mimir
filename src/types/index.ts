@@ -1,9 +1,10 @@
 export interface Message {
   id: string;
-  role: "user" | "system" | "assistant";
+  role: "user" | "assistant" | "system";
   content: string;
   timestamp: number;
   model?: Model;
+  attachments?: MessageAttachment[];
 }
 
 export interface Chat {
@@ -53,3 +54,9 @@ export interface Settings {
 
 // Chat organization types
 export type ChatSection = "pinned" | "folders" | "today" | "yesterday" | "older";
+
+export interface MessageAttachment {
+  file: File;
+  type: string;
+  name: string;
+}

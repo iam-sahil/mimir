@@ -17,6 +17,22 @@ export const geminiModels: Model[] = [
     modelId: "gemini-2.5-pro-exp-03-25",
     description: "Advanced model with enhanced capabilities",
     canUseImage: true,
+  },
+  {
+    id: "gemini-2.5-flash-preview-04-17",
+    name: "Gemini 2.5 Flash Preview",
+    provider: "gemini",
+    modelId: "gemini-2.5-flash-preview-04-17",
+    description: "Fast preview model with latest improvements",
+    canUseImage: true,
+  },
+  {
+    id: "gemini-2.5-pro-experimental",
+    name: "Gemini 2.5 Pro Experimental",
+    provider: "gemini",
+    modelId: "gemini-2.5-pro-experimental",
+    description: "Experimental version of Gemini 2.5 Pro",
+    canUseImage: true,
   }
 ];
 

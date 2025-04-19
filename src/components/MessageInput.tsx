@@ -8,7 +8,6 @@ import { Model } from "@/types";
 import { EnhancedModelSelectorV2 } from "./EnhancedModelSelectorV2";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "./ui/alert-dialog";
 
 interface MessageInputProps {
   onSendMessage: (message: string, attachments?: File[]) => void;
@@ -22,12 +21,10 @@ interface MessageInputProps {
 
 // Models that support image attachments
 const IMAGE_SUPPORTING_MODELS = [
-  "gemini-pro-vision", 
-  "gpt-4o", 
-  "gpt-4o-mini", 
-  "claude-3-opus-20240229", 
-  "claude-3-sonnet-20240229",
-  "claude-3-haiku-20240307"
+  "gemini-2.0-flash", 
+  "gemini-2.5-pro-exp-03-25",
+  "gemini-2.5-flash-preview-04-17",
+  "gemini-2.5-pro-experimental"
 ];
 
 // Allowed file types
@@ -152,7 +149,7 @@ export const MessageInput = ({
   }, [message]);
 
   return (
-    <div className="w-full">
+    <div className="w-full message-input-container">
       <form
         onSubmit={handleSubmit}
         className="relative overflow-hidden rounded-xl shadow-lg glass-effect border border-white/10"

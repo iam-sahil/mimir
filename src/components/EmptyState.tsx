@@ -1,107 +1,53 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Brain } from "lucide-react";
-import { useSettings } from "@/contexts/SettingsContext";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface EmptyStateProps {
   onPromptClick: (prompt: string) => void;
 }
 
+const samplePrompts = [
+  "Summarize the key points of quantum computing for a high school student.",
+  "Compare and contrast functional and object-oriented programming paradigms.",
+  "Create a 7-day itinerary for a trip to Tokyo, Japan."
+];
+
 export const EmptyState = ({ onPromptClick }: EmptyStateProps) => {
-  const { settings } = useSettings();
-  const username = settings.username || "user";
-  const [activeTab, setActiveTab] = useState<string>("general");
-
-  const tabPrompts: Record<string, string[]> = {
-    general: [
-      "How does AI work?",
-      "Explain quantum computing in simple terms",
-      "Write a poem about the stars",
-      "Tell me about the history of the internet",
-      "What are the basics of machine learning?"
-    ],
-    writing: [
-      "Write a short story about time travel",
-      "Create a product description for a new smartphone",
-      "Help me draft a professional email to a client",
-      "Write a persuasive introduction for my essay",
-      "Create a creative marketing slogan for a coffee shop"
-    ],
-    coding: [
-      "Explain React hooks to a beginner",
-      "Show me how to implement a binary search in Python",
-      "What's the difference between REST and GraphQL?",
-      "Write a simple CSS animation example",
-      "Debug this JavaScript function for me"
-    ],
-    research: [
-      "Summarize recent advances in renewable energy",
-      "What are the ethical implications of AI?",
-      "Compare and contrast democracy vs republic",
-      "Explain the basics of blockchain technology",
-      "What are the main theories about dark matter?"
-    ]
-  };
-
-  const tabs = [
-    { id: "general", label: "General" },
-    { id: "writing", label: "Writing" },
-    { id: "coding", label: "Coding" },
-    { id: "research", label: "Research" }
-  ];
-  
   return (
-    <div className="flex flex-col items-center justify-center w-full max-w-3xl mx-auto px-4 py-12">
+    <div className="flex flex-col items-center justify-center p-8 max-w-2xl mx-auto text-center">
       <div className="mb-6">
-        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-          <Brain className="h-8 w-8 text-primary" />
+        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Brain className="w-8 h-8 text-primary brain-icon" />
         </div>
+        <h1 className="text-2xl font-bold mb-2">Welcome to Mimir</h1>
+        <p className="text-muted-foreground">
+          Your AI assistant for learning and exploration. Ask anything to begin your conversation.
+        </p>
       </div>
-      
-      <h1 className="text-4xl font-semibold font-space-grotesk mb-4 text-center">
-        Hello, <span className="text-primary">{username}</span>!
-      </h1>
-      
-      <p className="text-muted-foreground text-center max-w-lg mb-8 font-helvetica text-lg">
-        I'm Mimir, your AI assistant. How can I help you today?
-      </p>
-      
-      {/* Category Pills */}
-      <div className="flex flex-wrap gap-2 justify-center mb-8">
-        {tabs.map((tab) => (
-          <Button
-            key={tab.id}
-            variant="outline"
+
+      <div className="w-full grid gap-3 max-w-md mx-auto mt-4">
+        {samplePrompts.map((prompt, i) => (
+          <Button 
+            key={i}
+            variant="outline" 
             className={cn(
-              "rounded-full px-6 py-2 text-sm font-medium transition-all",
-              activeTab === tab.id 
-                ? "bg-primary text-primary-foreground border-primary" 
-                : "hover:bg-primary/10"
+              "justify-start px-4 py-6 h-auto text-left border border-border/60 bg-background/40 hover:bg-accent/20 shadow-sm",
+              "transition-all duration-200 hover:shadow-md hover:border-primary/30"
             )}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => onPromptClick(prompt)}
           >
-            {tab.label}
+            <div className="overflow-hidden">
+              <p className="font-normal truncate text-sm">{prompt}</p>
+            </div>
           </Button>
         ))}
       </div>
-      
-      {/* Sample Prompts Grid */}
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3 w-full max-w-3xl">
-        {tabPrompts[activeTab].map((prompt, index) => (
-          <div 
-            key={index} 
-            className="border border-border/50 rounded-lg p-4 hover:bg-accent/10 cursor-pointer transition-all glass-effect"
-            onClick={() => onPromptClick(prompt)}
-          >
-            <p className="font-helvetica">{prompt}</p>
-            <div className="flex items-center text-xs text-muted-foreground mt-3">
-              Try it <span className="ml-1">→</span>
-            </div>
-          </div>
-        ))}
-      </div>
+
+      <p className="mt-6 text-sm text-muted-foreground">
+        Mimir can help with information, learning, creative tasks, and more.
+      </p>
     </div>
   );
 };

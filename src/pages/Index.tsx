@@ -96,7 +96,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background text-foreground font-space-grotesk overflow-hidden text-[15px]">
+    <div className="flex h-screen bg-background text-foreground font-space-grotesk overflow-hidden text-[14px]">
       <BackgroundGradient />
 
       {/* Sidebar with proper layering */}
