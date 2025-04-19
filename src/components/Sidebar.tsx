@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -103,28 +102,28 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-[300px] bg-[#202123] border-r border-border flex flex-col transition-transform duration-300 overflow-hidden",
+          "fixed top-0 left-0 z-50 h-full w-[300px] bg-background/95 backdrop-blur-xl flex flex-col transition-transform duration-300 ease-in-out overflow-hidden sidebar-transition",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex items-center justify-between p-4 border-b border-border">
-          <div className="flex items-center gap-2 text-xl font-space-grotesk font-semibold text-white">
-            <Brain className="h-6 w-6" />
-            <h1>Mimir</h1>
+        <div className="flex items-center justify-between p-4">
+          <div className="flex items-center gap-2">
+            <Brain className="h-6 w-6 text-primary" />
+            <span className="text-xl font-semibold">Mimir</span>
           </div>
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8" 
             onClick={onClose}
+            className="h-8 w-8"
           >
             <PanelRight className="h-5 w-5" />
           </Button>
         </div>
 
-        <div className="p-4 space-y-3">
+        <div className="p-4 space-y-4">
           <Button 
-            className="w-full justify-center font-space-grotesk bg-[#343541] hover:bg-[#343541]/90 text-white shadow-md"
+            className="w-full justify-center new-chat-button text-background"
             onClick={() => {
               createNewChat();
               if (isMobile) onClose();
@@ -133,28 +132,16 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             <Plus className="mr-2 h-4 w-4" /> New Chat
           </Button>
           
-          <div 
-            className="relative rounded-md border border-border focus-within:ring-1 focus-within:ring-primary"
-            onClick={handleSearchFocus}
-          >
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search your chats..."
-              className="pl-8 border-none focus-visible:ring-0 bg-transparent"
+          <div className="flex items-center space-x-2 sidebar-search px-1 py-2">
+            <Search className="h-4 w-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search chats..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-transparent border-none outline-none w-full text-sm"
               ref={searchInputRef}
             />
-            {searchQuery && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-0 top-0 h-full w-8 rounded-l-none"
-                onClick={() => setSearchQuery("")}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
           </div>
         </div>
 

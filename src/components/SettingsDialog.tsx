@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   Dialog,
@@ -98,7 +97,7 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] min-h-[500px] w-full">
+      <DialogContent className="settings-dialog max-w-4xl w-[90vw]">
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>
@@ -112,28 +111,28 @@ export const SettingsDialog = ({ open, onOpenChange }: SettingsDialogProps) => {
           value={activeTab} 
           onValueChange={setActiveTab}
         >
-          <TabsList className="grid grid-cols-4 mb-4 w-full">
+          <TabsList className="grid w-full grid-cols-4 bg-background/5 p-1 rounded-lg">
             <TabsTrigger 
               value="account" 
-              className="w-full px-1 py-1.5"
+              className="rounded-md px-3 py-1.5 data-[state=active]:bg-background"
             >
               Account
             </TabsTrigger>
             <TabsTrigger 
               value="customization" 
-              className="w-full px-1 py-1.5"
+              className="rounded-md px-3 py-1.5 data-[state=active]:bg-background"
             >
               Customization
             </TabsTrigger>
             <TabsTrigger 
               value="shortcuts" 
-              className="w-full px-1 py-1.5"
+              className="rounded-md px-3 py-1.5 data-[state=active]:bg-background"
             >
               Keyboard Shortcuts
             </TabsTrigger>
             <TabsTrigger 
               value="contact" 
-              className="w-full px-1 py-1.5"
+              className="rounded-md px-3 py-1.5 data-[state=active]:bg-background"
             >
               Contact Us
             </TabsTrigger>
