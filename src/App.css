@@ -48,6 +48,7 @@
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
 /* Add rounded corners to the main content when sidebar is open */
@@ -74,4 +75,33 @@
   100% {
     transform: scale(1);
   }
+}
+
+/* Skeuomorphic button effect */
+.skeuomorphic-button {
+  background: linear-gradient(to bottom, hsl(var(--primary)/0.95), hsl(var(--primary)/0.85));
+  box-shadow: 
+    0 1px 2px rgba(0,0,0,0.2),
+    0 2px 6px rgba(0,0,0,0.1),
+    inset 0 1px rgba(255,255,255,0.15);
+  border: 1px solid hsl(var(--primary)/0.7);
+  transform: translateY(0);
+  transition: all 0.2s ease;
+}
+
+.skeuomorphic-button:hover {
+  background: linear-gradient(to bottom, hsl(var(--primary)/1), hsl(var(--primary)/0.9));
+  transform: translateY(-1px);
+  box-shadow: 
+    0 2px 4px rgba(0,0,0,0.2),
+    0 4px 8px rgba(0,0,0,0.1),
+    inset 0 1px rgba(255,255,255,0.15);
+}
+
+.skeuomorphic-button:active {
+  background: linear-gradient(to bottom, hsl(var(--primary)/0.8), hsl(var(--primary)/0.9));
+  transform: translateY(1px);
+  box-shadow: 
+    0 1px 1px rgba(0,0,0,0.15),
+    inset 0 1px 1px rgba(0,0,0,0.1);
 }

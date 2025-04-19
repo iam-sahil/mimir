@@ -96,12 +96,12 @@ const Index = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background text-foreground font-space-grotesk overflow-hidden">
+    <div className="flex h-screen bg-background text-foreground font-space-grotesk overflow-hidden text-[15px]">
       <BackgroundGradient />
 
       {/* Sidebar with proper layering */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-20 transition-all duration-300 ease-in-out",
+        "fixed inset-y-0 left-0 z-20 transition-all duration-500 ease-in-out",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
@@ -109,7 +109,7 @@ const Index = () => {
       
       {/* Main Content Area */}
       <main className={cn(
-        "flex-1 transition-all duration-300 ease-in-out relative w-full h-full",
+        "flex-1 transition-all duration-500 ease-in-out relative w-full h-full",
         isSidebarOpen ? "lg:pl-[300px]" : "lg:pl-0"
       )}>
         {/* Overlay for mobile when sidebar is open */}
