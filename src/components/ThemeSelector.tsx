@@ -18,55 +18,27 @@ export const ThemeSelector = () => {
   const getThemeIcon = (theme: Theme) => {
     switch (theme) {
       case "light-pink":
-        return <Sun className="h-4 w-4 text-[#FF4081]" />;
+        return <Sun className="h-5 w-5 text-[#FF4081]" />;
       case "dark-green":
-        return <Moon className="h-4 w-4 text-[#4CAF50]" />;
+        return <Moon className="h-5 w-5 text-[#4CAF50]" />;
       case "dark-mono":
-        return <Moon className="h-4 w-4 text-[#FFFFFF]" />;
+        return <Moon className="h-5 w-5 text-[#FFFFFF]" />;
       case "catppuccin":
-        return <Palette className="h-4 w-4 text-[#F38BA8]" />;
+        return <Palette className="h-5 w-5 text-[#F38BA8]" />;
       case "tokyo-night":
-        return <Palette className="h-4 w-4 text-[#BB9AF7]" />;
+        return <Palette className="h-5 w-5 text-[#BB9AF7]" />;
       case "nord":
-        return <Palette className="h-4 w-4 text-[#81A1C1]" />;
+        return <Palette className="h-5 w-5 text-[#81A1C1]" />;
       case "gruvbox":
-        return <Palette className="h-4 w-4 text-[#FABD2F]" />;
+        return <Palette className="h-5 w-5 text-[#FABD2F]" />;
       case "one-dark":
-        return <Palette className="h-4 w-4 text-[#61AFEF]" />;
+        return <Palette className="h-5 w-5 text-[#61AFEF]" />;
       case "dracula":
-        return <Palette className="h-4 w-4 text-[#BD93F9]" />;
+        return <Palette className="h-5 w-5 text-[#BD93F9]" />;
       case "github-light":
-        return <Palette className="h-4 w-4 text-[#0366D6]" />;
+        return <Palette className="h-5 w-5 text-[#0366D6]" />;
       default:
-        return <Sun className="h-4 w-4" />;
-    }
-  };
-
-  // Helper to get theme accent color
-  const getThemeAccentClass = (theme: Theme) => {
-    switch (theme) {
-      case "light-pink":
-        return "text-[#FF4081]";
-      case "dark-green":
-        return "text-[#4CAF50]";
-      case "dark-mono":
-        return "text-[#FFFFFF]";
-      case "catppuccin":
-        return "text-[#F38BA8]";
-      case "tokyo-night":
-        return "text-[#BB9AF7]";
-      case "nord":
-        return "text-[#81A1C1]";
-      case "gruvbox":
-        return "text-[#FABD2F]";
-      case "one-dark":
-        return "text-[#61AFEF]";
-      case "dracula":
-        return "text-[#BD93F9]";
-      case "github-light":
-        return "text-[#0366D6]";
-      default:
-        return "";
+        return <Sun className="h-5 w-5" />;
     }
   };
 

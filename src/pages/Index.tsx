@@ -5,31 +5,31 @@ import { ChatContainer } from "@/components/ChatContainer";
 import { useChat } from "@/contexts/ChatContext";
 import { BackgroundGradient } from "@/components/BackgroundGradient";
 import { cn } from "@/lib/utils";
-import { PanelRight, Plus, Search, Info } from "lucide-react";
+import { PanelRight, Plus, Search, Info, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InfoDialog } from "@/components/InfoDialog";
 import { SearchModal } from "@/components/SearchModal";
 import { useHotkeys } from "@/hooks/useHotkeys";
 
-const CollapsedSidebarButtons = ({ onToggleSidebar, onNewChat, onOpenSearch, onInfoClick }: { 
+const CollapsedSidebarButtons = ({ onToggleSidebar, onNewChat, onOpenSearch, onSettingsClick }: { 
   onToggleSidebar: () => void;
   onNewChat: () => void;
   onOpenSearch: () => void;
-  onInfoClick: () => void;
+  onSettingsClick: () => void;
 }) => {
   return (
     <div className="fixed left-4 top-4 z-40 flex flex-row space-x-2">
-      <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+      <div className="glass-effect rounded-lg p-1.5 shadow-md">
         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onToggleSidebar}>
           <PanelRight className="h-5 w-5" />
         </Button>
       </div>
-      <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+      <div className="glass-effect rounded-lg p-1.5 shadow-md">
         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onNewChat}>
           <Plus className="h-5 w-5" />
         </Button>
       </div>
-      <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+      <div className="glass-effect rounded-lg p-1.5 shadow-md">
         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onOpenSearch}>
           <Search className="h-5 w-5" />
         </Button>
@@ -42,6 +42,7 @@ const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const { createNewChat } = useChat();
 
@@ -55,11 +56,9 @@ const Index = () => {
     { 
       keys: ["Control", "k"], 
       callback: () => {
-        // Focus message input or open search modal
         if (!isSidebarOpen || isMobile) {
           setIsSearchModalOpen(true);
         } else {
-          // Focus message input
           const messageInput = document.querySelector('textarea[placeholder="Message Mimir..."]');
           if (messageInput) {
             (messageInput as HTMLTextAreaElement).focus();
@@ -73,13 +72,6 @@ const Index = () => {
       callback: () => createNewChat(),
       description: "Create new chat" 
     },
-    {
-      keys: ["Control", "Shift", "a"],
-      callback: () => {
-        // This will be handled by the MessageInput component
-      },
-      description: "Attach files"
-    }
   ]);
 
   useEffect(() => {
@@ -104,29 +96,51 @@ const Index = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background text-foreground font-space-grotesk">
+    <div className="flex h-screen bg-background text-foreground font-space-grotesk overflow-hidden">
       <BackgroundGradient />
-      <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
-      
-      <main className={cn(
-        "flex-1 transition-all duration-300 w-full relative",
-        isSidebarOpen ? "lg:ml-[300px]" : "lg:ml-0"
+
+      {/* Sidebar with proper layering */}
+      <div className={cn(
+        "fixed inset-y-0 left-0 z-20 transition-all duration-300 ease-in-out",
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
+        <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
+      </div>
+      
+      {/* Main Content Area */}
+      <main className={cn(
+        "flex-1 transition-all duration-300 ease-in-out relative w-full h-full",
+        isSidebarOpen ? "lg:pl-[300px]" : "lg:pl-0"
+      )}>
+        {/* Overlay for mobile when sidebar is open */}
+        {isMobile && isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-10"
+            onClick={toggleSidebar}
+          />
+        )}
+
+        {/* Collapsed sidebar buttons */}
         {!isSidebarOpen && (
           <CollapsedSidebarButtons 
             onToggleSidebar={toggleSidebar}
             onNewChat={createNewChat}
-            onOpenSearch={() => {
-              setIsSearchModalOpen(true);
-            }}
-            onInfoClick={() => setIsInfoOpen(true)}
+            onOpenSearch={() => setIsSearchModalOpen(true)}
+            onSettingsClick={() => setIsSettingsOpen(true)}
           />
         )}
-        <ChatContainer 
-          onSidebarToggle={toggleSidebar}
-          onInfoClick={() => setIsInfoOpen(true)}
-          sidebarOpen={isSidebarOpen}
-        />
+
+        {/* Chat container */}
+        <div className={cn(
+          "w-full h-full relative"
+        )}>
+          <ChatContainer 
+            onSidebarToggle={toggleSidebar}
+            onInfoClick={() => setIsInfoOpen(true)}
+            onSettingsClick={() => setIsSettingsOpen(true)}
+            sidebarOpen={isSidebarOpen}
+          />
+        </div>
       </main>
       
       <InfoDialog open={isInfoOpen} onOpenChange={setIsInfoOpen} />

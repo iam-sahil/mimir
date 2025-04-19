@@ -23,12 +23,14 @@ import { cn } from "@/lib/utils";
 interface ChatContainerProps {
   onSidebarToggle: () => void;
   onInfoClick: () => void;
+  onSettingsClick: () => void;
   sidebarOpen: boolean;
 }
 
 export const ChatContainer = ({ 
   onSidebarToggle, 
   onInfoClick,
+  onSettingsClick,
   sidebarOpen 
 }: ChatContainerProps) => {
   const { currentChat, addMessage, setCurrentChatModel, createNewChat, renameChat } = useChat();
@@ -231,10 +233,10 @@ export const ChatContainer = ({
       <header className="h-16 flex items-center justify-between px-4 shrink-0">
         <div></div>
         <div className="flex items-center gap-2">
-          <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+          <div className="glass-effect rounded-lg p-1.5 shadow-md">
             <ThemeSelector />
           </div>
-          <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+          <div className="glass-effect rounded-lg p-1.5 shadow-md">
             <Button
               variant="ghost"
               size="icon"
@@ -244,7 +246,7 @@ export const ChatContainer = ({
               <Settings className="h-5 w-5" />
             </Button>
           </div>
-          <div className="glass-effect rounded-lg p-1.5 shadow-sm">
+          <div className="glass-effect rounded-lg p-1.5 shadow-md">
             <Button
               variant="ghost"
               size="icon"
@@ -274,7 +276,7 @@ export const ChatContainer = ({
             ))}
             {thinkingText && !isTyping && (
               <div className="w-full py-6 px-4 justify-start relative">
-                <div className="flex max-w-2xl rounded-lg p-4 bg-secondary/10 text-foreground mr-auto ml-8">
+                <div className="flex max-w-2xl rounded-lg p-4 bg-secondary/5 text-foreground mr-auto ml-8">
                   <div className="w-full overflow-hidden">
                     <div className="prose dark:prose-invert max-w-none text-sm font-space-grotesk">
                       <p>{thinkingText}</p>
@@ -290,7 +292,7 @@ export const ChatContainer = ({
             )}
             {isTyping && (
               <div className="w-full py-6 px-4 justify-start relative">
-                <div className="flex max-w-2xl rounded-lg p-4 bg-secondary/10 text-foreground mr-auto ml-8">
+                <div className="flex max-w-2xl rounded-lg p-4 bg-secondary/5 text-foreground mr-auto ml-8">
                   <div className="w-full overflow-hidden">
                     <div className="prose dark:prose-invert max-w-none text-sm font-space-grotesk">
                       <ReactMarkdown
@@ -346,10 +348,10 @@ export const ChatContainer = ({
         </div>
       )}
 
-      <div className="fixed bottom-6 left-0 right-0 flex justify-center">
+      <div className="fixed bottom-6 left-0 right-0 flex justify-center mx-auto">
         <div className={cn(
-          "w-full max-w-3xl px-4",
-          sidebarOpen ? "lg:ml-[300px] lg:mr-[300px]" : "mx-auto"
+          "w-full max-w-3xl px-4", 
+          sidebarOpen ? "lg:ml-[300px] lg:mr-0" : "mx-auto"
         )}>
           <div className="glass-effect backdrop-blur-md shadow-lg rounded-xl p-2">
             <MessageInput

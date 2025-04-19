@@ -103,12 +103,12 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-[300px] bg-sidebar border-r border-border flex flex-col transition-transform duration-300 overflow-hidden",
+          "fixed top-0 left-0 z-50 h-full w-[300px] bg-[#202123] border-r border-border flex flex-col transition-transform duration-300 overflow-hidden",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <div className="flex items-center gap-2 text-xl font-space-grotesk font-semibold text-sidebar-foreground">
+          <div className="flex items-center gap-2 text-xl font-space-grotesk font-semibold text-white">
             <Brain className="h-6 w-6" />
             <h1>Mimir</h1>
           </div>
@@ -124,7 +124,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
         <div className="p-4 space-y-3">
           <Button 
-            className="w-full justify-center font-space-grotesk bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
+            className="w-full justify-center font-space-grotesk bg-[#343541] hover:bg-[#343541]/90 text-white shadow-md"
             onClick={() => {
               createNewChat();
               if (isMobile) onClose();
@@ -165,7 +165,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               onClick={() => setIsPinnedExpanded(!isPinnedExpanded)}
             >
               <Pin className="h-4 w-4 mr-2 text-accent-primary" />
-              <span className="text-primary">Pinned Chats</span>
+              <span className="text-white">Pinned Chats</span>
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -207,7 +207,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               onClick={() => setIsFoldersExpanded(!isFoldersExpanded)}
             >
               <Folder className="h-4 w-4 mr-2 text-accent-primary" />
-              <span className="text-primary">Folders</span>
+              <span className="text-white">Folders</span>
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -230,7 +230,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                   <div key={folderName} className="ml-2 mt-1">
                     <div className="flex items-center px-2 py-1 text-sm font-medium">
                       <Folder className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                      <span className="truncate">{folderName}</span>
+                      <span className="truncate text-white">{folderName}</span>
                     </div>
                     <div className="space-y-1 ml-4">
                       {chats
@@ -337,7 +337,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
           {searchQuery && (
             <div className="mt-4">
-              <h3 className="text-sm font-medium px-2 py-1">Search Results</h3>
+              <h3 className="text-sm font-medium px-2 py-1 text-white">Search Results</h3>
               <div className="space-y-1 mt-2">
                 {filteredChats.length > 0 ? 
                   filteredChats.map((chat) => (

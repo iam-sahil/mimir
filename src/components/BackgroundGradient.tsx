@@ -109,7 +109,7 @@ export const BackgroundGradient = () => {
       {blobs.map((blob) => (
         <div
           key={blob.id}
-          className="absolute rounded-full blur-[100px]"
+          className="absolute rounded-full blur-[150px] transition-all duration-[30s]"
           style={{
             left: `${blob.x}%`,
             top: `${blob.y}%`,
@@ -117,7 +117,7 @@ export const BackgroundGradient = () => {
             height: `${blob.size}px`,
             backgroundColor: blob.color,
             opacity: blob.opacity,
-            transition: "left 8s ease-in-out, top 8s ease-in-out",
+            transition: "left 30s ease-in-out, top 30s ease-in-out",
           }}
         />
       ))}
