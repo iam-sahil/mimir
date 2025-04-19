@@ -80,6 +80,8 @@ const Index = () => {
       setIsMobile(mobile);
       if (mobile) {
         setIsSidebarOpen(false);
+      } else {
+        setIsSidebarOpen(true);
       }
     };
     
@@ -96,10 +98,10 @@ const Index = () => {
   return (
     <div className="flex h-screen bg-background text-foreground font-space-grotesk overflow-hidden">
       <BackgroundGradient />
-      
+
       {/* Sidebar with proper layering */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-20 transition-all duration-300 ease-in-out sidebar-root",
+        "fixed inset-y-0 left-0 z-20 transition-all duration-300 ease-in-out",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
@@ -107,15 +109,9 @@ const Index = () => {
       
       {/* Main Content Area */}
       <main className={cn(
-        "flex-1 transition-all duration-300 ease-in-out relative w-full h-full main-content-area",
+        "flex-1 transition-all duration-300 ease-in-out relative w-full h-full",
         isSidebarOpen ? "lg:pl-[300px]" : "lg:pl-0"
       )}>
-        {/* Top gap when sidebar is open */}
-        <div className={cn(
-          "w-full top-gap",
-          isSidebarOpen && !isMobile ? "top-gap-active" : ""
-        )}></div>
-
         {/* Overlay for mobile when sidebar is open */}
         {isMobile && isSidebarOpen && (
           <div 
@@ -136,8 +132,7 @@ const Index = () => {
 
         {/* Chat container */}
         <div className={cn(
-          "w-full h-full relative",
-          isSidebarOpen && !isMobile ? "main-content-with-sidebar" : ""
+          "w-full h-full relative"
         )}>
           <ChatContainer 
             onSidebarToggle={toggleSidebar}

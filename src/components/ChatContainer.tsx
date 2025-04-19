@@ -46,6 +46,7 @@ export const ChatContainer = ({
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [thinkingText, setThinkingText] = useState("");
 
+  // Register keyboard shortcut for renaming current chat
   useHotkeys([
     { 
       keys: ["Control", "r"], 
@@ -96,6 +97,7 @@ export const ChatContainer = ({
     typeWriter();
   }, [isTyping, completeResponse, addMessage]);
 
+  // Add thinking text effect when loading
   useEffect(() => {
     if (!isLoading || isTyping) {
       setThinkingText("");
@@ -104,8 +106,24 @@ export const ChatContainer = ({
     
     setThinkingText("Just a second...");
     
+    // Optional: create a more elaborate thinking animation
+    // const thinkingPhrases = [
+    //  "Just a second...",
+    //  "Thinking...",
+    //  "Processing your request...",
+    //  "Formulating response..."
+    // ];
+    //
+    // let index = 0;
+    // const interval = setInterval(() => {
+    //   setThinkingText(thinkingPhrases[index % thinkingPhrases.length]);
+    //   index++;
+    // }, 3000);
+    //
+    // return () => clearInterval(interval);
   }, [isLoading, isTyping]);
 
+  // Handle scroll to detect when to show the scroll to bottom button
   useEffect(() => {
     const handleScroll = (e: Event) => {
       const target = e.target as HTMLDivElement;
@@ -188,13 +206,17 @@ export const ChatContainer = ({
   const handleRegenerateResponse = (messageIndex: number) => {
     if (!currentChat || messageIndex < 0) return;
     
+    // Find the user message that triggered this response
     const userMessageIndex = messageIndex - 1;
     
     if (userMessageIndex >= 0 && currentChat.messages[userMessageIndex]?.role === "user") {
+      // Get the user message content
       const userMessage = currentChat.messages[userMessageIndex].content;
       
+      // Remove the assistant response and all subsequent messages
       const newMessages = currentChat.messages.slice(0, messageIndex);
       
+      // Resend the user message to get a new response
       handleSendMessage(userMessage);
       
       toast.success("Regenerating response");
@@ -202,16 +224,15 @@ export const ChatContainer = ({
   };
 
   const handleEditMessage = (content: string) => {
+    // Populate the message input with the content to edit
     setEditingMessageId(content);
   };
 
   return (
     <div className="flex flex-col h-screen">
-      <header className={cn(
-        "h-16 flex items-center justify-end px-4 shrink-0 transition-all duration-300",
-        sidebarOpen ? "lg:ml-[300px]" : ""
-      )}>
-        <div className="flex items-center gap-2 z-10">
+      <header className="h-16 flex items-center justify-between px-4 shrink-0">
+        <div></div>
+        <div className="flex items-center gap-2">
           <div className="glass-effect rounded-lg p-1.5 shadow-md">
             <ThemeSelector />
           </div>
@@ -238,10 +259,10 @@ export const ChatContainer = ({
         </div>
       </header>
 
-      <main className={cn(
-        "flex-1 relative transition-all duration-300 rounded-tl-xl bg-background/95 backdrop-blur-sm",
-        sidebarOpen ? "lg:ml-[300px]" : ""
-      )}>
+      <ScrollArea 
+        className="flex-1 overflow-y-auto pb-32"
+        ref={scrollAreaRef}
+      >
         {currentChat && currentChat.messages.length > 0 ? (
           <div className="pb-32 pt-4 max-w-4xl mx-auto">
             {currentChat.messages.map((message, index) => (
@@ -312,7 +333,7 @@ export const ChatContainer = ({
             <EmptyState onPromptClick={handleSendMessage} />
           </div>
         )}
-      </main>
+      </ScrollArea>
 
       {showScrollToBottom && (
         <div className="fixed bottom-24 left-0 right-0 flex justify-center z-10 pointer-events-none">
@@ -327,20 +348,22 @@ export const ChatContainer = ({
         </div>
       )}
 
-      <div className={cn(
-        "message-input-container prompt-box-transition",
-        sidebarOpen ? "lg:ml-[300px] lg:w-[calc(100%-300px)]" : "w-full"
-      )}>
-        <div className="glass-effect backdrop-blur-md shadow-lg rounded-xl p-2 max-w-4xl w-full mx-auto">
-          <MessageInput
-            onSendMessage={handleSendMessage}
-            isLoading={isLoading}
-            placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
-            selectedModel={currentChat?.model || settings.defaultModel}
-            onModelChange={setCurrentChatModel}
-            editingMessage={editingMessageId}
-            onClearEditingMessage={() => setEditingMessageId(null)}
-          />
+      <div className="fixed bottom-6 left-0 right-0 flex justify-center mx-auto">
+        <div className={cn(
+          "w-full max-w-3xl px-4", 
+          sidebarOpen ? "lg:ml-[300px] lg:mr-0" : "mx-auto"
+        )}>
+          <div className="glass-effect backdrop-blur-md shadow-lg rounded-xl p-2">
+            <MessageInput
+              onSendMessage={handleSendMessage}
+              isLoading={isLoading}
+              placeholder={isLoading ? "Thinking..." : "Message Mimir..."}
+              selectedModel={currentChat?.model || settings.defaultModel}
+              onModelChange={setCurrentChatModel}
+              editingMessage={editingMessageId}
+              onClearEditingMessage={() => setEditingMessageId(null)}
+            />
+          </div>
         </div>
       </div>
 
