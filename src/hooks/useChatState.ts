@@ -29,21 +29,52 @@ export function useChatState() {
 
     let i = 0;
     const responseText = completeResponse.content || "";
-    // Calculate typing speed based on response length
-    const baseSpeed = 10; // base speed in ms
-    const lengthFactor = Math.max(1, Math.min(3, responseText.length / 1000)); // scale factor based on length
-    const speed = Math.max(2, baseSpeed / lengthFactor); // minimum speed of 2ms
-    
+    // Make the typewriter effect much faster
+    const baseSpeed = 2; // much faster base speed in ms
+    const lengthFactor = Math.max(1, Math.min(3, responseText.length / 1000));
+    const speed = Math.max(1, baseSpeed / lengthFactor); // minimum speed of 1ms
+
+    let intervalId: NodeJS.Timeout | null = null;
+    let timeoutId: NodeJS.Timeout | null = null;
+    let isTabActive = true;
+
     const typeWriter = () => {
       if (i < responseText.length) {
         setTypingText(responseText.substring(0, i + 1));
         i++;
-        setTimeout(typeWriter, speed);
+        if (isTabActive) {
+          timeoutId = setTimeout(typeWriter, speed);
+        }
       } else {
         setIsTyping(false);
         addMessage(responseText, "assistant");
         setCompleteResponse(null);
         setTypingText("");
+        cleanup();
+      }
+    };
+
+    // Page Visibility API handler
+    const handleVisibilityChange = () => {
+      isTabActive = !document.hidden;
+      if (!isTabActive && intervalId == null) {
+        // When tab is inactive, use setInterval to continue processing
+        intervalId = setInterval(() => {
+          if (i < responseText.length) {
+            setTypingText(responseText.substring(0, i + 1));
+            i++;
+          } else {
+            setIsTyping(false);
+            addMessage(responseText, "assistant");
+            setCompleteResponse(null);
+            setTypingText("");
+            cleanup();
+          }
+        }, speed);
+      } else if (isTabActive && intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+        typeWriter();
       }
     };
 
@@ -52,16 +83,22 @@ export function useChatState() {
       text: responseText,
       position: i,
       speed,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
-    localStorage.setItem('typingState', JSON.stringify(typingState));
-    
+    localStorage.setItem("typingState", JSON.stringify(typingState));
+
+    // Cleanup function
+    const cleanup = () => {
+      if (intervalId) clearInterval(intervalId);
+      if (timeoutId) clearTimeout(timeoutId);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      localStorage.removeItem("typingState");
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     typeWriter();
 
-    // Cleanup function to remove the stored state
-    return () => {
-      localStorage.removeItem('typingState');
-    };
+    return cleanup;
   }, [isTyping, completeResponse, addMessage]);
 
   // Restore typing state when component mounts
