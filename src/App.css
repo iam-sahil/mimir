@@ -1,0 +1,127 @@
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Glass effect styling */
+.glass-effect {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+/* Add rounded corners to the main content when sidebar is open */
+@media (min-width: 1024px) {
+  .main-content-with-sidebar {
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Skeuomorphic button effect */
+.skeuomorphic-button {
+  background: linear-gradient(to bottom, hsl(var(--primary)/0.95), hsl(var(--primary)/0.7));
+  box-shadow: 
+    0 1px 2px rgba(0,0,0,0.2),
+    0 2px 6px rgba(0,0,0,0.1),
+    inset 0 1px rgba(255,255,255,0.15);
+  border: 1px solid hsl(var(--primary)/0.5);
+  transform: translateY(0);
+  transition: all 0.2s ease;
+  color: hsl(var(--primary-foreground));
+  font-weight: 600;
+}
+
+.skeuomorphic-button:hover {
+  background: linear-gradient(to bottom, hsl(var(--primary)/1), hsl(var(--primary)/0.8));
+  transform: translateY(-1px);
+  box-shadow: 
+    0 2px 4px rgba(0,0,0,0.2),
+    0 4px 8px rgba(0,0,0,0.1),
+    inset 0 1px rgba(255,255,255,0.15);
+}
+
+.skeuomorphic-button:active {
+  background: linear-gradient(to bottom, hsl(var(--primary)/0.8), hsl(var(--primary)/0.9));
+  transform: translateY(1px);
+  box-shadow: 
+    0 1px 1px rgba(0,0,0,0.15),
+    inset 0 1px 1px rgba(0,0,0,0.1);
+}
+
+/* Message input transition */
+@keyframes slideIn {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(150px);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(150px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.message-input-container {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* New chat button with transparent text */
+.new-chat-button {
+  background-color: hsl(var(--primary));
+}
+
+.new-chat-button .new-chat-text {
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-color: hsl(var(--primary-foreground));
+}

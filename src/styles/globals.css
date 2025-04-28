@@ -1,0 +1,270 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;600&display=swap');
+
+/* Hide scrollbars globally */
+* {
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Remove focus outline */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: none;
+}
+
+/* Base styles */
+:root, html, body {
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'Source Code Pro', monospace;
+  font-family: var(--font-sans);
+  font-size: 15px;
+}
+
+/* Ensure code elements use the monospace font */
+code, pre, .code, .hljs, .font-mono {
+  font-family: var(--font-mono) !important;
+}
+
+/* Floating background blobs */
+.background-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Glass effect styling with higher opacity */
+.glass-effect {
+  backdrop-filter: blur(12px);
+  background: rgba(var(--surface-rgb), 0.85);
+  border: 1px solid rgba(var(--divider-rgb), 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Message input container styling */
+.message-input-container {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center bottom;
+}
+
+.message-input-wrapper {
+  position: relative;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  background: rgba(var(--surface-rgb), 0.5);
+  border: 1px solid rgba(var(--divider-rgb), 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.message-input-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 1.2rem;
+  padding: 4px;
+  background: linear-gradient(to bottom, rgba(var(--accent-primary-rgb), 0.1), rgba(var(--accent-secondary-rgb), 0.05));
+  border: 1px solid rgba(var(--divider-rgb), 0.05);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.625rem;
+  }
+
+  * {
+    @apply border-border selection:bg-primary/10 selection:text-primary;
+    font-family: var(--font-sans);
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased overflow-hidden;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+  
+  code, pre {
+    font-family: var(--font-mono);
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
+  }
+  
+  .neo-blur {
+    @apply backdrop-blur-2xl bg-black/40 border border-white/10;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-br from-white via-white/90 to-white/70 bg-clip-text text-transparent;
+  }
+  
+  .text-gradient-primary {
+    @apply bg-gradient-to-br from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent;
+  }
+  
+  /* Floating blobs */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.4;
+    animation: float 20s infinite ease-in-out;
+  }
+  
+  .blob-1 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, hsl(var(--primary)/0.3), transparent 70%);
+    top: 10%;
+    left: 15%;
+    animation-delay: 0s;
+  }
+  
+  .blob-2 {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, hsl(var(--accent)/0.3), transparent 70%);
+    bottom: 15%;
+    right: 20%;
+    animation-delay: -5s;
+  }
+  
+  .blob-3 {
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, hsl(var(--primary)/0.2), transparent 70%);
+    top: 50%;
+    right: 30%;
+    animation-delay: -10s;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(5%, 5%);
+    }
+    50% {
+      transform: translate(-5%, 10%);
+    }
+    75% {
+      transform: translate(-10%, -5%);
+    }
+  }
+}
+
+/* Glass effect styling */
+.glass-effect {
+  background: linear-gradient(to bottom, 
+    rgba(var(--background-rgb), 0.95),
+    rgba(var(--background-rgb), 0.5)
+  );
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Add rounded corners to the main content when sidebar is open */
+@media (min-width: 1024px) {
+  .main-content-with-sidebar {
+    border-top-left-radius: 0.625rem;
+    border-bottom-left-radius: 0.625rem;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Skeuomorphic button effect */
+.skeuomorphic-button {
+  background: linear-gradient(to bottom, hsl(var(--primary)/0.95), hsl(var(--primary)/0.7));
+  box-shadow: 
+    0 1px 2px rgba(0,0,0,0.2),
+    0 2px 6px rgba(0,0,0,0.1),
+    inset 0 1px rgba(255,255,255,0.15);
+  border: 1px solid hsl(var(--primary)/0.5);
+  transform: translateY(0);
+  transition: all 0.2s ease;
+  color: hsl(var(--primary-foreground));
+  font-weight: 600;
+}
+
+.skeuomorphic-button:hover {
+  background: linear-gradient(to bottom, hsl(var(--primary)/1), hsl(var(--primary)/0.8));
+  transform: translateY(-1px);
+  box-shadow: 
+    0 2px 4px rgba(0,0,0,0.2),
+    0 4px 8px rgba(0,0,0,0.1),
+    inset 0 1px rgba(255,255,255,0.15);
+}
+
+.skeuomorphic-button:active {
+  background: linear-gradient(to bottom, hsl(var(--primary)/0.8), hsl(var(--primary)/0.9));
+  transform: translateY(1px);
+  box-shadow: 
+    0 1px 1px rgba(0,0,0,0.15),
+    inset 0 1px 1px rgba(0,0,0,0.1);
+}
+
+/* Message input transition */
+.message-input-container {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: bottom center;
+}
+
+/* New chat button with transparent text */
+.new-chat-button {
+  background-color: hsl(var(--primary));
+}
+
+.new-chat-button .new-chat-text {
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-color: hsl(var(--primary-foreground));
+}
+
+/* Animation for brain icon */
+@keyframes pulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.brain-icon {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* Theme Definitions - These are kept for backward compatibility but the main variables 
+   are now defined in the themes.ts file and applied through CSS variables */
