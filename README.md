@@ -5,91 +5,105 @@
 </p>
 
 <p align="center">
-  <b>Beautiful, Modern AI Chat Assistant</b><br/>
-  <a href="https://mimirai.vercel.app/">Live Demo</a> • <a href="#installation">Install</a> • <a href="#features">Features</a>
+  <b>Your Intelligent AI Chat Assistant</b><br/>
+  <a href="#features">Features</a> • <a href="#installation">Install</a> • <a href="#usage">Usage</a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/stars/yourusername/mimir?style=flat-square" />
-  <img src="https://img.shields.io/github/license/yourusername/mimir?style=flat-square" />
-  <img src="https://img.shields.io/badge/built%20with-React%20%26%20Vite-blue?style=flat-square" />
-  <img src="https://img.shields.io/badge/AI%20Models-Gemini%20%7C%20OpenRouter-green?style=flat-square" />
+  <img src="https://img.shields.io/badge/version-1.0.0-blue.svg?style=flat-square" />
+  <img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat-square" />
+  <img src="https://img.shields.io/badge/React-18.2.0-blue?style=flat-square&logo=react" />
+  <img src="https://img.shields.io/badge/TypeScript-5.0.0-blue?style=flat-square&logo=typescript" />
 </p>
 
 ---
 
 ## ✨ Features
 
-- **Modern UI/UX**: Beautiful, responsive design with multiple themes and font customization.
-- **AI Model Selection**: Seamlessly switch between Gemini, OpenRouter, and more.
-- **Typewriter Effect**: Fast, smooth, and persistent AI response animation.
-- **Keyboard Shortcuts**: Productivity-boosting hotkeys for power users.
-- **Privacy First**: All data and API keys are stored client-side only.
-- **Image Generation**: Generate images from text prompts (if supported by model).
-- **Chat Organization**: Pin, rename, and organize conversations with folders.
-- **Accessibility**: Fully keyboard accessible and screen reader friendly.
+- 🤖 **Multiple AI Models**: Seamlessly switch between Gemini and OpenRouter models
+- 🎨 **Beautiful UI**: Modern, responsive design with multiple themes and font customization
+- ⌨️ **Smart Typing**: Fast, smooth typewriter effect with background processing
+- 🔒 **Privacy First**: All data and API keys stored client-side only
+- 🖼️ **Image Generation**: Create images from text prompts (model-dependent)
+- 📁 **Smart Organization**: Pin, rename, and organize conversations with folders
+- ⌨️ **Keyboard Shortcuts**: Boost productivity with intuitive hotkeys
+- ♿ **Accessibility**: Fully keyboard accessible and screen reader friendly
 
 ---
 
-## 🚀 Installation
+## 📸 Preview
+
+<p align="center">
+  <img src="/public/icons/mimir-screenshot-1.png" width="800" alt="Mimir Chat Interface" />
+  <img src="/public/icons/mimir-screenshot-2.png" width="800" alt="Mimir Chat Features" />
+</p>
+
+---
+
+## 🚀 Quick Start
 
 ```bash
 # Clone the repository
-$ git clone https://github.com/yourusername/mimir.git
-$ cd mimir
+git clone https://github.com/yourusername/mimir.git
+cd mimir
 
 # Install dependencies
-$ npm install
+npm install
 
-# Start the development server
-$ npm run dev
+# Start development server
+npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Visit `http://localhost:5173` to start chatting!
 
 ---
 
-## 🛠️ Usage
+## 🛠️ Configuration
 
-- **API Keys**: Add your Gemini or OpenRouter API key in the Settings dialog for full access.
-- **Themes & Fonts**: Customize the look and feel in Settings > Appearance.
-- **Model Selection**: Choose your preferred AI model for each chat.
-- **Keyboard Shortcuts**: View all available shortcuts in Settings > Shortcuts.
+### API Keys
+1. Get your API keys:
+   - [Gemini API Key](https://aistudio.google.com/app/apikey)
+   - [OpenRouter API Key](https://openrouter.ai/keys)
+2. Add keys in Settings > API Keys
 
----
-
-## 📸 Screenshots
-
-<p align="center">
-  <img src="https://mimirai.vercel.app/screenshot1.png" width="600" alt="Mimir Chat Screenshot" />
-</p>
+### Customization
+- **Themes**: Choose from multiple themes in Settings > Appearance
+- **Fonts**: Customize font family and size
+- **Models**: Select preferred AI model for each chat
+- **Shortcuts**: View all keyboard shortcuts in Settings > Shortcuts
 
 ---
 
 ## 🧠 Tech Stack
 
-- **React** + **Vite**
-- **TypeScript**
-- **Tailwind CSS**
-- **Shadcn UI**
-- **Radix UI**
-- **Lucide Icons**
+- **Frontend**: React 18 + Vite
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: Shadcn UI + Radix UI
+- **Icons**: Lucide Icons
+- **State Management**: React Context
+- **API Integration**: Gemini + OpenRouter
 
 ---
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br/>
-Feel free to [open an issue](https://github.com/yourusername/mimir/issues) or submit a pull request.
+We welcome contributions! Here's how you can help:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
 ## 📄 License
 
-This project is [MIT](LICENSE) licensed.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
 <p align="center">
-  <b>Made with ❤️ by the Mimir Team</b>
+  Made with ❤️ by the Sahil Rana
 </p> 
