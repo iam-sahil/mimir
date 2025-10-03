@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -29,10 +28,10 @@ export const BackgroundGradient = () => {
   useEffect(() => {
     const colors = getThemeColors();
     const newBlobs: GradientBlob[] = [];
-    
+
     // Create 3-5 blobs
     const blobCount = Math.floor(Math.random() * 3) + 3;
-    
+
     for (let i = 0; i < blobCount; i++) {
       newBlobs.push({
         id: i,
@@ -41,42 +40,44 @@ export const BackgroundGradient = () => {
         size: Math.random() * 400 + 200, // Size between 200-600px
         color: colors[i % colors.length],
         opacity: Math.random() * 0.1 + 0.05, // Opacity between 0.05-0.15
-        speed: { 
+        speed: {
           x: (Math.random() - 0.5) * 0.02, // Slower movement
-          y: (Math.random() - 0.5) * 0.02  
-        }
+          y: (Math.random() - 0.5) * 0.02,
+        },
       });
     }
-    
+
     setBlobs(newBlobs);
   }, [currentTheme]);
 
   useEffect(() => {
     const animate = () => {
-      setBlobs(prevBlobs => prevBlobs.map(blob => {
-        let newX = blob.x + blob.speed.x;
-        let newY = blob.y + blob.speed.y;
-        
-        // Bounce when reaching edges
-        if (newX <= 0 || newX >= 100) blob.speed.x *= -1;
-        if (newY <= 0 || newY >= 100) blob.speed.y *= -1;
-        
-        // Ensure blobs stay within bounds
-        newX = Math.max(0, Math.min(100, newX));
-        newY = Math.max(0, Math.min(100, newY));
-        
-        return {
-          ...blob,
-          x: newX,
-          y: newY
-        };
-      }));
-      
+      setBlobs((prevBlobs) =>
+        prevBlobs.map((blob) => {
+          let newX = blob.x + blob.speed.x;
+          let newY = blob.y + blob.speed.y;
+
+          // Bounce when reaching edges
+          if (newX <= 0 || newX >= 100) blob.speed.x *= -1;
+          if (newY <= 0 || newY >= 100) blob.speed.y *= -1;
+
+          // Ensure blobs stay within bounds
+          newX = Math.max(0, Math.min(100, newX));
+          newY = Math.max(0, Math.min(100, newY));
+
+          return {
+            ...blob,
+            x: newX,
+            y: newY,
+          };
+        }),
+      );
+
       animationRef.current = requestAnimationFrame(animate);
     };
-    
+
     animationRef.current = requestAnimationFrame(animate);
-    
+
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -89,7 +90,7 @@ export const BackgroundGradient = () => {
       {blobs.map((blob) => (
         <div
           key={blob.id}
-          className="absolute rounded-full blur-[120px] transition-all duration-[50s]"
+          className="absolute rounded-full blur-[120px] transition-all"
           style={{
             left: `${blob.x}%`,
             top: `${blob.y}%`,

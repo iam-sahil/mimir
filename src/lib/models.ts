@@ -2,11 +2,12 @@ import { Model } from "@/types";
 
 export const geminiModels: Model[] = [
   {
-    id: "gemini-2-5-pro-exp-03-25",
+    id: "gemini-2-5-pro",
     name: "Gemini 2.5 Pro",
     provider: "gemini",
-    modelId: "gemini-2.5-pro-exp-03-25",
-    description: "Advanced model with enhanced thinking and reasoning, multimodal understanding, advanced coding, and more",
+    modelId: "gemini-2.5-pro",
+    description:
+      "Advanced model with enhanced thinking and reasoning, multimodal understanding, advanced coding, and more",
     canUseImage: true,
     supportsThinking: true,
     supportsWebSearch: true,
@@ -21,14 +22,15 @@ export const geminiModels: Model[] = [
       requestsToday: 0,
       tokensToday: 0,
     },
-    fallbackModelId: "gemini-2-5-flash-preview-04-17",
+    fallbackModelId: "gemini-flash-latest",
   },
   {
-    id: "gemini-2-5-flash-preview-04-17",
+    id: "gemini-flash-latest",
     name: "Gemini 2.5 Flash",
     provider: "gemini",
-    modelId: "gemini-2.5-flash-preview-04-17",
-    description: "Cost-efficient model with adaptive thinking and multimodal understanding",
+    modelId: "gemini-flash-latest",
+    description:
+      "Cost-efficient model with adaptive thinking and multimodal understanding",
     canUseImage: true,
     supportsThinking: true,
     supportsWebSearch: true,
@@ -64,8 +66,8 @@ export const geminiModels: Model[] = [
     usageTracking: {
       requestsToday: 0,
       tokensToday: 0,
-    }
-  }
+    },
+  },
 ];
 
 export const openRouterModels: Model[] = [
@@ -106,7 +108,8 @@ export const openRouterModels: Model[] = [
     name: "Llama 4 Scout",
     provider: "openrouter",
     modelId: "meta-llama/llama-4-scout:free",
-    description: "Smaller, more efficient version of Llama 4 with excellent reasoning",
+    description:
+      "Smaller, more efficient version of Llama 4 with excellent reasoning",
     canUseImage: false,
   },
   {
@@ -116,7 +119,7 @@ export const openRouterModels: Model[] = [
     modelId: "sophosympatheia/rogue-rose-103b-v0.2:free",
     description: "Large 103B parameter model with strong creative abilities",
     canUseImage: false,
-  }
+  },
 ];
 
 export const allModels: Model[] = [...geminiModels, ...openRouterModels];
@@ -127,16 +130,18 @@ export const getModelById = (id: string): Model => {
   return allModels.find((model) => model.id === id) || defaultModel;
 };
 
-export const getModelsByProvider = (provider: "gemini" | "openrouter"): Model[] => {
-  return allModels.filter(model => model.provider === provider);
+export const getModelsByProvider = (
+  provider: "gemini" | "openrouter",
+): Model[] => {
+  return allModels.filter((model) => model.provider === provider);
 };
 
 // Helper function to track usage for a model
 export const trackModelUsage = (modelId: string, tokensUsed: number): Model => {
   const model = getModelById(modelId);
-  
+
   if (!model || !model.usageTracking) return model;
-  
+
   // Reset usage tracking if it's a new day
   const today = new Date().toDateString();
   if (model.usageTracking.lastResetDate !== today) {
@@ -144,20 +149,20 @@ export const trackModelUsage = (modelId: string, tokensUsed: number): Model => {
     model.usageTracking.tokensToday = 0;
     model.usageTracking.lastResetDate = today;
   }
-  
+
   // Update usage
   model.usageTracking.requestsToday += 1;
   model.usageTracking.tokensToday += tokensUsed;
-  
+
   return model;
 };
 
 // Check if a model has reached its daily limit
 export const hasReachedDailyLimit = (modelId: string): boolean => {
   const model = getModelById(modelId);
-  
+
   if (!model || !model.rateLimits || !model.usageTracking) return false;
-  
+
   return (
     model.usageTracking.requestsToday >= model.rateLimits.requestsPerDay ||
     model.usageTracking.tokensToday >= model.rateLimits.tokensPerDay
@@ -167,16 +172,20 @@ export const hasReachedDailyLimit = (modelId: string): boolean => {
 // Get the fallback model when rate limits are reached
 export const getFallbackModel = (modelId: string): Model => {
   const model = getModelById(modelId);
-  
+
   if (!model || !model.fallbackModelId) return defaultModel;
-  
+
   const fallbackModel = getModelById(model.fallbackModelId);
-  
+
   // If the fallback model has also reached its limits, try to get its fallback model
-  if (fallbackModel && hasReachedDailyLimit(fallbackModel.id) && fallbackModel.fallbackModelId) {
+  if (
+    fallbackModel &&
+    hasReachedDailyLimit(fallbackModel.id) &&
+    fallbackModel.fallbackModelId
+  ) {
     return getFallbackModel(fallbackModel.id);
   }
-  
+
   return fallbackModel || defaultModel;
 };
 
@@ -184,13 +193,13 @@ export const getFallbackModel = (modelId: string): Model => {
 export const getModelForPrompt = (prompt: string): Model => {
   // Check if the prompt is requesting image generation
   const isImagePrompt = isImageGenerationPrompt(prompt);
-  
+
   if (isImagePrompt) {
     // Find a model that supports image generation
-    const imageModel = allModels.find(model => model.supportsImageGeneration);
+    const imageModel = allModels.find((model) => model.supportsImageGeneration);
     if (imageModel) return imageModel;
   }
-  
+
   // Otherwise return the default model
   return defaultModel;
 };
@@ -205,7 +214,7 @@ function isImageGenerationPrompt(prompt: string): boolean {
   const lowercasePrompt = prompt.toLowerCase();
   const imageKeywords = [
     "generate an image",
-    "create an image", 
+    "create an image",
     "draw",
     "make an image",
     "create a picture",
@@ -215,8 +224,8 @@ function isImageGenerationPrompt(prompt: string): boolean {
     "show me an image",
     "visualize",
     "create art",
-    "generate art"
+    "generate art",
   ];
-  
-  return imageKeywords.some(keyword => lowercasePrompt.includes(keyword));
+
+  return imageKeywords.some((keyword) => lowercasePrompt.includes(keyword));
 }
