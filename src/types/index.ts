@@ -46,8 +46,8 @@ export type Model = {
   fallbackModelId?: string;
 };
 
-export type Theme = 
-  | "light-pink" 
+export type Theme =
+  | "light-pink"
   | "light-green"
   | "dark-pink"
   | "dark-green"
@@ -76,6 +76,8 @@ export type ThemeConfig = {
 export interface Settings {
   defaultModel: Model;
   geminiApiKey: string;
+  geminiApiKeys?: string[];
+  currentGeminiKeyIndex?: number;
   openRouterApiKey: string;
   username: string;
   theme: string;

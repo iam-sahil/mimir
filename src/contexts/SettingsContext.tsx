@@ -4,11 +4,18 @@ import { geminiModels, getModelById, allModels } from "@/lib/models";
 import { useTheme } from "@/contexts/ThemeContext";
 import { mainFontOptions, codeFontOptions } from "@/lib/fonts";
 
-// Get the free API key from environment variables
-const FREE_GEMINI_API_KEY = import.meta.env.VITE_GEMINI_FREE_API_KEY || "";
+// Get the free API keys from environment variables (supports multiple keys)
+const FREE_GEMINI_API_KEYS = [
+  import.meta.env.VITE_GEMINI_FREE_API_KEY,
+  import.meta.env.VITE_GEMINI_FREE_API_KEY_2,
+  import.meta.env.VITE_GEMINI_FREE_API_KEY_3,
+  import.meta.env.VITE_GEMINI_FREE_API_KEY_4,
+  import.meta.env.VITE_GEMINI_FREE_API_KEY_5,
+].filter(Boolean) as string[];
+
 const FREE_MESSAGE_LIMIT = parseInt(
   import.meta.env.VITE_FREE_MESSAGE_LIMIT || "10",
-  10
+  10,
 );
 
 interface SettingsContextType {
@@ -21,6 +28,8 @@ interface SettingsContextType {
   incrementFreeMessagesUsed: () => void;
   hasValidKey: (provider: string) => boolean;
   getActiveApiKey: (provider: string) => string | null;
+  rotateToNextGeminiKey: () => void;
+  getCurrentGeminiKeyIndex: () => number;
   toggleThinking: () => void;
   toggleWebSearch: () => void;
   toggleImageGeneration: () => void;
@@ -40,6 +49,8 @@ export const SettingsContext = createContext<SettingsContextType>({
     enableImageGeneration: true,
     mainFont: "'Plus Jakarta Sans', sans-serif",
     codeFont: "'Source Code Pro', monospace",
+    currentGeminiKeyIndex: 0,
+    geminiApiKeys: [],
   },
   setSettings: () => {},
   saveGeminiKey: () => {},
@@ -53,6 +64,8 @@ export const SettingsContext = createContext<SettingsContextType>({
   toggleWebSearch: () => {},
   toggleImageGeneration: () => {},
   setDefaultModel: () => {},
+  rotateToNextGeminiKey: () => {},
+  getCurrentGeminiKeyIndex: () => 0,
 });
 
 interface SettingsProviderProps {
@@ -92,14 +105,14 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
         if (parsedSettings.mainFont) {
           document.documentElement.style.setProperty(
             "--font-sans",
-            parsedSettings.mainFont
+            parsedSettings.mainFont,
           );
           loadGoogleFont(parsedSettings.mainFont);
         }
         if (parsedSettings.codeFont) {
           document.documentElement.style.setProperty(
             "--font-mono",
-            parsedSettings.codeFont
+            parsedSettings.codeFont,
           );
           loadGoogleFont(parsedSettings.codeFont);
         }
@@ -123,6 +136,8 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
       enableImageGeneration: true,
       mainFont: "'Plus Jakarta Sans', sans-serif",
       codeFont: "'Source Code Pro', monospace",
+      currentGeminiKeyIndex: 0,
+      geminiApiKeys: [],
     };
   });
 
@@ -166,11 +181,11 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
     // Apply font settings when they change
     document.documentElement.style.setProperty(
       "--font-sans",
-      settings.mainFont
+      settings.mainFont,
     );
     document.documentElement.style.setProperty(
       "--font-mono",
-      settings.codeFont
+      settings.codeFont,
     );
     // Load the fonts
     loadGoogleFont(settings.mainFont);
@@ -212,11 +227,19 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
     console.log("Default model updated:", fullModel.id, fullModel.name);
   };
 
-  // Save Gemini API key
+  // Save Gemini API key (supports comma-separated keys for multiple keys)
   const saveGeminiKey = (key: string) => {
+    // Split by comma and trim to support multiple keys
+    const keys = key
+      .split(",")
+      .map((k) => k.trim())
+      .filter((k) => k.length > 0);
+
     setSettings((prev) => ({
       ...prev,
-      geminiApiKey: key,
+      geminiApiKey: keys[0] || key, // First key as primary
+      geminiApiKeys: keys.length > 1 ? keys : [], // Store all keys if multiple
+      currentGeminiKeyIndex: 0, // Reset to first key
     }));
   };
 
@@ -271,33 +294,80 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
     }));
   };
 
+  // Rotate to next Gemini API key (for handling rate limits)
+  const rotateToNextGeminiKey = () => {
+    const allKeys = [
+      settings.geminiApiKey,
+      ...(settings.geminiApiKeys || []),
+      ...FREE_GEMINI_API_KEYS,
+    ].filter(Boolean);
+
+    if (allKeys.length <= 1) {
+      // No keys to rotate to
+      return;
+    }
+
+    const currentIndex = settings.currentGeminiKeyIndex || 0;
+    const nextIndex = (currentIndex + 1) % allKeys.length;
+
+    setSettings((prev) => ({
+      ...prev,
+      currentGeminiKeyIndex: nextIndex,
+    }));
+  };
+
+  // Get current Gemini key index
+  const getCurrentGeminiKeyIndex = () => {
+    return settings.currentGeminiKeyIndex || 0;
+  };
+
   // Check if the user has a valid API key for a given provider
   const hasValidKey = (provider: string) => {
     if (provider === "gemini") {
-      return (
+      const hasUserKey =
         !!settings.geminiApiKey ||
-        (FREE_GEMINI_API_KEY && settings.freeMessagesUsed < FREE_MESSAGE_LIMIT)
-      );
+        (settings.geminiApiKeys && settings.geminiApiKeys.length > 0);
+      const hasFreeKey =
+        FREE_GEMINI_API_KEYS.length > 0 &&
+        settings.freeMessagesUsed < FREE_MESSAGE_LIMIT;
+      return hasUserKey || hasFreeKey;
     } else if (provider === "openrouter") {
       return !!settings.openRouterApiKey;
     }
     return false;
   };
 
-  // Get active API key for a given provider
+  // Get active API key for a given provider (with rotation support)
   const getActiveApiKey = (provider: string): string | null => {
     if (provider === "gemini") {
-      // Use the user's API key if available, otherwise use the free API key
-      // but only if they haven't exceeded the free message limit
-      if (settings.geminiApiKey) {
-        return settings.geminiApiKey;
-      } else if (
-        FREE_GEMINI_API_KEY &&
-        settings.freeMessagesUsed < FREE_MESSAGE_LIMIT
-      ) {
-        return FREE_GEMINI_API_KEY;
+      // Collect all available keys
+      const allKeys = [
+        settings.geminiApiKey,
+        ...(settings.geminiApiKeys || []),
+        ...FREE_GEMINI_API_KEYS,
+      ].filter(Boolean);
+
+      if (allKeys.length === 0) {
+        return null;
       }
-      return null;
+
+      // Use the current key index to select the key
+      const currentIndex = settings.currentGeminiKeyIndex || 0;
+      const selectedKey = allKeys[currentIndex % allKeys.length];
+
+      // Only use free keys if under the limit
+      if (FREE_GEMINI_API_KEYS.includes(selectedKey)) {
+        if (settings.freeMessagesUsed < FREE_MESSAGE_LIMIT) {
+          return selectedKey;
+        }
+        // If free key is exhausted, try next user key
+        if (settings.geminiApiKey) {
+          return settings.geminiApiKey;
+        }
+        return null;
+      }
+
+      return selectedKey;
     } else if (provider === "openrouter") {
       return settings.openRouterApiKey || null;
     }
@@ -320,6 +390,8 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
         toggleWebSearch,
         toggleImageGeneration,
         setDefaultModel,
+        rotateToNextGeminiKey,
+        getCurrentGeminiKeyIndex,
       }}
     >
       {children}

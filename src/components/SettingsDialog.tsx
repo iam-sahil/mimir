@@ -81,14 +81,14 @@ export const SettingsDialog = ({
 
   const [geminiKey, setGeminiKey] = useState(settings.geminiApiKey || "");
   const [openRouterKey, setOpenRouterKey] = useState(
-    settings.openRouterApiKey || ""
+    settings.openRouterApiKey || "",
   );
   const [username, setUsernameState] = useState(settings.username || "");
   const [mainFont, setMainFont] = useState(
-    settings.mainFont || "'Plus Jakarta Sans', sans-serif"
+    settings.mainFont || "'Plus Jakarta Sans', sans-serif",
   );
   const [codeFont, setCodeFont] = useState(
-    settings.codeFont || "'Source Code Pro', monospace"
+    settings.codeFont || "'Source Code Pro', monospace",
   );
   const freeMessagesRemaining = 10 - settings.freeMessagesUsed;
   const [activeTab, setActiveTab] = useState("account");
@@ -116,12 +116,21 @@ export const SettingsDialog = ({
       setUsername(username);
     }
 
-    // Save font settings
-    setSettings((prev) => ({
-      ...prev,
-      mainFont,
-      codeFont,
-    }));
+    // Save font settings with force reload
+    if (mainFont !== settings.mainFont || codeFont !== settings.codeFont) {
+      setSettings((prev) => ({
+        ...prev,
+        mainFont,
+        codeFont,
+      }));
+
+      // Apply fonts immediately
+      document.documentElement.style.setProperty("--font-sans", mainFont);
+      document.documentElement.style.setProperty("--font-mono", codeFont);
+
+      // Force re-render by updating body class
+      document.body.className = document.body.className;
+    }
 
     onOpenChange(false);
     toast("Settings saved successfully");
@@ -133,12 +142,14 @@ export const SettingsDialog = ({
 
   const handleMainFontChange = (font: string) => {
     setMainFont(font);
+    // Apply immediately for preview
     document.documentElement.style.setProperty("--font-sans", font);
+
     // Load the font immediately
     const fontOption = mainFontOptions.find((f) => f.value === font);
     if (fontOption?.url) {
       const existingLink = document.querySelector(
-        `link[href="${fontOption.url}"]`
+        `link[href="${fontOption.url}"]`,
       );
       if (!existingLink) {
         const linkEl = document.createElement("link");
@@ -147,16 +158,24 @@ export const SettingsDialog = ({
         document.head.appendChild(linkEl);
       }
     }
+
+    // Update state immediately to reflect changes
+    setSettings((prev) => ({
+      ...prev,
+      mainFont: font,
+    }));
   };
 
   const handleCodeFontChange = (font: string) => {
     setCodeFont(font);
+    // Apply immediately for preview
     document.documentElement.style.setProperty("--font-mono", font);
+
     // Load the font immediately
     const fontOption = codeFontOptions.find((f) => f.value === font);
     if (fontOption?.url) {
       const existingLink = document.querySelector(
-        `link[href="${fontOption.url}"]`
+        `link[href="${fontOption.url}"]`,
       );
       if (!existingLink) {
         const linkEl = document.createElement("link");
@@ -165,6 +184,12 @@ export const SettingsDialog = ({
         document.head.appendChild(linkEl);
       }
     }
+
+    // Update state immediately to reflect changes
+    setSettings((prev) => ({
+      ...prev,
+      codeFont: font,
+    }));
   };
 
   return (
@@ -172,7 +197,7 @@ export const SettingsDialog = ({
       <DialogContent
         className={cn(
           "sm:max-w-[600px] max-h-[85vh] overflow-y-auto",
-          className
+          className,
         )}
       >
         <DialogHeader>
@@ -244,28 +269,34 @@ export const SettingsDialog = ({
             </div>
 
             <div className="grid gap-2 mt-4">
-              <Label htmlFor="gemini-api-key">Gemini API Key</Label>
+              <Label htmlFor="gemini-api-key">Gemini API Key(s)</Label>
               <Input
                 id="gemini-api-key"
                 type="password"
-                placeholder="Enter your Gemini API key"
+                placeholder="Enter your Gemini API key(s) - separate multiple keys with commas"
                 value={geminiKey}
                 onChange={(e) => setGeminiKey(e.target.value)}
               />
-              <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                <span>
-                  Free messages remaining:{" "}
-                  {freeMessagesRemaining < 0 ? 0 : freeMessagesRemaining}
+              <div className="flex flex-col gap-1 text-xs text-muted-foreground mt-1">
+                <div className="flex justify-between">
+                  <span>
+                    Free messages remaining:{" "}
+                    {freeMessagesRemaining < 0 ? 0 : freeMessagesRemaining}
+                  </span>
+                  <a
+                    href="https://ai.google.dev/tutorials/web_quickstart"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-primary hover:underline"
+                  >
+                    <span>Get a Gemini API key</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+                <span className="text-muted-foreground/70">
+                  💡 Tip: Add multiple API keys separated by commas for
+                  automatic rotation when rate limits are reached
                 </span>
-                <a
-                  href="https://ai.google.dev/tutorials/web_quickstart"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-primary hover:underline"
-                >
-                  <span>Get a Gemini API key</span>
-                  <ExternalLink className="h-3 w-3" />
-                </a>
               </div>
             </div>
 
@@ -437,7 +468,7 @@ export const SettingsDialog = ({
                             onClick={() => {
                               setDefaultModel(model);
                               toast.success(
-                                `${model.name} set as default model`
+                                `${model.name} set as default model`,
                               );
                             }}
                           >
@@ -565,7 +596,7 @@ export const SettingsDialog = ({
                               onClick={() => {
                                 setDefaultModel(model);
                                 toast.success(
-                                  `${model.name} set as default model`
+                                  `${model.name} set as default model`,
                                 );
                               }}
                             >
@@ -733,8 +764,23 @@ export const SettingsDialog = ({
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground mt-1">
-                Choose the main font for the interface.
+                Choose the code font for code blocks. Changes apply immediately.
               </p>
+            </div>
+
+            <div className="mt-4 p-3 border rounded-md bg-muted/30">
+              <p className="text-sm mb-2 font-medium">Font Preview</p>
+              <div className="space-y-2">
+                <p className="text-sm" style={{ fontFamily: mainFont }}>
+                  Main Font: The quick brown fox jumps over the lazy dog
+                </p>
+                <code
+                  className="text-sm block"
+                  style={{ fontFamily: codeFont }}
+                >
+                  Code Font: const hello = "world";
+                </code>
+              </div>
             </div>
 
             <div className="grid gap-2 mt-4">
@@ -746,9 +792,9 @@ export const SettingsDialog = ({
                 <SelectContent>
                   {codeFontOptions.map((font) => (
                     <SelectItem key={font.name} value={font.value}>
-                      <span style={{ fontFamily: font.value }}>
+                      <code style={{ fontFamily: font.value }}>
                         {font.name}
-                      </span>
+                      </code>
                     </SelectItem>
                   ))}
                 </SelectContent>
